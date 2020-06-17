@@ -1,0 +1,11 @@
+BotConfig:
+  Activity:
+    Type: PLAYING
+    Text: ''
+    StreamURL: http://wwww.redicraft.eu
+    Onlinestatus: ONLINE
+BotInfo:
+  version: 19700101_v0.0.0abs
+  online:
+    ts: 1591455670384
+    string: 06/06/2020 - 17:01:10
