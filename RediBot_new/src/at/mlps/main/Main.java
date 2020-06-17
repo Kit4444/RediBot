@@ -101,6 +101,7 @@ public class Main implements EventListener{
 		file.addDefault("MySQL.Database", "database");
 		file.addDefault("MySQL.Username", "username");
 		file.addDefault("MySQL.Password", "password");
+		file.addDefault("BotConfig.Bottoken", "the bottoken goes here");
 		file.set("BotInfo.online.ts", System.currentTimeMillis());
 		file.set("BotInfo.online.string", stime);
 		file.options().copyDefaults(true);
@@ -114,7 +115,7 @@ public class Main implements EventListener{
 	static void startBot() throws InvalidConfigurationException, IOException, LoginException {
 		YamlFile file = new YamlFile("configuration.yml");
 		file.load();
-		JDABuilder builder = JDABuilder.createDefault("NTg4NTQ3MjA0MDYzNDI4NjM3.XrfKRQ.6T6SdwMMTu-QG24vWoyJFnOMcB0");
+		JDABuilder builder = JDABuilder.createDefault(file.getString("BotConfig.Bottoken"));
 		if(at.mlps.rc.mysql.lb.MySQL.isConnected()) {
 			if(file.getString("BotConfig.Activity.Type").equalsIgnoreCase("PLAYING")) {
 				builder.setActivity(Activity.playing(file.getString("BotConfig.Activity.Text")));
