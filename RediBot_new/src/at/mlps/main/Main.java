@@ -16,6 +16,7 @@ import botclasses.GuildLogger;
 import botclasses.LOA;
 import botclasses.Punishments;
 import botclasses.PurgeCommand;
+import botclasses.RegisterGuilds;
 import botclasses.Serverinfo;
 import botclasses.SetStatesCMD;
 import botclasses.UserCommands;
@@ -148,6 +149,7 @@ public class Main implements EventListener{
 		builder.addEventListeners(new FAQ());
 		builder.addEventListeners(new UserInfo());
 		builder.addEventListeners(new Punishments());
+		builder.addEventListeners(new RegisterGuilds());
 		builder.build();
 	}
 	
