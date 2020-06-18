@@ -2,6 +2,9 @@ package botclasses;
 
 import java.awt.Color;
 import java.io.IOException;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -45,7 +48,7 @@ public class UserCommands extends ListenerAdapter{
 			eb.addField("Bot-Version:", file.getString("BotInfo.version"), false);
 			eb.addField("Online since:", file.getString("BotInfo.online.string"), false);
 			eb.addField("Systemtime: ", stime, false);
-			eb.addField("Guilds:", e.getJDA().getGuilds().size() + "", false);
+			eb.addField("Guilds:", "Total: " + e.getJDA().getGuilds().size() + ", Registered: " + returnRegisteredGuilds(), false);
 			eb.addField("Ram", "Usage: " + String.valueOf((run.totalMemory() - run.freeMemory()) / 1048576L) + "mb / Allocated: " + String.valueOf(run.totalMemory() / 1048576L) + "mb", false);
 			if(MySQL.isConnected()) {
 				eb.addField("DB Connection:", "connected", true);
@@ -79,9 +82,10 @@ public class UserCommands extends ListenerAdapter{
 			eb.addField(Main.botprefix + "mute", "Removes all roles and mutes him in this way.", false);
 			eb.addField(Main.botprefix + "ping", "See the bot's ping", false);
 			eb.addField(Main.botprefix + "purge", "Mod Command, deletes up to 100 messages on one command.", false);
+			eb.addField(Main.botprefix + "registerguild", "Botownercommand - registers a guild for guildlogging", false);
 			eb.addField(Main.botprefix + "serverinfo", "Displays some informations regarding the guild where the command was sent in.\nThis is just for registered guilds available!", false);
-			eb.addField(Main.botprefix + "setactivity", "Ownercommand", false);
-			eb.addField(Main.botprefix + "setgame", "Ownercommand", false);
+			eb.addField(Main.botprefix + "setactivity", "Botownercommand", false);
+			eb.addField(Main.botprefix + "setgame", "Botownercommand", false);
 			eb.addField(Main.botprefix + "userinfo", "Displays some infos of your account what we stored.\nAlias: " + Main.botprefix + "user", false);
 			eb.addField(Main.botprefix + "warn", "Warns a Member.", false);
 			chan.sendMessage(eb.build()).queue();
@@ -124,5 +128,18 @@ public class UserCommands extends ListenerAdapter{
 			eb.addField("15.6.2020", "- Changed JDA-Version from build 101 to 165\n- added the [p]changelog command\n- changed some backend code", false);
 			chan.sendMessage(eb.build()).queue();
 		}
+	}
+	
+	private int returnRegisteredGuilds() {
+		int i = 0;
+		try {
+			PreparedStatement ps = MySQL.getConnection().prepareStatement("SELECT * FROM redibot_guildlog");
+			ResultSet rs = ps.executeQuery();
+			
+			while(rs.next()) {
+				i++;
+			}
+		}catch (SQLException e) { }
+		return i;
 	}
 }
