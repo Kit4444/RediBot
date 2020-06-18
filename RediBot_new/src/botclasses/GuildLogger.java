@@ -23,7 +23,6 @@ import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.events.ReadyEvent;
-import net.dv8tion.jda.api.events.ShutdownEvent;
 import net.dv8tion.jda.api.events.channel.category.update.CategoryUpdateNameEvent;
 import net.dv8tion.jda.api.events.channel.text.TextChannelCreateEvent;
 import net.dv8tion.jda.api.events.channel.text.TextChannelDeleteEvent;
@@ -119,13 +118,13 @@ public class GuildLogger extends ListenerAdapter{
 			EmbedBuilder eb = new EmbedBuilder();
 			eb.setColor(Color.green);
 			eb.setTitle("Member joined");
-			eb.setDescription( m.getAsMention() + " has joined the guild and the autoroles has been given.");
+			eb.setDescription( m.getAsMention() + " has joined the guild.");
 			eb.setFooter(stime, g.getIconUrl());
-			g.getTextChannelById(redibotlog).sendMessage(eb.build()).queue();
+			sendMsg(eb, g);
 		}
 	}
 
-	public void onGuildMemberLeave(GuildMemberRemoveEvent e) {
+	public void onGuildMemberRemove(GuildMemberRemoveEvent e) {
 		Guild g = e.getGuild();
 		Member m = e.getMember();
 		YamlFile file = new YamlFile("configuration.yml");
@@ -136,14 +135,12 @@ public class GuildLogger extends ListenerAdapter{
 		}
 		SimpleDateFormat time = new SimpleDateFormat("dd/MM/yy - HH:mm:ss");
         String stime = time.format(new Date());
-		if(g.getIdLong() == redimain) {
-			EmbedBuilder eb = new EmbedBuilder();
-			eb.setColor(red);
-			eb.setTitle("Member left");
-			eb.setDescription(m.getUser().getName() + "#" + m.getUser().getDiscriminator() + " has left the guild.\nJoindate: " + file.getString("Members.Date." + m.getIdLong()));
-			eb.setFooter(stime, g.getIconUrl());
-			g.getTextChannelById(redibotlog).sendMessage(eb.build()).queue();
-		}
+        EmbedBuilder eb = new EmbedBuilder();
+		eb.setColor(red);
+		eb.setTitle("Member left");
+		eb.setDescription(m.getUser().getName() + "#" + m.getUser().getDiscriminator() + " has left the guild.\nJoindate: " + file.getString("Members.Date." + m.getIdLong()));
+		eb.setFooter(stime, g.getIconUrl());
+		sendMsg(eb, g);
 	}
 
 	public void onGuildMemberUpdateNickname(GuildMemberUpdateNicknameEvent e) {
@@ -161,9 +158,7 @@ public class GuildLogger extends ListenerAdapter{
 		List<Guild> guilds = e.getUser().getMutualGuilds();
 		if(!(guilds.isEmpty()) && !(e.getUser().isBot())) {
 			for(Guild guild : guilds) {
-				if(guild.getIdLong() == redimain) {
-					g.getTextChannelById(redibotlog).sendMessage(eb.build()).queue();
-				}
+				sendMsg(eb, guild);
 			}
 		}
 	}
@@ -184,7 +179,7 @@ public class GuildLogger extends ListenerAdapter{
 			if(m.getRoles().contains(player)) {
 				g.removeRoleFromMember(m, guest).complete();
 			}
-			g.getTextChannelById(redibotlog).sendMessage(eb.build()).queue();
+			sendMsg(eb, g);
 		}
 	}
 	
@@ -198,9 +193,7 @@ public class GuildLogger extends ListenerAdapter{
 		eb.setColor(orange);
 		eb.setDescription("User: " + m.getAsMention() + "\nRole removed: " + e.getRoles().get(0).getName());
 		eb.setFooter(stime, g.getIconUrl());
-		if(g.getIdLong() == redimain) {
-			g.getTextChannelById(redibotlog).sendMessage(eb.build()).queue();
-		}
+		sendMsg(eb, g);
 	}
 	
 	public void onRoleUpdateColor(RoleUpdateColorEvent e) {
@@ -210,11 +203,9 @@ public class GuildLogger extends ListenerAdapter{
         EmbedBuilder eb = new EmbedBuilder();
 		eb.setTitle("Role Update");
 		eb.setColor(e.getNewColor());
-		eb.setDescription("Role: ``" + e.getRole().getName() + "``\nOld Color: ``" + Integer.toHexString(e.getOldColor().getRGB()) + "``\nNew Color: ``" + Integer.toHexString(e.getNewColor().getRGB()) + "``");
+		eb.setDescription("Role: ``" + e.getRole().getName() + "`` \nOld Color: ``" + hexCol(e.getOldColorRaw()) + "``\nNew Color: ``" + hexCol(e.getNewColorRaw()) + "``");
 		eb.setFooter(stime, g.getIconUrl());
-		if(g.getIdLong() == redimain) {
-			g.getTextChannelById(redibotlog).sendMessage(eb.build()).queue();
-		}
+		sendMsg(eb, g);
 	}
 	
 	public void onRoleUpdateName(RoleUpdateNameEvent e) {
@@ -226,9 +217,7 @@ public class GuildLogger extends ListenerAdapter{
 		eb.setColor(orange);
 		eb.setDescription("Role: ``" + e.getRole().getIdLong() + "``\nOld Name: ``" + e.getOldName() + "``\nNew Name: ``" + e.getNewName() + "``");
 		eb.setFooter(stime, g.getIconUrl());
-		if(g.getIdLong() == redimain) {
-			g.getTextChannelById(redibotlog).sendMessage(eb.build()).queue();
-		}
+		sendMsg(eb, g);
 	}
 	
 	public void onRoleUpdateHoisted(RoleUpdateHoistedEvent e) {
@@ -240,9 +229,7 @@ public class GuildLogger extends ListenerAdapter{
 		eb.setColor(orange);
 		eb.setDescription("Role: ``" + e.getRole().getName() + "``\nHoisted: ``" + e.getNewValue() + "``");
 		eb.setFooter(stime, g.getIconUrl());
-		if(g.getIdLong() == redimain) {
-			g.getTextChannelById(redibotlog).sendMessage(eb.build()).queue();
-		}
+		sendMsg(eb, g);
 	}
 	
 	public void onGuildJoin(GuildJoinEvent e) {
@@ -325,22 +312,8 @@ public class GuildLogger extends ListenerAdapter{
 		}
 		System.out.print("RediBot has been loaded. Version: " + file.getString("BotInfo.version") + " Javaversion: " + System.getProperty("java.version") + "\n");
 	}
-	
-	public void onShutdown(ShutdownEvent e) {
-		Guild g = e.getJDA().getGuildById(rediassetg);
-		SimpleDateFormat time = new SimpleDateFormat("dd/MM/yy - HH:mm:ss");
-        String stime = time.format(new Date());
-        if(g.getIdLong() == rediassetg) {
-        	EmbedBuilder eb = new EmbedBuilder();
-        	eb.setFooter(stime);
-        	eb.setColor(red);
-        	eb.setTitle("Bot is not online anymore.");
-        	g.getTextChannelById(rediassetlog).sendMessage(eb.build()).queue();
-        }
-	}
 
 	public void onUserUpdateAvatar(UserUpdateAvatarEvent e) {
-		Guild g = e.getJDA().getGuildById(redimain);
 		List<Guild> guilds = e.getUser().getMutualGuilds();
 		SimpleDateFormat time = new SimpleDateFormat("dd/MM/yy - HH:mm:ss");
         String stime = time.format(new Date());
@@ -354,15 +327,12 @@ public class GuildLogger extends ListenerAdapter{
 		eb.addField("New AvatarURL:", e.getNewAvatarUrl() + "", false);
 		if(!(guilds.isEmpty()) && !(e.getUser().isBot())) {
 			for(Guild guild : guilds) {
-				if(guild.getIdLong() == redimain) {
-					g.getTextChannelById(redibotlog).sendMessage(eb.build()).queue();
-				}
+				sendMsg(eb, guild);
 			}
 		}
 	}
 	
 	public void onUserUpdateDiscriminator(UserUpdateDiscriminatorEvent e) {
-		Guild g = e.getJDA().getGuildById(redimain);
 		SimpleDateFormat time = new SimpleDateFormat("dd/MM/yy - HH:mm:ss");
         String stime = time.format(new Date());
         EmbedBuilder eb = new EmbedBuilder();
@@ -375,15 +345,12 @@ public class GuildLogger extends ListenerAdapter{
 		List<Guild> guilds = e.getUser().getMutualGuilds();
 		if(!(guilds.isEmpty()) && !(e.getUser().isBot())) {
 			for(Guild guild : guilds) {
-				if(guild.getIdLong() == redimain) {
-					g.getTextChannelById(redibotlog).sendMessage(eb.build()).queue();
-				}
+				sendMsg(eb, guild);
 			}
 		}
 	}
 	
 	public void onUserUpdateName(UserUpdateNameEvent e) {
-		Guild g = e.getJDA().getGuildById(redimain);
 		SimpleDateFormat time = new SimpleDateFormat("dd/MM/yy - HH:mm:ss");
         String stime = time.format(new Date());
         EmbedBuilder eb = new EmbedBuilder();
@@ -396,9 +363,7 @@ public class GuildLogger extends ListenerAdapter{
 		List<Guild> guilds = e.getUser().getMutualGuilds();
 		if(!(guilds.isEmpty()) && !(e.getUser().isBot())) {
 			for(Guild guild : guilds) {
-				if(guild.getIdLong() == redimain) {
-					g.getTextChannelById(redibotlog).sendMessage(eb.build()).queue();
-				}
+				sendMsg(eb, guild);
 			}
 		}
 	}
@@ -415,13 +380,10 @@ public class GuildLogger extends ListenerAdapter{
 		eb.setFooter(stime);
 		eb.addField("Old AvatarURL:", e.getOldIconUrl(), false);
 		eb.addField("New AvatarURL:", e.getNewIconUrl(), false);
-        if(g.getIdLong() == redimain) {
-        	g.getTextChannelById(redibotlog).sendMessage(eb.build()).queue();
-        }
+		sendMsg(eb, g);
 	}
 	
 	public void onGuildMemberUpdateBoostTime(GuildMemberUpdateBoostTimeEvent e) {
-		Guild g = e.getGuild();
 		Member m = e.getMember();
 		SimpleDateFormat time = new SimpleDateFormat("dd/MM/yy - HH:mm:ss");
         String stime = time.format(new Date());
@@ -435,9 +397,7 @@ public class GuildLogger extends ListenerAdapter{
     	List<Guild> guilds = e.getUser().getMutualGuilds();
 		if(!(guilds.isEmpty()) && !(e.getUser().isBot())) {
 			for(Guild guild : guilds) {
-				if(guild.getIdLong() == redimain) {
-					g.getTextChannelById(redibotlog).sendMessage(eb.build()).queue();
-				}
+				sendMsg(eb, guild);
 			}
 		}
 	}
@@ -457,9 +417,7 @@ public class GuildLogger extends ListenerAdapter{
     	eb.addField("Old Count", e.getOldBoostCount() + "", false);
     	eb.addField("New Count", e.getNewBoostCount() + "", false);
     	eb.setFooter(stime);
-        if(g.getIdLong() == redimain) {
-        	g.getTextChannelById(redibotlog).sendMessage(eb.build()).queue();
-        }
+    	sendMsg(eb, g);
 	}
 	
 	public void onTextChannelCreate(TextChannelCreateEvent e) {
@@ -474,9 +432,7 @@ public class GuildLogger extends ListenerAdapter{
     	eb.addField("ID:", e.getChannel().getIdLong() + "", false);
     	eb.setFooter(stime);
 		eb.setColor(green);
-        if(g.getIdLong() == redimain) {
-        	g.getTextChannelById(redibotlog).sendMessage(eb.build()).queue();
-        }
+		sendMsg(eb, g);
 	}
 	
 	public void onVoiceChannelCreate(VoiceChannelCreateEvent e) {
@@ -492,9 +448,7 @@ public class GuildLogger extends ListenerAdapter{
     	eb.addField("ID:", e.getChannel().getIdLong() + "", false);
     	eb.setFooter(stime);
 		eb.setColor(green);
-        if(g.getIdLong() == redimain) {
-        	g.getTextChannelById(redibotlog).sendMessage(eb.build()).queue();
-        }
+		sendMsg(eb, g);
 	}
 	
 	public void onTextChannelDelete(TextChannelDeleteEvent e) {
@@ -510,9 +464,7 @@ public class GuildLogger extends ListenerAdapter{
     	eb.addField("ID:", e.getChannel().getIdLong() + "", false);
     	eb.setFooter(stime);
 		eb.setColor(red);
-        if(g.getIdLong() == redimain) {
-        	g.getTextChannelById(redibotlog).sendMessage(eb.build()).queue();
-        }
+		sendMsg(eb, g);
 	}
 	
 	public void onVoiceChannelDelete(VoiceChannelDeleteEvent e) {
@@ -529,9 +481,7 @@ public class GuildLogger extends ListenerAdapter{
     	eb.addField("ID:", e.getChannel().getIdLong() + "", false);
     	eb.setFooter(stime);
 		eb.setColor(green);
-        if(g.getIdLong() == redimain) {
-        	g.getTextChannelById(redibotlog).sendMessage(eb.build()).queue();
-        }
+		sendMsg(eb, g);
 	}
 	
 	public void onTextChannelUpdateName(TextChannelUpdateNameEvent e) {
@@ -545,9 +495,7 @@ public class GuildLogger extends ListenerAdapter{
         eb.addField("New Name:", e.getNewName(), false);
         eb.setFooter(stime);
 		eb.setColor(orange);
-        if(g.getIdLong() == redimain) {
-        	g.getTextChannelById(redibotlog).sendMessage(eb.build()).queue();
-        }
+		sendMsg(eb, g);
 	}
 	
 	public void onVoiceChannelUpdateName(VoiceChannelUpdateNameEvent e) {
@@ -557,13 +505,11 @@ public class GuildLogger extends ListenerAdapter{
         EmbedBuilder eb = new EmbedBuilder();
         eb.setTitle("Voice channel has been updated.");
         eb.setDescription("Voicechannel: " + e.getChannel().getName());
-        eb.addField("Old Name:", e.getOldName(), false);
-        eb.addField("New Name:", e.getNewName(), false);
+        eb.addField("Old Name:", e.getOldName() + "", false);
+        eb.addField("New Name:", e.getNewName() + "", false);
         eb.setFooter(stime);
 		eb.setColor(orange);
-        if(g.getIdLong() == redimain) {
-        	g.getTextChannelById(redibotlog).sendMessage(eb.build()).queue();
-        }
+		sendMsg(eb, g);
 	}
 	
 	public void onTextChannelUpdateNSFFW(TextChannelUpdateNSFWEvent e) {
@@ -576,9 +522,7 @@ public class GuildLogger extends ListenerAdapter{
         eb.addField("Is NSFW:", e.getNewValue() + "", false);
         eb.setFooter(stime);
 		eb.setColor(orange);
-        if(g.getIdLong() == redimain) {
-        	g.getTextChannelById(redibotlog).sendMessage(eb.build()).queue();
-        }
+		sendMsg(eb, g);
 	}
 	
 	public void onVoiceChannelUpdateBitrate(VoiceChannelUpdateBitrateEvent e) {
@@ -592,9 +536,7 @@ public class GuildLogger extends ListenerAdapter{
         eb.addField("New Bitrate:", e.getNewBitrate() + " Bit", false);
         eb.setFooter(stime);
 		eb.setColor(orange);
-        if(g.getIdLong() == redimain) {
-        	g.getTextChannelById(redibotlog).sendMessage(eb.build()).queue();
-        }
+		sendMsg(eb, g);
 	}
 	
 	public void onTextChannelUpdateTopic(TextChannelUpdateTopicEvent e) {
@@ -604,13 +546,11 @@ public class GuildLogger extends ListenerAdapter{
         EmbedBuilder eb = new EmbedBuilder();
         eb.setTitle("Text channel has been updated.");
         eb.setDescription("Textchannel: " + e.getChannel().getAsMention());
-        eb.addField("Old Topic:", e.getOldTopic(), false);
-        eb.addField("New Topic:", e.getNewTopic(), false);
+        eb.addField("Old Topic:", e.getOldTopic() + "", false);
+        eb.addField("New Topic:", e.getNewTopic() + "", false);
         eb.setFooter(stime);
 		eb.setColor(orange);
-        if(g.getIdLong() == redimain) {
-        	g.getTextChannelById(redibotlog).sendMessage(eb.build()).queue();
-        }
+		sendMsg(eb, g);
 	}
 	
 	public void onVoiceChannelUpdateUserLimit(VoiceChannelUpdateUserLimitEvent e) {
@@ -624,9 +564,7 @@ public class GuildLogger extends ListenerAdapter{
         eb.addField("New Limit:", e.getNewUserLimit() + " Users", false);
         eb.setFooter(stime);
 		eb.setColor(orange);
-        if(g.getIdLong() == redimain) {
-        	g.getTextChannelById(redibotlog).sendMessage(eb.build()).queue();
-        }
+		sendMsg(eb, g);
 	}
 	
 	public void onTextChannelUpdateSlowmode(TextChannelUpdateSlowmodeEvent e) {
@@ -640,9 +578,7 @@ public class GuildLogger extends ListenerAdapter{
         eb.addField("New Slowmode:", e.getNewSlowmode() + " seconds", false);
         eb.setFooter(stime);
 		eb.setColor(orange);
-        if(g.getIdLong() == redimain) {
-        	g.getTextChannelById(redibotlog).sendMessage(eb.build()).queue();
-        }
+		sendMsg(eb, g);
 	}
 	
 	public void onCategoryUpdateName(CategoryUpdateNameEvent e) {
@@ -652,13 +588,11 @@ public class GuildLogger extends ListenerAdapter{
         EmbedBuilder eb = new EmbedBuilder();
         eb.setTitle("Category has been updated.");
         eb.setDescription("Category: " + e.getCategory().getName());
-        eb.addField("Old Name:", e.getOldName(), false);
-        eb.addField("New Name:", e.getNewName(), false);
+        eb.addField("Old Name:", e.getOldName() + "", false);
+        eb.addField("New Name:", e.getNewName() + "", false);
         eb.setFooter(stime);
 		eb.setColor(orange);
-        if(g.getIdLong() == redimain) {
-        	g.getTextChannelById(redibotlog).sendMessage(eb.build()).queue();
-        }
+		sendMsg(eb, g);
 	}
 	
 	public void onEmoteAdded(EmoteAddedEvent e) {
@@ -671,9 +605,7 @@ public class GuildLogger extends ListenerAdapter{
         eb.addField("Name:", e.getEmote().getName(), false);
         eb.setFooter(stime);
 		eb.setColor(green);
-        if(g.getIdLong() == redimain) {
-        	g.getTextChannelById(redibotlog).sendMessage(eb.build()).queue();
-        }
+        sendMsg(eb, g);
 	}
 	
 	public void onEmoteRemoved(EmoteRemovedEvent e) {
@@ -686,9 +618,7 @@ public class GuildLogger extends ListenerAdapter{
         eb.addField("Name:", e.getEmote().getName(), false);
         eb.setFooter(stime);
 		eb.setColor(red);
-        if(g.getIdLong() == redimain) {
-        	g.getTextChannelById(redibotlog).sendMessage(eb.build()).queue();
-        }
+		sendMsg(eb, g);
 	}
 	
 	public void onEmoteUpdateNameEvent(EmoteUpdateNameEvent e) {
@@ -702,15 +632,13 @@ public class GuildLogger extends ListenerAdapter{
         eb.addField("New Name:", e.getNewName(), false);
         eb.setFooter(stime);
 		eb.setColor(orange);
-        if(g.getIdLong() == redimain) {
-        	g.getTextChannelById(redibotlog).sendMessage(eb.build()).queue();
-        }
+		sendMsg(eb, g);
 	}
 	
 	public void onGuildMessageReceived(GuildMessageReceivedEvent e) {
 		Guild g = e.getGuild();
-		if(g.getIdLong() == redimain) {
-			insertMsg(g.getIdLong(), e.getMessageIdLong(), e.getMessage().getContentStripped());
+		if(!e.getAuthor().isBot() || !e.getAuthor().isFake() || !e.isWebhookMessage()) {
+			insertMsg(g.getIdLong(), e.getMessageIdLong(), e.getMessage().getContentDisplay().toString());
 		}
 	}
 	
@@ -726,9 +654,7 @@ public class GuildLogger extends ListenerAdapter{
         eb.addField("New Message:", e.getMessage().getContentStripped(), false);
         eb.setFooter(stime);
 		eb.setColor(orange);
-		if(g.getIdLong() == redimain) {
-        	g.getTextChannelById(redibotlog).sendMessage(eb.build()).queue();
-        }
+		sendMsg(eb, g);
 	}
 	
 	public void onGuildMessageDelete(GuildMessageDeleteEvent e) {
@@ -741,9 +667,7 @@ public class GuildLogger extends ListenerAdapter{
         eb.addField("Message:", retMsg(g.getIdLong(), e.getMessageIdLong()), false);
         eb.setFooter(stime);
 		eb.setColor(orange);
-		if(g.getIdLong() == redimain) {
-        	g.getTextChannelById(redibotlog).sendMessage(eb.build()).queue();
-        }
+		sendMsg(eb, g);
 	}
 	
 	private void insertMsg(long guildid, long msgid, String msgtxt) {
@@ -772,8 +696,6 @@ public class GuildLogger extends ListenerAdapter{
 				ResultSet rs = ps.executeQuery();
 				rs.next();
 				msg = rs.getString("msgtxt");
-				rs.close();
-				ps.close();
 			}else {
 				msg = "This message doesn't exists in the Database!";
 			}
@@ -781,5 +703,27 @@ public class GuildLogger extends ListenerAdapter{
 			e.printStackTrace();
 		}
 		return msg;
+	}
+	
+	private void sendMsg(EmbedBuilder eb, Guild g) {
+		try {
+			PreparedStatement ps = MySQL.getConnection().prepareStatement("SELECT * FROM redibot_guildlog");
+			ResultSet rs = ps.executeQuery();
+			long guildid = g.getIdLong();
+			while(rs.next()) {
+				long saveguildid = rs.getLong("guildid");
+				long savetxtchan = rs.getLong("channelid");
+				if(guildid == saveguildid) {
+					TextChannel chan = g.getTextChannelById(savetxtchan);
+					chan.sendMessage(eb.build()).queue();
+				}
+			}
+		}catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private String hexCol(int color) {
+		return String.format("#%06X", (0xFFFFFF & color)).toLowerCase();
 	}
 }
