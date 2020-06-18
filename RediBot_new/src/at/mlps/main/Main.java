@@ -34,7 +34,6 @@ public class Main implements EventListener{
 	public static String DB = "RediCraft";
 	public static String user = "mauriceb";
 	public static String pw = "MauriceB2400";
-	static int maxshard = 10;
 	public static Main instance;
 	public static MySQL mysql;
 	
