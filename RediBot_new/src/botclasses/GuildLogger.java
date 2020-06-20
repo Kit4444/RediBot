@@ -23,17 +23,22 @@ import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.events.ReadyEvent;
+import net.dv8tion.jda.api.events.channel.category.CategoryCreateEvent;
+import net.dv8tion.jda.api.events.channel.category.CategoryDeleteEvent;
 import net.dv8tion.jda.api.events.channel.category.update.CategoryUpdateNameEvent;
+import net.dv8tion.jda.api.events.channel.category.update.CategoryUpdatePositionEvent;
 import net.dv8tion.jda.api.events.channel.text.TextChannelCreateEvent;
 import net.dv8tion.jda.api.events.channel.text.TextChannelDeleteEvent;
 import net.dv8tion.jda.api.events.channel.text.update.TextChannelUpdateNSFWEvent;
 import net.dv8tion.jda.api.events.channel.text.update.TextChannelUpdateNameEvent;
+import net.dv8tion.jda.api.events.channel.text.update.TextChannelUpdateParentEvent;
 import net.dv8tion.jda.api.events.channel.text.update.TextChannelUpdateSlowmodeEvent;
 import net.dv8tion.jda.api.events.channel.text.update.TextChannelUpdateTopicEvent;
 import net.dv8tion.jda.api.events.channel.voice.VoiceChannelCreateEvent;
 import net.dv8tion.jda.api.events.channel.voice.VoiceChannelDeleteEvent;
 import net.dv8tion.jda.api.events.channel.voice.update.VoiceChannelUpdateBitrateEvent;
 import net.dv8tion.jda.api.events.channel.voice.update.VoiceChannelUpdateNameEvent;
+import net.dv8tion.jda.api.events.channel.voice.update.VoiceChannelUpdateParentEvent;
 import net.dv8tion.jda.api.events.channel.voice.update.VoiceChannelUpdateUserLimitEvent;
 import net.dv8tion.jda.api.events.emote.EmoteAddedEvent;
 import net.dv8tion.jda.api.events.emote.EmoteRemovedEvent;
@@ -41,6 +46,8 @@ import net.dv8tion.jda.api.events.emote.update.EmoteUpdateNameEvent;
 import net.dv8tion.jda.api.events.guild.GuildJoinEvent;
 import net.dv8tion.jda.api.events.guild.GuildLeaveEvent;
 import net.dv8tion.jda.api.events.guild.GuildUnavailableEvent;
+import net.dv8tion.jda.api.events.guild.invite.GuildInviteCreateEvent;
+import net.dv8tion.jda.api.events.guild.invite.GuildInviteDeleteEvent;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberRemoveEvent;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberRoleAddEvent;
@@ -48,13 +55,24 @@ import net.dv8tion.jda.api.events.guild.member.GuildMemberRoleRemoveEvent;
 import net.dv8tion.jda.api.events.guild.member.update.GuildMemberUpdateBoostTimeEvent;
 import net.dv8tion.jda.api.events.guild.member.update.GuildMemberUpdateNicknameEvent;
 import net.dv8tion.jda.api.events.guild.update.GuildUpdateBoostCountEvent;
+import net.dv8tion.jda.api.events.guild.update.GuildUpdateBoostTierEvent;
+import net.dv8tion.jda.api.events.guild.update.GuildUpdateExplicitContentLevelEvent;
 import net.dv8tion.jda.api.events.guild.update.GuildUpdateIconEvent;
+import net.dv8tion.jda.api.events.guild.update.GuildUpdateNameEvent;
+import net.dv8tion.jda.api.events.guild.update.GuildUpdateOwnerEvent;
+import net.dv8tion.jda.api.events.guild.update.GuildUpdateRegionEvent;
+import net.dv8tion.jda.api.events.guild.update.GuildUpdateVerificationLevelEvent;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageDeleteEvent;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageUpdateEvent;
+import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent;
+import net.dv8tion.jda.api.events.role.RoleCreateEvent;
+import net.dv8tion.jda.api.events.role.RoleDeleteEvent;
 import net.dv8tion.jda.api.events.role.update.RoleUpdateColorEvent;
 import net.dv8tion.jda.api.events.role.update.RoleUpdateHoistedEvent;
+import net.dv8tion.jda.api.events.role.update.RoleUpdateMentionableEvent;
 import net.dv8tion.jda.api.events.role.update.RoleUpdateNameEvent;
+import net.dv8tion.jda.api.events.role.update.RoleUpdatePositionEvent;
 import net.dv8tion.jda.api.events.user.update.UserUpdateAvatarEvent;
 import net.dv8tion.jda.api.events.user.update.UserUpdateDiscriminatorEvent;
 import net.dv8tion.jda.api.events.user.update.UserUpdateNameEvent;
@@ -155,12 +173,7 @@ public class GuildLogger extends ListenerAdapter{
 		eb.addField("New Nick:", e.getNewNickname() + " ", false);
 		eb.setColor(orange);
 		eb.setFooter(stime, g.getIconUrl());
-		List<Guild> guilds = e.getUser().getMutualGuilds();
-		if(!(guilds.isEmpty()) && !(e.getUser().isBot())) {
-			for(Guild guild : guilds) {
-				sendMsg(eb, guild);
-			}
-		}
+		sendMsg(eb, g);
 	}
 	
 	public void onGuildMemberRoleAdd(GuildMemberRoleAddEvent e) {
@@ -171,7 +184,16 @@ public class GuildLogger extends ListenerAdapter{
         EmbedBuilder eb = new EmbedBuilder();
 		eb.setTitle("Role add");
 		eb.setColor(orange);
-		eb.setDescription("User: " + m.getAsMention() + "\nRole added: " + e.getRoles().get(0).getName());
+		if(e.getRoles().size() == 1) {
+			eb.setDescription("User: " + m.getAsMention() + "\nRole added: " + e.getRoles().get(0).getName());
+		}else {
+			StringBuilder sb = new StringBuilder();
+			for(Role r : e.getRoles()) {
+				sb.append(r.getName());
+				sb.append(", ");
+			}
+			eb.setDescription("User: " + m.getAsMention() + "\nRoles added: " + sb.toString());
+		}
 		eb.setFooter(stime, g.getIconUrl());
 		if(g.getIdLong() == redimain) {
 			Role guest = e.getGuild().getRoleById(651569972920713226L);
@@ -179,8 +201,8 @@ public class GuildLogger extends ListenerAdapter{
 			if(m.getRoles().contains(player)) {
 				g.removeRoleFromMember(m, guest).complete();
 			}
-			sendMsg(eb, g);
 		}
+		sendMsg(eb, g);
 	}
 	
 	public void onGuildMemberRoleRemove(GuildMemberRoleRemoveEvent e) {
@@ -191,9 +213,47 @@ public class GuildLogger extends ListenerAdapter{
         EmbedBuilder eb = new EmbedBuilder();
 		eb.setTitle("Role remove");
 		eb.setColor(orange);
-		eb.setDescription("User: " + m.getAsMention() + "\nRole removed: " + e.getRoles().get(0).getName());
+		if(e.getRoles().size() == 1) {
+			eb.setDescription("User: " + m.getAsMention() + "\nRole removed: " + e.getRoles().get(0).getName());
+		}else {
+			StringBuilder sb = new StringBuilder();
+			for(Role r : e.getRoles()) {
+				sb.append(r.getName());
+				sb.append(", ");
+			}
+			eb.setDescription("User: " + m.getAsMention() + "\nRoles removed: " + sb.toString());
+		}
 		eb.setFooter(stime, g.getIconUrl());
 		sendMsg(eb, g);
+	}
+	
+	public void onRoleCreate(RoleCreateEvent e) {
+		Guild g = e.getGuild();
+		SimpleDateFormat time = new SimpleDateFormat("dd/MM/yy - HH:mm:ss");
+        String stime = time.format(new Date());
+        EmbedBuilder eb = new EmbedBuilder();
+        eb.setTitle("Role has been created.");
+        eb.addField("Name:", e.getRole().getName(), false);
+        eb.addField("ID:", e.getRole().getIdLong() + "", false);
+        eb.addField("Permissions:", e.getRole().getPermissionsRaw() + "", false);
+        eb.setFooter(stime);
+		eb.setColor(green);
+        sendMsg(eb, g);
+	}
+	
+	public void onRoleDelete(RoleDeleteEvent e) {
+		Guild g = e.getGuild();
+		SimpleDateFormat time = new SimpleDateFormat("dd/MM/yy - HH:mm:ss");
+        String stime = time.format(new Date());
+        EmbedBuilder eb = new EmbedBuilder();
+        eb.setTitle("Role has been deleted.");
+        eb.addField("Name:", e.getRole().getName(), false);
+        eb.addField("ID:", e.getRole().getIdLong() + "", false);
+        eb.addField("Creationdate:", retDate(e.getRole().getTimeCreated()), false);
+        eb.addField("Permissions:", e.getRole().getPermissionsRaw() + "", false);
+        eb.setFooter(stime);
+		eb.setColor(green);
+        sendMsg(eb, g);
 	}
 	
 	public void onRoleUpdateColor(RoleUpdateColorEvent e) {
@@ -228,6 +288,30 @@ public class GuildLogger extends ListenerAdapter{
 		eb.setTitle("Role Update");
 		eb.setColor(orange);
 		eb.setDescription("Role: ``" + e.getRole().getName() + "``\nHoisted: ``" + e.getNewValue() + "``");
+		eb.setFooter(stime, g.getIconUrl());
+		sendMsg(eb, g);
+	}
+	
+	public void onRoleUpdateMentionable(RoleUpdateMentionableEvent e) {
+		Guild g = e.getGuild();
+		SimpleDateFormat time = new SimpleDateFormat("dd/MM/yy - HH:mm:ss");
+        String stime = time.format(new Date());
+        EmbedBuilder eb = new EmbedBuilder();
+		eb.setTitle("Role Update");
+		eb.setColor(orange);
+		eb.setDescription("Role: ``" + e.getRole().getName() + "``\nMentionable: ``" + e.getNewValue() + "``");
+		eb.setFooter(stime, g.getIconUrl());
+		sendMsg(eb, g);
+	}
+	
+	public void onRoleUpdatePosition(RoleUpdatePositionEvent e) {
+		Guild g = e.getGuild();
+		SimpleDateFormat time = new SimpleDateFormat("dd/MM/yy - HH:mm:ss");
+        String stime = time.format(new Date());
+        EmbedBuilder eb = new EmbedBuilder();
+		eb.setTitle("Role Update");
+		eb.setColor(orange);
+		eb.setDescription("Role: ``" + e.getRole().getName() + "``\nOld Position: ``" + e.getOldPosition() + "\n``New Position: ``" + e.getNewPosition() + "``");
 		eb.setFooter(stime, g.getIconUrl());
 		sendMsg(eb, g);
 	}
@@ -383,8 +467,65 @@ public class GuildLogger extends ListenerAdapter{
 		sendMsg(eb, g);
 	}
 	
+	public void onGuildUpdateName(GuildUpdateNameEvent e) {
+		Guild g = e.getGuild();
+		SimpleDateFormat time = new SimpleDateFormat("dd/MM/yy - HH:mm:ss");
+        String stime = time.format(new Date());
+        EmbedBuilder eb = new EmbedBuilder();
+    	eb.setTitle("Guild has been updated");
+		eb.setColor(green);
+    	eb.setDescription("The guild has now a new name.");
+    	eb.addField("Old Name:", e.getOldName(), false);
+    	eb.addField("New Name:", e.getNewName(), false);
+    	eb.setFooter(stime);
+    	sendMsg(eb, g);
+	}
+	
+	public void onGuildUpdateExplicitContentLevel(GuildUpdateExplicitContentLevelEvent e) {
+		Guild g = e.getGuild();
+		SimpleDateFormat time = new SimpleDateFormat("dd/MM/yy - HH:mm:ss");
+        String stime = time.format(new Date());
+        EmbedBuilder eb = new EmbedBuilder();
+    	eb.setTitle("Guild has been updated");
+		eb.setColor(green);
+    	eb.setDescription("The guild has now a new explicit content level.");
+    	eb.addField("Old ECL:", e.getOldLevel().getDescription(), false);
+    	eb.addField("New ECL:", e.getNewLevel().getDescription(), false);
+    	eb.setFooter(stime);
+    	sendMsg(eb, g);
+	}
+	
+	public void onGuildUpdateRegion(GuildUpdateRegionEvent e) {
+		Guild g = e.getGuild();
+		SimpleDateFormat time = new SimpleDateFormat("dd/MM/yy - HH:mm:ss");
+        String stime = time.format(new Date());
+        EmbedBuilder eb = new EmbedBuilder();
+    	eb.setTitle("Guild has been updated");
+		eb.setColor(green);
+    	eb.setDescription("The guild is now in a new region.");
+    	eb.addField("Old Region:", e.getOldRegion().getName(), false);
+    	eb.addField("New Region:", e.getNewRegion().getName(), false);
+    	eb.setFooter(stime);
+    	sendMsg(eb, g);
+	}
+	
+	public void onGuildUpdateVerificationLevel(GuildUpdateVerificationLevelEvent e) {
+		Guild g = e.getGuild();
+		SimpleDateFormat time = new SimpleDateFormat("dd/MM/yy - HH:mm:ss");
+        String stime = time.format(new Date());
+        EmbedBuilder eb = new EmbedBuilder();
+    	eb.setTitle("Guild has been updated");
+		eb.setColor(green);
+    	eb.setDescription("The guild has now a new verification level.");
+    	eb.addField("Old VL:", e.getOldValue().toString(), false);
+    	eb.addField("New VL:", e.getNewValue().toString(), false);
+    	eb.setFooter(stime);
+    	sendMsg(eb, g);
+	}
+	
 	public void onGuildMemberUpdateBoostTime(GuildMemberUpdateBoostTimeEvent e) {
 		Member m = e.getMember();
+		Guild g = e.getGuild();
 		SimpleDateFormat time = new SimpleDateFormat("dd/MM/yy - HH:mm:ss");
         String stime = time.format(new Date());
         EmbedBuilder eb = new EmbedBuilder();
@@ -394,12 +535,7 @@ public class GuildLogger extends ListenerAdapter{
     	eb.addField("New Time", retDate(e.getNewTimeBoosted()), false);
     	eb.setFooter(stime);
 		eb.setColor(green);
-    	List<Guild> guilds = e.getUser().getMutualGuilds();
-		if(!(guilds.isEmpty()) && !(e.getUser().isBot())) {
-			for(Guild guild : guilds) {
-				sendMsg(eb, guild);
-			}
-		}
+		sendMsg(eb, g);
 	}
 	
 	private String retDate(OffsetDateTime odt) {
@@ -416,6 +552,66 @@ public class GuildLogger extends ListenerAdapter{
     	eb.setDescription("The Boostcount has been changed.");
     	eb.addField("Old Count", e.getOldBoostCount() + "", false);
     	eb.addField("New Count", e.getNewBoostCount() + "", false);
+    	eb.setFooter(stime);
+    	sendMsg(eb, g);
+	}
+	
+	public void onGuildUpdateBoostTier(GuildUpdateBoostTierEvent e) {
+		Guild g = e.getGuild();
+		SimpleDateFormat time = new SimpleDateFormat("dd/MM/yy - HH:mm:ss");
+        String stime = time.format(new Date());
+        EmbedBuilder eb = new EmbedBuilder();
+    	eb.setTitle("New Boost Count");
+		eb.setColor(green);
+    	eb.setDescription("The Boostcount has been changed.");
+    	eb.addField("Old Values", "Max. Bitrate: " + e.getOldBoostTier().getMaxBitrate() + "\nMax. Emotes: " + e.getOldBoostTier().getMaxEmotes() + "\nMax. Filesize: " + e.getOldBoostTier().getMaxFileSize(), false);
+    	eb.addField("New Count", "Max. Bitrate: " + e.getNewBoostTier().getMaxBitrate() + "\nMax. Emotes: " + e.getNewBoostTier().getMaxEmotes() + "\nMax. Filesize: " + e.getNewBoostTier().getMaxFileSize(), false);
+    	eb.setFooter(stime);
+    	sendMsg(eb, g);
+	}
+	
+	public void onGuildUpdateOwner(GuildUpdateOwnerEvent e) {
+		Guild g = e.getGuild();
+		SimpleDateFormat time = new SimpleDateFormat("dd/MM/yy - HH:mm:ss");
+        String stime = time.format(new Date());
+        EmbedBuilder eb = new EmbedBuilder();
+    	eb.setTitle("Guild has been updated");
+		eb.setColor(green);
+    	eb.setDescription("The guild has now a new owner.");
+    	eb.addField("Old Owner:", e.getOldOwner().getAsMention() + " / " + e.getOldOwner().getUser().getName() + "#" + e.getOldOwner().getUser().getDiscriminator(), false);
+    	eb.addField("New Owner:", e.getNewOwner().getAsMention() + " / " + e.getNewOwner().getUser().getName() + "#" + e.getNewOwner().getUser().getDiscriminator(), false);
+    	eb.setFooter(stime);
+    	sendMsg(eb, g);
+	}
+	
+	public void onGuildInviteCreate(GuildInviteCreateEvent e) {
+		Guild g = e.getGuild();
+		SimpleDateFormat time = new SimpleDateFormat("dd/MM/yy - HH:mm:ss");
+        String stime = time.format(new Date());
+        EmbedBuilder eb = new EmbedBuilder();
+    	eb.setTitle("Guild has a new Invite");
+		eb.setColor(green);
+    	eb.setDescription("The guild has a new invite.");
+    	eb.addField("InviteURL:", e.getInvite().getUrl(), false);
+    	eb.addField("Inviter:", e.getInvite().getInviter().getName() + "#" + e.getInvite().getInviter().getDiscriminator(), false);
+    	eb.addField("Max Uses:", e.getInvite().getMaxUses() + " ", false);
+    	eb.addField("Channel:", "Name: " + e.getInvite().getChannel().getName() + "\nChanneltype: " + e.getInvite().getChannel().getType().toString(), false);
+    	eb.addField("Creation Date:", retDate(e.getInvite().getTimeCreated()), false);
+    	eb.addField("Time Valid:", e.getInvite().getMaxAge() + " seconds", false);
+    	eb.addField("Current Uses: ", e.getInvite().getUses() + " ", false);
+    	eb.setFooter(stime);
+    	sendMsg(eb, g);
+	}
+	
+	public void onGuildInviteDelete(GuildInviteDeleteEvent e) {
+		Guild g = e.getGuild();
+		SimpleDateFormat time = new SimpleDateFormat("dd/MM/yy - HH:mm:ss");
+        String stime = time.format(new Date());
+        EmbedBuilder eb = new EmbedBuilder();
+    	eb.setTitle("Guild has now an invite less.");
+		eb.setColor(green);
+    	eb.setDescription("The guild has now lost an invite.");
+    	eb.addField("InviteURL:", e.getUrl(), false);
     	eb.setFooter(stime);
     	sendMsg(eb, g);
 	}
@@ -581,6 +777,34 @@ public class GuildLogger extends ListenerAdapter{
 		sendMsg(eb, g);
 	}
 	
+	public void onVoiceChannelUpdateParent(VoiceChannelUpdateParentEvent e) {
+		Guild g = e.getGuild();
+		SimpleDateFormat time = new SimpleDateFormat("dd/MM/yy - HH:mm:ss");
+        String stime = time.format(new Date());
+        EmbedBuilder eb = new EmbedBuilder();
+        eb.setTitle("Voice channel has been moved.");
+        eb.setDescription("Voicechannel: " + e.getChannel().getName());
+        eb.addField("Old Parent:", e.getOldParent().getName(), false);
+        eb.addField("New Parent:", e.getNewParent().getName(), false);
+        eb.setFooter(stime);
+		eb.setColor(orange);
+		sendMsg(eb, g);
+	}
+	
+	public void onTextChannelUpdateParent(TextChannelUpdateParentEvent e) {
+		Guild g = e.getGuild();
+		SimpleDateFormat time = new SimpleDateFormat("dd/MM/yy - HH:mm:ss");
+        String stime = time.format(new Date());
+        EmbedBuilder eb = new EmbedBuilder();
+        eb.setTitle("Text channel has been moved.");
+        eb.setDescription("Textchannel: " + e.getChannel().getAsMention());
+        eb.addField("Old Parent:", e.getOldParent().getName(), false);
+        eb.addField("New Parent:", e.getNewParent().getName(), false);
+        eb.setFooter(stime);
+		eb.setColor(orange);
+		sendMsg(eb, g);
+	}
+	
 	public void onCategoryUpdateName(CategoryUpdateNameEvent e) {
 		Guild g = e.getGuild();
 		SimpleDateFormat time = new SimpleDateFormat("dd/MM/yy - HH:mm:ss");
@@ -590,6 +814,52 @@ public class GuildLogger extends ListenerAdapter{
         eb.setDescription("Category: " + e.getCategory().getName());
         eb.addField("Old Name:", e.getOldName() + "", false);
         eb.addField("New Name:", e.getNewName() + "", false);
+        eb.setFooter(stime);
+		eb.setColor(orange);
+		sendMsg(eb, g);
+	}
+	
+	public void onCategoryUpdateName(CategoryUpdatePositionEvent e) {
+		Guild g = e.getGuild();
+		SimpleDateFormat time = new SimpleDateFormat("dd/MM/yy - HH:mm:ss");
+        String stime = time.format(new Date());
+        EmbedBuilder eb = new EmbedBuilder();
+        eb.setTitle("Category has been moved.");
+        eb.setDescription("Category: " + e.getCategory().getName());
+        eb.addField("Old Position:", e.getCategory().getParent().getName() + " / " + e.getOldPosition(), false);
+        eb.addField("New Position:", e.getCategory().getParent().getName() + " / " + e.getNewPosition(), false);
+        eb.setFooter(stime);
+		eb.setColor(orange);
+		sendMsg(eb, g);
+	}
+	
+	public void onCategoryCreate(CategoryCreateEvent e) {
+		Guild g = e.getGuild();
+		SimpleDateFormat time = new SimpleDateFormat("dd/MM/yy - HH:mm:ss");
+        String stime = time.format(new Date());
+        EmbedBuilder eb = new EmbedBuilder();
+        eb.setTitle("Category has been created.");
+        eb.setDescription("Category: " + e.getCategory().getName());
+        eb.addField("Name:", e.getCategory().getName() + "", false);
+        eb.addField("ID:", e.getIdLong() + " ", false);
+        eb.addField("Parent:", e.getCategory().getParent().getName(), false);
+        eb.setFooter(stime);
+		eb.setColor(orange);
+		sendMsg(eb, g);
+	}
+	
+	public void onCategoryDelete(CategoryDeleteEvent e) {
+		Guild g = e.getGuild();
+		SimpleDateFormat time = new SimpleDateFormat("dd/MM/yy - HH:mm:ss");
+        String stime = time.format(new Date());
+        EmbedBuilder eb = new EmbedBuilder();
+        eb.setTitle("Category has been deleted.");
+        eb.setDescription("Category: " + e.getCategory().getName());
+        eb.addField("Name:", e.getCategory().getName() + "", false);
+        eb.addField("ID:", e.getIdLong() + " ", false);
+        eb.addField("Parent:", e.getCategory().getParent().getName(), false);
+        eb.addField("Creation Date:", retDate(e.getCategory().getTimeCreated()), false);
+        eb.addField("Channels:", "Textchannels: " + e.getCategory().getTextChannels().size() + "\nVoicechannels: " + e.getCategory().getVoiceChannels().size(), false);
         eb.setFooter(stime);
 		eb.setColor(orange);
 		sendMsg(eb, g);
@@ -654,7 +924,9 @@ public class GuildLogger extends ListenerAdapter{
         eb.addField("New Message:", e.getMessage().getContentStripped(), false);
         eb.setFooter(stime);
 		eb.setColor(orange);
-		sendMsg(eb, g);
+		if(!e.getAuthor().isBot() || !e.getAuthor().isFake()) {
+			sendMsg(eb, g);
+		}
 	}
 	
 	public void onGuildMessageDelete(GuildMessageDeleteEvent e) {
@@ -668,6 +940,24 @@ public class GuildLogger extends ListenerAdapter{
         eb.setFooter(stime);
 		eb.setColor(orange);
 		sendMsg(eb, g);
+	}
+	
+	public void onPrivateMessageReceived(PrivateMessageReceivedEvent e) {
+		SimpleDateFormat time = new SimpleDateFormat("dd/MM/yy - HH:mm:ss");
+        String stime = time.format(new Date());
+        EmbedBuilder eb = new EmbedBuilder();
+        eb.setTitle("New Private Message received");
+        StringBuilder sb = new StringBuilder();
+        for(Guild g : e.getJDA().getMutualGuilds(e.getAuthor())) {
+        	sb.append(g.getName());
+        	sb.append(", ");
+        }
+        eb.setDescription("Author: " + e.getAuthor().getName() + "#" + e.getAuthor().getDiscriminator());
+        eb.addField("Message:", e.getMessage().getContentRaw(), false);
+        eb.addField("Mutual Guilds:", sb.toString() + " ", false);
+        eb.setImage(e.getAuthor().getAvatarUrl());
+        eb.setFooter(stime);
+        e.getJDA().getGuildById(rediassetg).getTextChannelById(rediassetlog).sendMessage(eb.build()).queue();
 	}
 	
 	private void insertMsg(long guildid, long msgid, String msgtxt) {
