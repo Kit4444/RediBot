@@ -24,19 +24,12 @@ public class FAQ extends ListenerAdapter{
 				TextChannel faqchannel = e.getGuild().getTextChannelById(548187217726537738L);
 				if(e.getMember().getRoles().contains(pm)) {
 					setEmbed_hierarchy(faqchannel);
-					try { Thread.sleep(2000); } catch (InterruptedException e1) { e1.printStackTrace(); }
 					setEmbed_invite(faqchannel);
-					try { Thread.sleep(2000); } catch (InterruptedException e1) { e1.printStackTrace(); }
 					setEmbed_partnerships(faqchannel);
-					try { Thread.sleep(2000); } catch (InterruptedException e1) { e1.printStackTrace(); }
 					setEmbed_beta(faqchannel);
-					try { Thread.sleep(2000); } catch (InterruptedException e1) { e1.printStackTrace(); }
 					setEmbed_platform(faqchannel);
-					try { Thread.sleep(2000); } catch (InterruptedException e1) { e1.printStackTrace(); }
 					setEmbed_report(faqchannel);
-					try { Thread.sleep(2000); } catch (InterruptedException e1) { e1.printStackTrace(); }
 					setEmbed_serverinfo(faqchannel);
-					try { Thread.sleep(2000); } catch (InterruptedException e1) { e1.printStackTrace(); }
 					setEmbed_apply(faqchannel);
 				}
 			}else {
@@ -50,11 +43,8 @@ public class FAQ extends ListenerAdapter{
 				TextChannel ruleschannel = e.getGuild().getTextChannelById(548187134687838218L);
 				if(e.getMember().getRoles().contains(pm)) {
 					setRulesEmbed_1(ruleschannel);
-					try { Thread.sleep(2000); } catch (InterruptedException e1) { e1.printStackTrace(); }
 					setRulesEmbed_2(ruleschannel);
-					try { Thread.sleep(2000); } catch (InterruptedException e1) { e1.printStackTrace(); }
 					setRulesEmbed_3(ruleschannel);
-					try { Thread.sleep(2000); } catch (InterruptedException e1) { e1.printStackTrace(); }
 					setRulesEmbed_4(ruleschannel);	
 				}
 			}else {
@@ -183,10 +173,10 @@ public class FAQ extends ListenerAdapter{
 				"If you want to contact any staff private, please ask for permission to do that. If this permission is not granted, this decision is final!\r\n" + 
 				"Violating this decision may cause a warn!\r\n" + 
 				"Please have also a look at staff´s online-status:\r\n" + 
-				"Green = Available\r\n" + 
-				"Yellow = Absent/AFK - an answer might take a while\r\n" + 
-				"Red = Do not disturb\r\n" + 
-				"Grey = Offline, invisible or do not disturb", false);
+				"<:online:671772876482936862> = Available\r\n" + 
+				"<:idle:671772876449251383> = Absent/AFK - an answer might take a while\r\n" + 
+				"<:dnd:708982976838369320> = Do not disturb\r\n" + 
+				"<:offline:671772876499582996> = Offline, invisible or do not disturb", false);
 		eb.addField("§10 Staff instructions:", "Staff instructions are absolutely to obey.\r\n" + 
 				"Muting staffs or ignoring staff instructions is not allowed.\r\n" + 
 				"Provoking staff-members or other users is to avoid.\r\n" + 
