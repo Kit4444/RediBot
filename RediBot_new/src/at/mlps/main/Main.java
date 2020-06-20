@@ -26,6 +26,8 @@ import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.events.GenericEvent;
 import net.dv8tion.jda.api.hooks.EventListener;
+import net.dv8tion.jda.api.requests.GatewayIntent;
+import net.dv8tion.jda.api.utils.MemberCachePolicy;
 
 public class Main implements EventListener{
 	
@@ -139,6 +141,16 @@ public class Main implements EventListener{
 			builder.setStatus(OnlineStatus.DO_NOT_DISTURB);
 			builder.setActivity(Activity.watching("the DB connection"));
 		}
+		builder.enableIntents(GatewayIntent.GUILD_MEMBERS);
+		builder.enableIntents(GatewayIntent.GUILD_BANS);
+		builder.enableIntents(GatewayIntent.GUILD_EMOJIS);
+		builder.enableIntents(GatewayIntent.GUILD_INVITES);
+		builder.enableIntents(GatewayIntent.GUILD_MESSAGE_REACTIONS);
+		builder.enableIntents(GatewayIntent.GUILD_MESSAGES);
+		builder.enableIntents(GatewayIntent.GUILD_PRESENCES);
+		builder.enableIntents(GatewayIntent.GUILD_VOICE_STATES);
+		builder.enableIntents(GatewayIntent.DIRECT_MESSAGES);
+		builder.setMemberCachePolicy(MemberCachePolicy.ALL);
 		builder.addEventListeners(new LOA());
 		builder.addEventListeners(new PurgeCommand());
 		builder.addEventListeners(new Serverinfo());
