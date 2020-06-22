@@ -1,4 +1,4 @@
-package botclasses;
+package at.mlps.botclasses.commands;
 
 import at.mlps.main.Main;
 import net.dv8tion.jda.api.entities.Guild;

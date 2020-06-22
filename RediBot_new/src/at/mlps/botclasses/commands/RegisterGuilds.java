@@ -1,4 +1,4 @@
-package botclasses;
+package at.mlps.botclasses.commands;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;

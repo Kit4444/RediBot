@@ -1,4 +1,4 @@
-package botclasses;
+package at.mlps.botclasses.commands;
 
 import java.time.OffsetDateTime;
 import java.time.temporal.ChronoUnit;

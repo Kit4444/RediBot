@@ -1,4 +1,4 @@
-package botclasses;
+package at.mlps.botclasses.commands;
 
 import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;

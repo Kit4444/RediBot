@@ -1,4 +1,4 @@
-package botclasses;
+package at.mlps.botclasses.guildlogging;
 
 import java.awt.Color;
 import java.io.IOException;
