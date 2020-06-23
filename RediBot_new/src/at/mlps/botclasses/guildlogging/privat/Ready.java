@@ -2,15 +2,16 @@ package at.mlps.botclasses.guildlogging.privat;
 
 import java.awt.Color;
 
-import at.mlps.botclasses.guildlogging.GuildLogger;
+import at.mlps.botclasses.guildlogging.guild.GuildLogEvents;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.ReadyEvent;
+import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
-public class Ready {
+public class Ready extends ListenerAdapter{
 	
 	public void onReady(ReadyEvent e) {
 		EmbedBuilder eb = new EmbedBuilder();
-		GuildLogger gl = new GuildLogger();
+		GuildLogEvents gl = new GuildLogEvents();
 		eb.setDescription("The bot is now online.");
 		eb.setFooter("LOGLEVEL: INFO", "https://redicraft.eu/redianim.gif");
 		eb.setColor(Color.green);

@@ -19,7 +19,7 @@ import at.mlps.botclasses.commands.Serverinfo;
 import at.mlps.botclasses.commands.SetStatesCMD;
 import at.mlps.botclasses.commands.UserCommands;
 import at.mlps.botclasses.commands.UserInfo;
-import at.mlps.botclasses.guildlogging.GuildLogger;
+import at.mlps.botclasses.guildlogging.guild.GuildLogEvents;
 import at.mlps.rc.mysql.lpb.MySQL;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.OnlineStatus;
@@ -156,7 +156,7 @@ public class Main implements EventListener{
 		builder.addEventListeners(new Serverinfo());
 		builder.addEventListeners(new SetStatesCMD());
 		builder.addEventListeners(new UserCommands());
-		builder.addEventListeners(new GuildLogger());
+		builder.addEventListeners(new GuildLogEvents());
 		builder.addEventListeners(new FAQ());
 		builder.addEventListeners(new UserInfo());
 		builder.addEventListeners(new Punishments());
