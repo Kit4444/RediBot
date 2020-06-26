@@ -100,7 +100,7 @@ public class FAQ extends ListenerAdapter{
 	private void setEmbed_hierarchy(TextChannel chan) {
 		EmbedBuilder eb = Embed();
 		eb.setDescription("Question: How does the team hierarchy looks like? \nAnswer: It's very simple. You can see it from the following graphic:");
-		eb.setImage("https://redicraft.eu/redicraft_hierarchie.png");
+		eb.setImage("https://redicraft.eu/hierarchie.png");
 		chan.sendMessage(eb.build()).queue();
 	}
 	
