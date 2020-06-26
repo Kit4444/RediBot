@@ -16,9 +16,9 @@ public class Tags extends ListenerAdapter{
 				EmbedBuilder eb = new EmbedBuilder();
 				eb.setColor(e.getMember().getColor());
 				eb.setTitle("Tags");
-				//eb.addField(Main.botprefix + "", "", false);
-				eb.addField(Main.botprefix + "ask", "``Don't ask ...``", false);
-				eb.addField(Main.botprefix + "when", "We don't know, wh...", false);
+				//eb.addField(Main.botprefix + "tag ", "", false);
+				eb.addField(Main.botprefix + "tag ask", "``Don't ask ...``", false);
+				eb.addField(Main.botprefix + "tag when", "We don't know, wh...", false);
 				chan.sendMessage(eb.build()).queue();
 			}else if(args[0].equalsIgnoreCase(Main.botprefix + "tag")) {
 				chan.sendMessage("<:deny:678036504702091278> | " + Main.botprefix + "tag <tag> | Get the tags with " + Main.botprefix + "tags").queue();
