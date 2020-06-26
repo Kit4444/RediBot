@@ -12,6 +12,7 @@ import org.simpleyaml.exceptions.InvalidConfigurationException;
 
 import at.mlps.botclasses.commands.FAQ;
 import at.mlps.botclasses.commands.LOA;
+import at.mlps.botclasses.commands.MCServerinfo;
 import at.mlps.botclasses.commands.Punishments;
 import at.mlps.botclasses.commands.PurgeCommand;
 import at.mlps.botclasses.commands.RegisterGuilds;
@@ -217,6 +218,7 @@ public class Main implements EventListener{
 		builder.addEventListeners(new VoiceChannelUpdateParent());
 		builder.addEventListeners(new VoiceChannelUpdateUserLimit());
 		builder.addEventListeners(new Tags());
+		builder.addEventListeners(new MCServerinfo());
 		builder.build();
 	}
 	
