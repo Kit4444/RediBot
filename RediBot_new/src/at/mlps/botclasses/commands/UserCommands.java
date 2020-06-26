@@ -85,6 +85,8 @@ public class UserCommands extends ListenerAdapter{
 			eb.addField(Main.botprefix + "ping", "See the bot's ping", false);
 			eb.addField(Main.botprefix + "purge", "Mod Command, deletes up to 100 messages on one command.", false);
 			eb.addField(Main.botprefix + "registerguild", "Botownercommand - registers a guild for guildlogging", false);
+			eb.addField(Main.botprefix + "server", "List detailed informations from a specified server.", false);
+			eb.addField(Main.botprefix + "servers", "List all servers from Minecraft and give small informations about it.", false);
 			eb.addField(Main.botprefix + "serverinfo", "Displays some informations regarding the guild where the command was sent in.\nThis is just for registered guilds available!", false);
 			eb.addField(Main.botprefix + "setactivity", "Botownercommand", false);
 			eb.addField(Main.botprefix + "setgame", "Botownercommand", false);
