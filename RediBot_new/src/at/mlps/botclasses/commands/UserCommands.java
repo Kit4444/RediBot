@@ -15,6 +15,7 @@ import at.mlps.main.Main;
 import at.mlps.rc.mysql.lb.MySQL;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDAInfo;
+import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
@@ -67,6 +68,7 @@ public class UserCommands extends ListenerAdapter{
 			eb.setDescription("All commands are listed in alphabetic order.");
 			//eb.addField(Main.botprefix + "", "", false);
 			eb.addField(Main.botprefix + "about", "Displays some infos who has written the bot.", false);
+			eb.addField(Main.botprefix + "addallusers", "Saves all users to File. (Optional for leavemsg)", false);
 			eb.addField(Main.botprefix + "aua", "Fun command", false);
 			eb.addField(Main.botprefix + "avatar", "Sends your avatar.", false);
 			eb.addField(Main.botprefix + "ban", "Bans a member from the guild.", false);
@@ -86,6 +88,8 @@ public class UserCommands extends ListenerAdapter{
 			eb.addField(Main.botprefix + "serverinfo", "Displays some informations regarding the guild where the command was sent in.\nThis is just for registered guilds available!", false);
 			eb.addField(Main.botprefix + "setactivity", "Botownercommand", false);
 			eb.addField(Main.botprefix + "setgame", "Botownercommand", false);
+			eb.addField(Main.botprefix + "tag", "Display's a tag.", false);
+			eb.addField(Main.botprefix + "tags", "List all tags.", false);
 			eb.addField(Main.botprefix + "userinfo", "Displays some infos of your account what we stored.\nAlias: " + Main.botprefix + "user", false);
 			eb.addField(Main.botprefix + "warn", "Warns a Member.", false);
 			chan.sendMessage(eb.build()).queue();
@@ -128,6 +132,32 @@ public class UserCommands extends ListenerAdapter{
 			eb.addField("21.6.2020", "- Added Discord's new Gateway Intents\n- added new events for the registered guildlogging\n- removed the Sleeps in the FAQ and Ruleset-Thread\n- changed something in the rules §9", false);
 			eb.addField("15.6.2020", "- Changed JDA-Version from build 101 to 165\n- added the [p]changelog command\n- changed some backend code", false);
 			chan.sendMessage(eb.build()).queue();
+		}else if(cont.equalsIgnoreCase(Main.botprefix + "addallusers")) {
+			if(e.getAuthor().getIdLong() == 228145889988837385L) {
+				YamlFile file = new YamlFile("configuration.yml");
+				try {
+					file.load();
+				} catch (InvalidConfigurationException | IOException e1) {
+					e1.printStackTrace();
+				}
+				SimpleDateFormat time = new SimpleDateFormat("dd/MM/yy - HH:mm:ss");
+		        String stime = time.format(new Date());
+		        int i = 0;
+		        for(Member m : e.getGuild().getMembers()) {
+		        	i++;
+		        	file.set("Members.ID." + e.getGuild().getIdLong() + "." + m.getIdLong(), true);
+					file.set("Members.Date." + e.getGuild().getIdLong() + "." + m.getIdLong(), stime);
+		        }
+		        try {
+					file.save();
+					chan.sendMessage("Successfully saved " + i + " members for " + e.getGuild().getName() + ".").queue();
+				} catch (IOException e1) {
+					chan.sendMessage("Errored while saving members. Stacktrace:" + e1.getStackTrace()).queue();
+					e1.printStackTrace();
+				}
+			}else {
+				chan.sendMessage("You can't do that!").queue();
+			}
 		}
 	}
 	
