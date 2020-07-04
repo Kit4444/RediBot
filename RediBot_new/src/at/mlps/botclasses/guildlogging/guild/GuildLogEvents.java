@@ -17,6 +17,7 @@ import org.simpleyaml.exceptions.InvalidConfigurationException;
 import at.mlps.main.Main;
 import at.mlps.rc.mysql.lb.MySQL;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.JDAInfo;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Role;
@@ -395,7 +396,7 @@ public class GuildLogEvents extends ListenerAdapter{
 	public void onGuildMessageReceived(GuildMessageReceivedEvent e) {
 		Guild g = e.getGuild();
 		if(!e.getAuthor().isBot() || !e.getAuthor().isFake() || !e.isWebhookMessage()) {
-			insertMsg(g.getIdLong(), e.getMessageIdLong(), e.getMessage().getContentDisplay().toString());
+			insertMsg(g.getIdLong(), e.getMessageIdLong(), e.getMessage().getContentDisplay().toString(), e.getAuthor().getIdLong(), e.getAuthor().isBot());
 		}
 	}
 	
@@ -411,7 +412,7 @@ public class GuildLogEvents extends ListenerAdapter{
         eb.addField("New Message:", e.getMessage().getContentStripped(), false);
         eb.setFooter(stime);
 		eb.setColor(orange);
-		if(!e.getAuthor().isBot() || !e.getAuthor().isFake()) {
+		if(!isBotMessage(g.getIdLong(), e.getMessageIdLong())) {
 			sendMsg(eb, g);
 		}
 	}
@@ -421,25 +422,55 @@ public class GuildLogEvents extends ListenerAdapter{
 		SimpleDateFormat time = new SimpleDateFormat("dd/MM/yy - HH:mm:ss");
         String stime = time.format(new Date());
         EmbedBuilder eb = new EmbedBuilder();
+        
         eb.setTitle("Message has been deleted.");
-        eb.setDescription("Channel: " + e.getChannel().getAsMention());
+        if(retMID(g.getIdLong(), e.getMessageIdLong()) != 0L) {
+        	Member m = g.getMemberById(retMID(g.getIdLong(), e.getMessageIdLong()));
+        	eb.setDescription("Member: " + m.getUser().getName() + "#" + m.getUser().getDiscriminator() + "\nChannel: " + e.getChannel().getAsMention());
+        }else {
+        	eb.setDescription("Member: not cached." + "\nChannel: " + e.getChannel().getAsMention());
+        }
         eb.addField("Message:", retMsg(g.getIdLong(), e.getMessageIdLong()), false);
         eb.setFooter(stime);
 		eb.setColor(orange);
-		sendMsg(eb, g);
+		if(!isBotMessage(g.getIdLong(), e.getMessageIdLong())) {
+			sendMsg(eb, g);
+		}
 	}
 	
-	public void insertMsg(long guildid, long msgid, String msgtxt) {
+	public void insertMsg(long guildid, long msgid, String msgtxt, long memberid, boolean botmsg) {
 		try {
-			PreparedStatement ps = MySQL.getConnection().prepareStatement("INSERT INTO redibot_msglog (guildid, msgid, msgtxt) VALUES (?, ?, ?)");
+			PreparedStatement ps = MySQL.getConnection().prepareStatement("INSERT INTO redibot_msglog (guildid, msgid, msgtxt, memberid, botmsg) VALUES (?, ?, ?, ?, ?)");
 			ps.setLong(1, guildid);
 			ps.setLong(2, msgid);
 			ps.setString(3, msgtxt);
+			ps.setLong(4, memberid);
+			ps.setBoolean(5, botmsg);
 			ps.executeUpdate();
 			ps.close();
 		}catch (SQLException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public boolean isBotMessage(long guildid, long msgid) {
+		boolean boo = false;
+		HashMap<String, Object> hm = new HashMap<>();
+		hm.put("guildid", guildid);
+		hm.put("msgid", msgid);
+		try {
+			if(Main.mysql.isInDatabase("redibot_msglog", hm)) {
+				PreparedStatement ps = MySQL.getConnection().prepareStatement("SELECT * FROM redibot_msglog WHERE guildid = ? AND msgid = ?");
+				ps.setLong(1, guildid);
+				ps.setLong(2, msgid);
+				ResultSet rs = ps.executeQuery();
+				rs.next();
+				boo = rs.getBoolean("botmsg");
+			}
+		}catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return boo;
 	}
 	
 	public String retMsg(long guildid, long msgid) {
@@ -462,6 +493,28 @@ public class GuildLogEvents extends ListenerAdapter{
 			e.printStackTrace();
 		}
 		return msg;
+	}
+	
+	public long retMID(long guildid, long msgid) {
+		long id = 0L;
+		HashMap<String, Object> hm = new HashMap<>();
+		hm.put("guildid", guildid);
+		hm.put("msgid", msgid);
+		try {
+			if(Main.mysql.isInDatabase("redibot_msglog", hm)) {
+				PreparedStatement ps = MySQL.getConnection().prepareStatement("SELECT * FROM redibot_msglog WHERE guildid = ? AND msgid = ?");
+				ps.setLong(1, guildid);
+				ps.setLong(2, msgid);
+				ResultSet rs = ps.executeQuery();
+				rs.next();
+				id = rs.getLong("memberid");
+			}else {
+				id = 0L;
+			}
+		}catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return id;
 	}
 	
 	public void sendMsg(EmbedBuilder eb, Guild g) {
@@ -490,7 +543,7 @@ public class GuildLogEvents extends ListenerAdapter{
 		return odt.format(DateTimeFormatter.ofPattern("dd.MM.yyyy - HH:mm:ss"));
 	}
 	
-	public void welcCon() {
+	/*public void welcCon() {
 		System.out.println("#####   ######  #####   #  #####    ####   #######");
 		System.out.println("#    #  #       #    #  #  #    #  #    #     #");
 		System.out.println("#    #  #       #    #  #  #    #  #    #     #");
@@ -508,5 +561,26 @@ public class GuildLogEvents extends ListenerAdapter{
 			e1.printStackTrace();
 		}
 		System.out.print("RediBot has been loaded. Version: " + file.getString("BotInfo.version") + " Javaversion: " + System.getProperty("java.version") + "\n");
+	}*/
+	
+	public void welcCon() {
+		System.out.println("####################################");
+		System.out.println("#                                  #");
+		System.out.println("# ###  #### ###  # ###   ##  ##### #");
+		System.out.println("# #  # #    #  # # #  # #  #   #   #");
+		System.out.println("# #  # #    #  # # #  # #  #   #   #");
+		System.out.println("# ###  ###  #  # # ###  #  #   #   #");
+		System.out.println("# # #  #    #  # # #  # #  #   #   #");
+		System.out.println("# #  # #    #  # # #  # #  #   #   #");
+		System.out.println("# #  # #### ###  # ###   ##    #   #");
+		System.out.println("#                                  #");
+		System.out.println("####################################");
+		YamlFile file = new YamlFile("configuration.yml");
+		try {
+			file.load();
+		} catch (InvalidConfigurationException | IOException e1) {
+			e1.printStackTrace();
+		}
+		System.out.print("RediBot has been loaded.\nVersion: " + file.getString("BotInfo.version") + "\nJavaversion: " + System.getProperty("java.version") + "\nJDA-Version: " + JDAInfo.VERSION + "\n");
 	}
 }
