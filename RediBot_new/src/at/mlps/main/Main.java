@@ -28,6 +28,7 @@ import at.mlps.botclasses.commands.PurgeCommand;
 import at.mlps.botclasses.commands.RegisterGuilds;
 import at.mlps.botclasses.commands.Serverinfo;
 import at.mlps.botclasses.commands.SetStatesCMD;
+import at.mlps.botclasses.commands.StreamAdvCMD;
 import at.mlps.botclasses.commands.Tags;
 import at.mlps.botclasses.commands.UserCommands;
 import at.mlps.botclasses.commands.UserInfo;
@@ -249,6 +250,7 @@ public class Main implements EventListener{
 		builder.addEventListeners(new Tags());
 		builder.addEventListeners(new MCServerinfo());
 		builder.addEventListeners(new CreateInvite());
+		builder.addEventListeners(new StreamAdvCMD());
 		builder.build();
 	}
 	

@@ -15,6 +15,7 @@ import at.mlps.main.Main;
 import at.mlps.rc.mysql.lb.MySQL;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDAInfo;
+import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.User;
@@ -24,6 +25,7 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 public class UserCommands extends ListenerAdapter{
 
 	public void onGuildMessageReceived(GuildMessageReceivedEvent e) {
+		System.gc();
 		String cont = e.getMessage().getContentRaw();
 		MessageChannel chan = e.getChannel();
 		if(cont.equalsIgnoreCase(Main.botprefix + "ping")) {
@@ -50,6 +52,13 @@ public class UserCommands extends ListenerAdapter{
 			eb.addField("Online since:", file.getString("BotInfo.online.string"), false);
 			eb.addField("Systemtime: ", stime, false);
 			eb.addField("Guilds:", "Total: " + e.getJDA().getGuilds().size() + ", Registered: " + returnRegisteredGuilds(), false);
+			int i = 0;
+			for(Guild g : e.getJDA().getGuilds()) {
+				for(@SuppressWarnings("unused") Member m : g.getMembers()) {
+					i++;
+				}
+			}
+			eb.addField("Members:", "Serving " + i + " Members", true);
 			eb.addField("Ram", "Usage: " + String.valueOf((run.totalMemory() - run.freeMemory()) / 1048576L) + "mb / Allocated: " + String.valueOf(run.totalMemory() / 1048576L) + "mb", false);
 			if(MySQL.isConnected()) {
 				eb.addField("DB Connection:", "connected", true);
@@ -90,6 +99,7 @@ public class UserCommands extends ListenerAdapter{
 			eb.addField(Main.botprefix + "serverinfo", "Displays some informations regarding the guild where the command was sent in.\nThis is just for registered guilds available!", false);
 			eb.addField(Main.botprefix + "setactivity", "Botownercommand", false);
 			eb.addField(Main.botprefix + "setgame", "Botownercommand", false);
+			eb.addField(Main.botprefix + "stream", "RediCraft Admin Command", false);
 			eb.addField(Main.botprefix + "tag", "Display's a tag.", false);
 			eb.addField(Main.botprefix + "tags", "List all tags.", false);
 			eb.addField(Main.botprefix + "userinfo", "Displays some infos of your account what we stored.\nAlias: " + Main.botprefix + "user", false);
@@ -131,6 +141,8 @@ public class UserCommands extends ListenerAdapter{
 			}
 			eb.setDescription("Current Botversion: " + file.getString("BotInfo.version"));
 			//eb.addField("dd.MM.yyyy", "Annotation", false);
+			eb.addField("20.07.2020", "- Added [p]stream command\n- edited a small row in the RC-Rules\n- Changed some backend code", false);
+			eb.addField("12.07.2020", "- Changed JDA-Version to 4.2.0_177\n- Messagelogging has been reworked and messages are now encrypted\n- added new tags", false);
 			eb.addField("04.07.2020", "- Changed JDA-Version to Release 4.2.0_168\n- Reworked the Messagelogging (for Updating&Deleting) - Bot's messages won't be displayed anymore\n- some backend and frontend changes.", false);
 			eb.addField("21.06.2020", "- Added Discord's new Gateway Intents\n- added new events for the registered guildlogging\n- removed the Sleeps in the FAQ and Ruleset-Thread\n- changed something in the rules §9", false);
 			eb.addField("15.06.2020", "- Changed JDA-Version from build 101 to 165\n- added the [p]changelog command\n- changed some backend code", false);
