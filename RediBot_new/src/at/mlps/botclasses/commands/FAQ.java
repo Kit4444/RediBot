@@ -41,11 +41,21 @@ public class FAQ extends ListenerAdapter{
 			if(e.getGuild().getIdLong() == 548136727697555496L) {
 				Role pm = e.getGuild().getRoleById(548175887179186191L);
 				TextChannel ruleschannel = e.getGuild().getTextChannelById(548187134687838218L);
+				TextChannel ruleschangelog = e.getGuild().getTextChannelById(552932676890394624L);
 				if(e.getMember().getRoles().contains(pm)) {
 					setRulesEmbed_1(ruleschannel);
 					setRulesEmbed_2(ruleschannel);
 					setRulesEmbed_3(ruleschannel);
-					setRulesEmbed_4(ruleschannel);	
+					setRulesEmbed_4(ruleschannel);
+					//changelog
+					SimpleDateFormat time = new SimpleDateFormat("dd/MM/yyyy - HH:mm:ss");
+			        String stime = time.format(new Date());
+					EmbedBuilder eb = new EmbedBuilder();
+					eb.setColor(Color.decode("#55ff55"));
+					eb.setFooter("", e.getGuild().getIconUrl());
+					eb.setTitle("Ruleset Change at " + stime, e.getAuthor().getAvatarUrl());
+					eb.setDescription("Changed the last Message from\n``The Administration`` \nto\n``The RediCraft Team``");
+					ruleschangelog.sendMessage(eb.build()).queue();
 				}
 			}else {
 				chan.sendMessage("Error! This guild is not registered for a ruleset of RediCraft!").queue(msg1 -> {
@@ -87,13 +97,13 @@ public class FAQ extends ListenerAdapter{
 	
 	private void setEmbed_serverinfo(TextChannel chan) {
 		EmbedBuilder eb = Embed();
-		eb.setDescription("Questions: What's about the Minecraft-Server? \nAnswer: RediCraft is a Minecraft Network with preference in building.\nOur server is Java-Based and runs on ***1.15.2***.");
+		eb.setDescription("Questions: What's about the Minecraft-Server? \nAnswer: RediCraft is a Minecraft Network with preference in building.\nOur server is Java-Based and runs on the latest version. Current version: ***1.16.1***.");
 		chan.sendMessage(eb.build()).queue();
 	}
 	
 	private void setEmbed_invite(TextChannel chan) {
 		EmbedBuilder eb = Embed();
-		eb.setDescription("Question: How can I invite my friends? \nAnswer: Copy the Invite link from here: https://discord.gg/QPTsj8R");
+		eb.setDescription("Question: How can I invite my friends? \nAnswer: Just create one by yourself.");
 		chan.sendMessage(eb.build()).queue();
 	}
 	
@@ -194,7 +204,7 @@ public class FAQ extends ListenerAdapter{
 		EmbedBuilder eb = Rulesembed("FF5555");
 		SimpleDateFormat time = new SimpleDateFormat("dd/MM/yyyy - HH:mm:ss");
         String stime = time.format(new Date());
-		eb.setDescription("**We wish you all a lot of fun on the RediCraft Discord server!**\n *The Administration* \n \nLast Updated: " + stime);
+		eb.setDescription("**We wish you all a lot of fun on the RediCraft Discord server!**\n *The RediCraft - Team* \n \nLast Updated: " + stime);
 		chan.sendMessage(eb.build()).queue();
 	}
 }
