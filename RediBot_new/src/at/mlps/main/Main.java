@@ -1,15 +1,25 @@
 package at.mlps.main;
 
 import java.io.IOException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import javax.crypto.Cipher;
+import javax.crypto.KeyGenerator;
+import javax.crypto.NoSuchPaddingException;
+import javax.crypto.SecretKey;
 import javax.security.auth.login.LoginException;
 
 import org.simpleyaml.configuration.file.YamlFile;
 import org.simpleyaml.exceptions.InvalidConfigurationException;
 
+import com.sun.xml.internal.messaging.saaj.packaging.mime.util.BASE64DecoderStream;
+import com.sun.xml.internal.messaging.saaj.packaging.mime.util.BASE64EncoderStream;
+
+import at.mlps.botclasses.commands.CreateInvite;
 import at.mlps.botclasses.commands.FAQ;
 import at.mlps.botclasses.commands.LOA;
 import at.mlps.botclasses.commands.MCServerinfo;
@@ -68,6 +78,10 @@ public class Main implements EventListener{
 	public static Main instance;
 	public static MySQL mysql;
 	
+	public static Cipher ecipher;
+	public static Cipher dcipher;
+	public static SecretKey key;
+	
 	public static String botprefix = "rb!";
 
 	public static void main(String[] args) {
@@ -87,6 +101,21 @@ public class Main implements EventListener{
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
+		}
+		try {
+			key = KeyGenerator.getInstance("DES").generateKey();
+			
+			ecipher = Cipher.getInstance("DES");
+			dcipher = Cipher.getInstance("DES");
+			
+			ecipher.init(Cipher.ENCRYPT_MODE, key);
+			dcipher.init(Cipher.DECRYPT_MODE, key);
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+		} catch (NoSuchPaddingException e) {
+			e.printStackTrace();
+		} catch (InvalidKeyException e) {
+			e.printStackTrace();
 		}
 		setCFG();
 		String host = file.getString("MySQL.Host");
@@ -219,6 +248,7 @@ public class Main implements EventListener{
 		builder.addEventListeners(new VoiceChannelUpdateUserLimit());
 		builder.addEventListeners(new Tags());
 		builder.addEventListeners(new MCServerinfo());
+		builder.addEventListeners(new CreateInvite());
 		builder.build();
 	}
 	
@@ -237,5 +267,29 @@ public class Main implements EventListener{
 		}else {
 			System.out.println(sdf.format(new Date()) + " | " + msg);
 		}
+	}
+	
+	public static String encrypt(String s) {
+		try {
+			byte[] utf8 = s.getBytes("UTF8");
+			byte[] enc = ecipher.doFinal(utf8);
+			enc = BASE64EncoderStream.encode(enc);
+			return new String(enc);
+		}catch (Exception e) {
+			e.printStackTrace();
+			return "ERROR";
+		}
+	}
+	
+	public static String decrypt(String s) {
+		try {
+			byte[] dec = BASE64DecoderStream.decode(s.getBytes());
+			byte[] utf8 = dcipher.doFinal(dec);
+			return new String(utf8, "UTF8");
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "ERROR";
+		}
+		
 	}
 }

@@ -63,6 +63,8 @@ public class GuildLogEvents extends ListenerAdapter{
 	public void onGuildMemberJoin(GuildMemberJoinEvent e){
 		Guild g = e.getGuild();
 		Member m = e.getMember();
+		SimpleDateFormat time = new SimpleDateFormat("dd/MM/yy - HH:mm:ss");
+        String stime = time.format(new Date());
 		if(g.getIdLong() == redimain) {
 			YamlFile file = new YamlFile("configuration.yml");
 			try {
@@ -73,8 +75,6 @@ public class GuildLogEvents extends ListenerAdapter{
 			TextChannel rules = g.getTextChannelById(548187134687838218L);
 			Role guest = e.getGuild().getRoleById(651569972920713226L);
 			g.addRoleToMember(e.getMember(), guest).complete();
-			SimpleDateFormat time = new SimpleDateFormat("dd/MM/yy - HH:mm:ss");
-	        String stime = time.format(new Date());
 			if(file.getBoolean("Members.ID." + g.getIdLong() + "." + m.getIdLong())) {
 				EmbedBuilder eb = new EmbedBuilder();
 				eb.setTitle("Member has rejoined the server");
@@ -99,13 +99,13 @@ public class GuildLogEvents extends ListenerAdapter{
 				eb.setColor(Color.decode("#55FF55"));
 				g.getTextChannelById(637343872422248458L).sendMessage(eb.build()).queue();
 			}
-			EmbedBuilder eb = new EmbedBuilder();
-			eb.setColor(Color.green);
-			eb.setTitle("Member joined");
-			eb.setDescription( m.getAsMention() + " has joined the guild.");
-			eb.setFooter(stime, g.getIconUrl());
-			sendMsg(eb, g);
 		}
+		EmbedBuilder eb = new EmbedBuilder();
+		eb.setColor(Color.green);
+		eb.setTitle("Member joined");
+		eb.setDescription( m.getAsMention() + " has joined the guild.");
+		eb.setFooter(stime, g.getIconUrl());
+		sendMsg(eb, g);
 	}
 
 	public void onGuildMemberRemove(GuildMemberRemoveEvent e) {
@@ -396,7 +396,9 @@ public class GuildLogEvents extends ListenerAdapter{
 	public void onGuildMessageReceived(GuildMessageReceivedEvent e) {
 		Guild g = e.getGuild();
 		if(!e.getAuthor().isBot() || !e.getAuthor().isFake() || !e.isWebhookMessage()) {
-			insertMsg(g.getIdLong(), e.getMessageIdLong(), e.getMessage().getContentDisplay().toString(), e.getAuthor().getIdLong(), e.getAuthor().isBot());
+			String messageold = e.getMessage().getContentRaw();
+			String messagenew = Main.encrypt(messageold);
+			insertMsg(g.getIdLong(), e.getMessageIdLong(), messagenew, e.getAuthor().getIdLong(), e.getAuthor().isBot());
 		}
 	}
 	
@@ -406,9 +408,11 @@ public class GuildLogEvents extends ListenerAdapter{
 		SimpleDateFormat time = new SimpleDateFormat("dd/MM/yy - HH:mm:ss");
         String stime = time.format(new Date());
         EmbedBuilder eb = new EmbedBuilder();
+        String messageold = retMsg(g.getIdLong(), e.getMessageIdLong());
+        String messagenew = Main.decrypt(messageold);
         eb.setTitle("Message has been updated.");
         eb.setDescription("Member: " + m.getAsMention() + "\nChannel: " + e.getChannel().getAsMention() + "\nJump to Message: " + e.getMessage().getJumpUrl());
-        eb.addField("Old Message:", retMsg(g.getIdLong(), e.getMessageIdLong()), false);
+        eb.addField("Old Message:", messagenew, false);
         eb.addField("New Message:", e.getMessage().getContentStripped(), false);
         eb.setFooter(stime);
 		eb.setColor(orange);
@@ -422,7 +426,8 @@ public class GuildLogEvents extends ListenerAdapter{
 		SimpleDateFormat time = new SimpleDateFormat("dd/MM/yy - HH:mm:ss");
         String stime = time.format(new Date());
         EmbedBuilder eb = new EmbedBuilder();
-        
+        String messageold = retMsg(g.getIdLong(), e.getMessageIdLong());
+        String messagenew = Main.decrypt(messageold);
         eb.setTitle("Message has been deleted.");
         if(retMID(g.getIdLong(), e.getMessageIdLong()) != 0L) {
         	Member m = g.getMemberById(retMID(g.getIdLong(), e.getMessageIdLong()));
@@ -430,7 +435,7 @@ public class GuildLogEvents extends ListenerAdapter{
         }else {
         	eb.setDescription("Member: not cached." + "\nChannel: " + e.getChannel().getAsMention());
         }
-        eb.addField("Message:", retMsg(g.getIdLong(), e.getMessageIdLong()), false);
+        eb.addField("Message:", messagenew + " ", false);
         eb.setFooter(stime);
 		eb.setColor(orange);
 		if(!isBotMessage(g.getIdLong(), e.getMessageIdLong())) {
