@@ -1,5 +1,7 @@
 package at.mlps.botclasses.commands;
 
+import java.util.concurrent.TimeUnit;
+
 import at.mlps.main.Main;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
@@ -14,7 +16,12 @@ public class CreateInvite extends ListenerAdapter{
 				TextChannel welcome = e.getGuild().getTextChannelById(548191322738130944L);
 				welcome.createInvite().setMaxUses(1).setMaxAge(1800).reason(e.getAuthor().getName() + "#" + e.getAuthor().getDiscriminator() + " has created an invite.").queue(inv -> {
 					e.getAuthor().openPrivateChannel().queue(pchannel -> {
-						pchannel.sendMessage("Hello " + e.getAuthor().getAsMention() + "! You have requested a invite code for RediCraft.\nInvite: " + inv.getUrl()).queue();
+						e.getMessage().delete().queue();
+						e.getChannel().sendMessage("Hey, " + e.getAuthor().getAsMention() + ", I've sent you the Invite in your DMs. The URL is just available for 30 mins or one use.").queue(sm -> {
+							sm.delete().queueAfter(30, TimeUnit.SECONDS);
+						});
+						pchannel.sendMessage("Hello " + e.getAuthor().getAsMention() + "! You have requested a invite code for RediCraft.\nInvite: " + inv.getUrl() + " \nInfo, the URL is just available for 30 minutes or one use. That's not a permanent invite.").queue();
+						
 					});
 				});
 			}

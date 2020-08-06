@@ -334,7 +334,11 @@ public class GuildLogEvents extends ListenerAdapter{
     	eb.addField("Max Uses:", e.getInvite().getMaxUses() + " ", false);
     	eb.addField("Channel:", "Name: " + e.getInvite().getChannel().getName() + "\nChanneltype: " + e.getInvite().getChannel().getType().toString(), false);
     	eb.addField("Creation Date:", retDate(e.getInvite().getTimeCreated()), false);
-    	eb.addField("Time Valid:", e.getInvite().getMaxAge() + " seconds", false);
+    	if(e.getInvite().getMaxAge() == 0) {
+    		eb.addField("Time Valid:", "permanent", false);
+    	}else {
+    		eb.addField("Time Valid:", e.getInvite().getMaxAge() + " seconds", false);
+    	}
     	eb.addField("Current Uses: ", e.getInvite().getUses() + " ", false);
     	eb.setFooter(stime);
     	sendMsg(eb, g);
@@ -395,7 +399,7 @@ public class GuildLogEvents extends ListenerAdapter{
 	
 	public void onGuildMessageReceived(GuildMessageReceivedEvent e) {
 		Guild g = e.getGuild();
-		if(!e.getAuthor().isBot() || !e.getAuthor().isFake() || !e.isWebhookMessage()) {
+		if(!e.getAuthor().isBot() || !e.isWebhookMessage()) {
 			String messageold = e.getMessage().getContentRaw();
 			String messagenew = Main.encrypt(messageold);
 			insertMsg(g.getIdLong(), e.getMessageIdLong(), messagenew, e.getAuthor().getIdLong(), e.getAuthor().isBot());
