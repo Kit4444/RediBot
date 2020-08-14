@@ -31,7 +31,7 @@ public class UserCommands extends ListenerAdapter{
 		if(cont.equalsIgnoreCase(Main.botprefix + "ping")) {
 			long time = System.currentTimeMillis();
 			chan.sendMessage("Pong!").queue(response -> {
-				response.editMessageFormat("Pong! ``%d ms``", System.currentTimeMillis() - time).queue();
+				response.editMessageFormat("Pong! ``%d ms`` Gatewayping: ``%d ms``", System.currentTimeMillis() - time, e.getJDA().getGatewayPing()).queue();
 			});
 		}else if(cont.equalsIgnoreCase(Main.botprefix + "botinfo")) {
 			YamlFile file = new YamlFile("configuration.yml");
@@ -141,6 +141,7 @@ public class UserCommands extends ListenerAdapter{
 			}
 			eb.setDescription("Current Botversion: " + file.getString("BotInfo.version"));
 			//eb.addField("dd.MM.yyyy", "Annotation", false);
+			eb.addField("14.08.2020", "- Reworked some Guildlogging-Messages, so it's more conform to the correct spelling\n- Added Gatewayping on [p]ping\n- Changed JDA-Build to 191", false);
 			eb.addField("20.07.2020", "- Added [p]stream command\n- edited a small row in the RC-Rules\n- Changed some backend code", false);
 			eb.addField("12.07.2020", "- Changed JDA-Version to 4.2.0_177\n- Messagelogging has been reworked and messages are now encrypted\n- added new tags", false);
 			eb.addField("04.07.2020", "- Changed JDA-Version to Release 4.2.0_168\n- Reworked the Messagelogging (for Updating&Deleting) - Bot's messages won't be displayed anymore\n- some backend and frontend changes.", false);

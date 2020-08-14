@@ -54,7 +54,7 @@ public class Ready extends ListenerAdapter{
 				long savetxtchan = rs.getLong("channelid");
 				for(Guild g : e.getJDA().getGuilds()) {
 					if(g.getIdLong() == saveguildid) {
-						g.getTextChannelById(savetxtchan).sendMessage(ebwelc.build()).queue();
+						//g.getTextChannelById(savetxtchan).sendMessage(ebwelc.build()).queue();
 					}
 				}
 			}

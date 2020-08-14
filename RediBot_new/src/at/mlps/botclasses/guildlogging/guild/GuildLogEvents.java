@@ -390,8 +390,8 @@ public class GuildLogEvents extends ListenerAdapter{
         EmbedBuilder eb = new EmbedBuilder();
         eb.setTitle("Emote has been updated.");
         eb.setThumbnail(e.getEmote().getImageUrl());
-        eb.addField("Old Name:", e.getOldName(), false);
-        eb.addField("New Name:", e.getNewName(), false);
+        eb.addField("Old Name:", e.getOldName() + " ", false);
+        eb.addField("New Name:", e.getNewName() + " ", false);
         eb.setFooter(stime);
 		eb.setColor(orange);
 		sendMsg(eb, g);
@@ -416,8 +416,16 @@ public class GuildLogEvents extends ListenerAdapter{
         String messagenew = Main.decrypt(messageold);
         eb.setTitle("Message has been updated.");
         eb.setDescription("Member: " + m.getAsMention() + "\nChannel: " + e.getChannel().getAsMention() + "\nJump to Message: " + e.getMessage().getJumpUrl());
-        eb.addField("Old Message:", messagenew, false);
-        eb.addField("New Message:", e.getMessage().getContentStripped(), false);
+        if(messagenew.length() >= 512) {
+       	 	eb.addField("Message:", messagenew.substring(0, 512) + " ", false);
+        }else {
+       	 	eb.addField("Message:", messagenew + " ", false);
+        }
+        if(e.getMessage().getContentStripped().length() >= 512) {
+        	eb.addField("New Message:", e.getMessage().getContentStripped().substring(0, 512), false);
+        }else {
+        	eb.addField("New Message:", e.getMessage().getContentStripped(), false);
+        }
         eb.setFooter(stime);
 		eb.setColor(orange);
 		if(!isBotMessage(g.getIdLong(), e.getMessageIdLong())) {
@@ -439,7 +447,11 @@ public class GuildLogEvents extends ListenerAdapter{
         }else {
         	eb.setDescription("Member: not cached." + "\nChannel: " + e.getChannel().getAsMention());
         }
-        eb.addField("Message:", messagenew + " ", false);
+        if(messagenew.length() >= 512) {
+        	 eb.addField("Message:", messagenew.substring(0, 512) + " ", false);
+        }else {
+        	 eb.addField("Message:", messagenew + " ", false);
+        }
         eb.setFooter(stime);
 		eb.setColor(orange);
 		if(!isBotMessage(g.getIdLong(), e.getMessageIdLong())) {

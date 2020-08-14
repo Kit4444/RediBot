@@ -8,8 +8,8 @@ BotConfig:
 BotInfo:
   version: 19700101_v0.0.0abs
   online:
-    ts: 1593048545203
-    string: 25/06/2020 - 03:29:05
+    ts: 1597421015750
+    string: 14/08/2020 - 18:03:35
 MySQL:
   Host: localhost
   Port: 3306
