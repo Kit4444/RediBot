@@ -17,12 +17,10 @@ public class UserUpdateDiscriminator extends ListenerAdapter{
         String stime = time.format(new Date());
         GuildLogEvents gl = new GuildLogEvents();
         EmbedBuilder eb = new EmbedBuilder();
-		eb.setTitle("Discriminator Update");
-		eb.setDescription(e.getUser().getAsMention() + " updated it's discriminator.");
+        String fname = e.getUser().getName() + "#" + e.getUser().getDiscriminator();
+		eb.setDescription(e.getUser().getAsMention() + " / " + fname + " has updated their discriminator.\nOld Discriminator: ``" + e.getOldDiscriminator() + "``\nNew Discriminator: ``" + e.getNewDiscriminator() + "``");
 		eb.setFooter(stime);
 		eb.setColor(gl.green);
-		eb.addField("Old Discriminator:", e.getOldDiscriminator(), false);
-		eb.addField("New Discriminator:", e.getNewDiscriminator(), false);
 		List<Guild> guilds = e.getUser().getMutualGuilds();
 		if(!(guilds.isEmpty()) && !(e.getUser().isBot())) {
 			for(Guild guild : guilds) {

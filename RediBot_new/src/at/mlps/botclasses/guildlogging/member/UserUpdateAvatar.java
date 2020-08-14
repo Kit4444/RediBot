@@ -18,13 +18,11 @@ public class UserUpdateAvatar extends ListenerAdapter{
 		SimpleDateFormat time = new SimpleDateFormat("dd/MM/yy - HH:mm:ss");
         String stime = time.format(new Date());
         EmbedBuilder eb = new EmbedBuilder();
-		eb.setTitle("Click me if you don't see the avatar", e.getNewAvatarUrl());
-		eb.setDescription(e.getUser().getAsMention() + " updated it's avatar.");
+        String fname = e.getUser().getName() + "#" + e.getUser().getDiscriminator();
+		eb.setDescription(e.getUser().getAsMention() + " / " + fname + " has updated their avatar.");
 		eb.setImage(e.getNewAvatarUrl());
 		eb.setColor(gl.green);
 		eb.setFooter(stime);
-		eb.addField("Old AvatarURL:", e.getOldAvatarUrl() + "", false);
-		eb.addField("New AvatarURL:", e.getNewAvatarUrl() + "", false);
 		if(!(guilds.isEmpty()) && !(e.getUser().isBot())) {
 			for(Guild guild : guilds) {
 				gl.sendMsg(eb, guild);

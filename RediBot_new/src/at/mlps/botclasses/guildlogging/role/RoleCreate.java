@@ -18,9 +18,7 @@ public class RoleCreate extends ListenerAdapter{
         String stime = time.format(new Date());
         EmbedBuilder eb = new EmbedBuilder();
         eb.setTitle("Role has been created.");
-        eb.addField("Name:", e.getRole().getName(), false);
-        eb.addField("ID:", e.getRole().getIdLong() + "", false);
-        eb.addField("Permissions:", e.getRole().getPermissionsRaw() + "", false);
+        eb.setDescription("Name: ``" + e.getRole().getName() + "``\nID: ``" + e.getRole().getId() + "``\nPermissions: ``" + e.getRole().getPermissionsRaw() + "``");
         eb.setFooter(stime);
 		eb.setColor(gl.green);
         gl.sendMsg(eb, g);

@@ -17,12 +17,10 @@ public class UserUpdateName extends ListenerAdapter{
         String stime = time.format(new Date());
         GuildLogEvents gl = new GuildLogEvents();
         EmbedBuilder eb = new EmbedBuilder();
-		eb.setTitle("Name Update");
-		eb.setDescription(e.getUser().getAsMention() + " updated it's Name.");
+        String fname = e.getUser().getName() + "#" + e.getUser().getDiscriminator();
+		eb.setDescription(e.getUser().getAsMention() + " / " + fname + " has updated their name.\nOld Name: ``" + e.getOldName() + "``\nNew Name: ``" + e.getNewName() + "``");
 		eb.setFooter(stime);
 		eb.setColor(gl.green);
-		eb.addField("Old Name:", e.getOldName(), false);
-		eb.addField("New Name:", e.getNewName(), false);
 		List<Guild> guilds = e.getUser().getMutualGuilds();
 		if(!(guilds.isEmpty()) && !(e.getUser().isBot())) {
 			for(Guild guild : guilds) {

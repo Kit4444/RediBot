@@ -17,7 +17,7 @@ public class TextChannelCreate extends ListenerAdapter{
 		SimpleDateFormat time = new SimpleDateFormat("dd/MM/yy - HH:mm:ss");
         String stime = time.format(new Date());
         EmbedBuilder eb = new EmbedBuilder();
-    	eb.setTitle("Text Channel has been created.");
+    	eb.setTitle("Channel has been created.");
     	eb.setDescription("Textchannel: " + e.getChannel().getAsMention());
     	eb.addField("Parent:", e.getChannel().getParent().getName(), false);
     	eb.addField("NSFW:", "" + e.getChannel().isNSFW(), false);

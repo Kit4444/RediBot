@@ -17,7 +17,7 @@ public class VoiceChannelCreate extends ListenerAdapter{
 		SimpleDateFormat time = new SimpleDateFormat("dd/MM/yy - HH:mm:ss");
         String stime = time.format(new Date());
         EmbedBuilder eb = new EmbedBuilder();
-    	eb.setTitle("Voice Channel has been created.");
+    	eb.setTitle("Channel has been created.");
     	eb.setDescription("Voicechannel: " + e.getChannel().getName());
     	eb.addField("Parent:", e.getChannel().getParent().getName(), false);
     	eb.addField("Members:", e.getChannel().getUserLimit() + "", false);

@@ -17,7 +17,7 @@ public class VoiceChannelUpdateParent extends ListenerAdapter{
 		SimpleDateFormat time = new SimpleDateFormat("dd/MM/yy - HH:mm:ss");
         String stime = time.format(new Date());
         EmbedBuilder eb = new EmbedBuilder();
-        eb.setTitle("Voice channel has been moved.");
+        eb.setTitle("Channel has been moved.");
         eb.setDescription("Voicechannel: " + e.getChannel().getName());
         eb.addField("Old Parent:", e.getOldParent().getName(), false);
         eb.addField("New Parent:", e.getNewParent().getName(), false);

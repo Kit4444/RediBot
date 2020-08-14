@@ -17,7 +17,7 @@ public class TextChannelDelete extends ListenerAdapter{
 		SimpleDateFormat time = new SimpleDateFormat("dd/MM/yy - HH:mm:ss");
         String stime = time.format(new Date());
         EmbedBuilder eb = new EmbedBuilder();
-    	eb.setTitle("Text Channel has been deleted.");
+    	eb.setTitle("Channel has been deleted.");
     	eb.setDescription("Textchannel: " + e.getChannel().getName());
     	eb.addField("Parent:", e.getChannel().getParent().getName(), false);
     	eb.addField("NSFW:", "" + e.getChannel().isNSFW(), false);

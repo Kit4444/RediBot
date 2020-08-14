@@ -17,7 +17,7 @@ public class TextChannelUpdateName extends ListenerAdapter{
 		SimpleDateFormat time = new SimpleDateFormat("dd/MM/yy - HH:mm:ss");
         String stime = time.format(new Date());
         EmbedBuilder eb = new EmbedBuilder();
-        eb.setTitle("Text channel has been updated.");
+        eb.setTitle("Channel has been updated.");
         eb.setDescription("Textchannel: " + e.getChannel().getAsMention());
         eb.addField("Old Name:", e.getOldName(), false);
         eb.addField("New Name:", e.getNewName(), false);

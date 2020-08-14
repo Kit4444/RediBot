@@ -17,7 +17,7 @@ public class VoiceChannelUpdateUserLimit extends ListenerAdapter{
 		SimpleDateFormat time = new SimpleDateFormat("dd/MM/yy - HH:mm:ss");
         String stime = time.format(new Date());
         EmbedBuilder eb = new EmbedBuilder();
-        eb.setTitle("Voice channel has been updated.");
+        eb.setTitle("Channel has been updated.");
         eb.setDescription("Voicechannel: " + e.getChannel().getName());
         eb.addField("Old Limit:", e.getOldUserLimit() + " Users", false);
         eb.addField("New Limit:", e.getNewUserLimit() + " Users", false);

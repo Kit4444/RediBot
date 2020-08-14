@@ -17,10 +17,10 @@ public class TextChannelUpdateTopic extends ListenerAdapter{
 		SimpleDateFormat time = new SimpleDateFormat("dd/MM/yy - HH:mm:ss");
         String stime = time.format(new Date());
         EmbedBuilder eb = new EmbedBuilder();
-        eb.setTitle("Text channel has been updated.");
+        eb.setTitle("Channel has been updated.");
         eb.setDescription("Textchannel: " + e.getChannel().getAsMention());
-        eb.addField("Old Topic:", e.getOldTopic() + "", false);
-        eb.addField("New Topic:", e.getNewTopic() + "", false);
+        eb.addField("Old Topic:", e.getOldTopic() + " ", false);
+        eb.addField("New Topic:", e.getNewTopic() + " ", false);
         eb.setFooter(stime);
 		eb.setColor(gl.orange);
 		gl.sendMsg(eb, g);
