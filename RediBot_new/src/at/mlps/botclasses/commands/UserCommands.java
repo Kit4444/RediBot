@@ -45,12 +45,18 @@ public class UserCommands extends ListenerAdapter{
 			Runtime run = Runtime.getRuntime();
 			EmbedBuilder eb = new EmbedBuilder();
 			eb.setColor(e.getMember().getColor());
+			String ver = file.getString("BotInfo.version");
 			eb.setTitle("Botinfo");
 			eb.addField("JDA-Version:", "JDA " + JDAInfo.VERSION, false);
 			eb.addField("Java-Version:", System.getProperty("java.version"), false);
-			eb.addField("Bot-Version:", file.getString("BotInfo.version"), false);
+			eb.addField("Bot-Version:", ver, false);
 			eb.addField("Online since:", file.getString("BotInfo.online.string"), false);
 			eb.addField("Systemtime: ", stime, false);
+			if(ver.equalsIgnoreCase(retVer())) {
+				eb.addField("Info", "The bot is on the latest version!", false);
+			}else {
+				eb.addField("Info", "The bot is not on the latest version!", false);
+			}
 			eb.addField("Guilds:", "Total: " + e.getJDA().getGuilds().size() + ", Registered: " + returnRegisteredGuilds(), false);
 			int i = 0;
 			for(Guild g : e.getJDA().getGuilds()) {
@@ -70,41 +76,6 @@ public class UserCommands extends ListenerAdapter{
 			chan.sendMessage("Schlechter Witz <:picardfacepalm:555680906199826432>").queue();
 		}else if(cont.equalsIgnoreCase(Main.botprefix + "furry")) {
 			chan.sendMessage("Du wurdest soeben von Inferno geknuddelt <:blep:572536387241246720>").queue();
-		}else if(cont.equalsIgnoreCase(Main.botprefix + "botcommands") || cont.equalsIgnoreCase(Main.botprefix + "help")) {
-			EmbedBuilder eb = new EmbedBuilder();
-			eb.setColor(e.getMember().getColor());
-			eb.setTitle("Helplist for RediBot");
-			eb.setDescription("All commands are listed in alphabetic order.");
-			//eb.addField(Main.botprefix + "", "", false);
-			eb.addField(Main.botprefix + "about", "Displays some infos who has written the bot.", false);
-			eb.addField(Main.botprefix + "addallusers", "Saves all users to File. (Optional for leavemsg)", false);
-			eb.addField(Main.botprefix + "aua", "Fun command", false);
-			eb.addField(Main.botprefix + "avatar", "Sends your avatar.", false);
-			eb.addField(Main.botprefix + "ban", "Bans a member from the guild.", false);
-			eb.addField(Main.botprefix + "botcommands", "Displays this embed \nAlias: " + Main.botprefix + "help", false);
-			eb.addField(Main.botprefix + "botinfo", "Displays some informations regarding this bot.", false);
-			eb.addField(Main.botprefix + "changelog", "Lists a changelog", false);
-			eb.addField(Main.botprefix + "faq", "Admin Command", false);
-			eb.addField(Main.botprefix + "furry", "Fun command", false);
-			eb.addField(Main.botprefix + "guilds", "Displays a list where the bot is in", false);
-			eb.addField(Main.botprefix + "kick", "Kicks a member from this guild.", false);
-			eb.addField(Main.botprefix + "loa", "Staff command", false);
-			eb.addField(Main.botprefix + "makemeacheesesandwich", "Fun command", false);
-			eb.addField(Main.botprefix + "mute", "Removes all roles and mutes him in this way.", false);
-			eb.addField(Main.botprefix + "ping", "See the bot's ping", false);
-			eb.addField(Main.botprefix + "purge", "Mod Command, deletes up to 100 messages on one command.", false);
-			eb.addField(Main.botprefix + "registerguild", "Botownercommand - registers a guild for guildlogging", false);
-			eb.addField(Main.botprefix + "server", "List detailed informations from a specified server.", false);
-			eb.addField(Main.botprefix + "servers", "List all servers from Minecraft and give small informations about it.", false);
-			eb.addField(Main.botprefix + "serverinfo", "Displays some informations regarding the guild where the command was sent in.\nThis is just for registered guilds available!", false);
-			eb.addField(Main.botprefix + "setactivity", "Botownercommand", false);
-			eb.addField(Main.botprefix + "setgame", "Botownercommand", false);
-			eb.addField(Main.botprefix + "stream", "RediCraft Admin Command", false);
-			eb.addField(Main.botprefix + "tag", "Display's a tag.", false);
-			eb.addField(Main.botprefix + "tags", "List all tags.", false);
-			eb.addField(Main.botprefix + "userinfo", "Displays some infos of your account what we stored.\nAlias: " + Main.botprefix + "user", false);
-			eb.addField(Main.botprefix + "warn", "Warns a Member.", false);
-			chan.sendMessage(eb.build()).queue();
 		}else if(cont.equalsIgnoreCase("moin") || cont.equalsIgnoreCase("moino") || cont.equalsIgnoreCase("hey") || cont.equalsIgnoreCase("hi") || cont.equalsIgnoreCase("grüzli")) {
 			e.getMessage().addReaction("a:catwave:555680908490047489").queue();
 		}else if(cont.equalsIgnoreCase(Main.botprefix + "avatar")) {
@@ -141,6 +112,7 @@ public class UserCommands extends ListenerAdapter{
 			}
 			eb.setDescription("Current Botversion: " + file.getString("BotInfo.version"));
 			//eb.addField("dd.MM.yyyy", "Annotation", false);
+			eb.addField("15.08.2020", "- Added a version-checker\n- extended the [p]help - Command\n- fixed few bugs\n- added for RC the Voter in discord suggestions", false);
 			eb.addField("14.08.2020", "- Reworked some Guildlogging-Messages, so it's more conform to the correct spelling\n- Added Gatewayping on [p]ping\n- Changed JDA-Build to 191", false);
 			eb.addField("20.07.2020", "- Added [p]stream command\n- edited a small row in the RC-Rules\n- Changed some backend code", false);
 			eb.addField("12.07.2020", "- Changed JDA-Version to 4.2.0_177\n- Messagelogging has been reworked and messages are now encrypted\n- added new tags", false);
@@ -188,5 +160,17 @@ public class UserCommands extends ListenerAdapter{
 			}
 		}catch (SQLException e) { }
 		return i;
+	}
+	
+	private String retVer() {
+		try {
+			PreparedStatement ps = MySQL.getConnection().prepareStatement("SELECT * FROM redicore_versions WHERE type = ?");
+			ps.setString(1, "bot");
+			ResultSet rs = ps.executeQuery();
+			rs.next();
+			return rs.getString("version");
+		}catch (SQLException e) {
+			return "ERROR";
+		}
 	}
 }

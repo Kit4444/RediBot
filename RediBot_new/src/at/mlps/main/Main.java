@@ -20,7 +20,9 @@ import com.sun.xml.internal.messaging.saaj.packaging.mime.util.BASE64DecoderStre
 import com.sun.xml.internal.messaging.saaj.packaging.mime.util.BASE64EncoderStream;
 
 import at.mlps.botclasses.commands.CreateInvite;
+import at.mlps.botclasses.commands.DiscordSugg_Voter;
 import at.mlps.botclasses.commands.FAQ;
+import at.mlps.botclasses.commands.HelpCMD;
 import at.mlps.botclasses.commands.LOA;
 import at.mlps.botclasses.commands.MCServerinfo;
 import at.mlps.botclasses.commands.Punishments;
@@ -32,6 +34,7 @@ import at.mlps.botclasses.commands.StreamAdvCMD;
 import at.mlps.botclasses.commands.Tags;
 import at.mlps.botclasses.commands.UserCommands;
 import at.mlps.botclasses.commands.UserInfo;
+import at.mlps.botclasses.commands.WhoisCMD;
 import at.mlps.botclasses.guildlogging.guild.GuildLogEvents;
 import at.mlps.botclasses.guildlogging.member.UserUpdateAvatar;
 import at.mlps.botclasses.guildlogging.member.UserUpdateDiscriminator;
@@ -251,6 +254,9 @@ public class Main implements EventListener{
 		builder.addEventListeners(new MCServerinfo());
 		builder.addEventListeners(new CreateInvite());
 		builder.addEventListeners(new StreamAdvCMD());
+		builder.addEventListeners(new WhoisCMD());
+		builder.addEventListeners(new HelpCMD());
+		builder.addEventListeners(new DiscordSugg_Voter());
 		builder.build();
 	}
 	
