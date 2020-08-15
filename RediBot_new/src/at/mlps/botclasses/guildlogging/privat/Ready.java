@@ -43,9 +43,15 @@ public class Ready extends ListenerAdapter{
 		ebwelc.setTitle("Bot is now online!");
 		ebwelc.setFooter(stime);
 		ebwelc.setColor(Color.magenta);
-		ebwelc.addField("Botversion:", file.getString("BotInfo.version"), false);
+		String ver = file.getString("BotInfo.version");
+		ebwelc.addField("Botversion:", ver, false);
 		ebwelc.addField("Javaversion:", System.getProperty("java.version"), false);
 		ebwelc.addField("JDA-Version:", JDAInfo.VERSION, false);
+		if(ver.equalsIgnoreCase(retVer())) {
+			ebwelc.addField("Info", "The bot is on the latest version!", false);
+		}else {
+			ebwelc.addField("Info", "The bot is not on the latest version!", false);
+		}
 		try {
 			PreparedStatement ps = MySQL.getConnection().prepareStatement("SELECT * FROM redibot_guildlog");
 			ResultSet rs = ps.executeQuery();
@@ -54,12 +60,24 @@ public class Ready extends ListenerAdapter{
 				long savetxtchan = rs.getLong("channelid");
 				for(Guild g : e.getJDA().getGuilds()) {
 					if(g.getIdLong() == saveguildid) {
-						//g.getTextChannelById(savetxtchan).sendMessage(ebwelc.build()).queue();
+						g.getTextChannelById(savetxtchan).sendMessage(ebwelc.build()).queue();
 					}
 				}
 			}
 		}catch (SQLException e1) {
 			e1.printStackTrace();
+		}
+	}
+	
+	private String retVer() {
+		try {
+			PreparedStatement ps = MySQL.getConnection().prepareStatement("SELECT * FROM redicore_versions WHERE type = ?");
+			ps.setString(1, "bot");
+			ResultSet rs = ps.executeQuery();
+			rs.next();
+			return rs.getString("version");
+		}catch (SQLException e) {
+			return "ERROR";
 		}
 	}
 }
