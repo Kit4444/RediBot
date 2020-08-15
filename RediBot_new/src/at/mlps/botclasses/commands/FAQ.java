@@ -23,13 +23,13 @@ public class FAQ extends ListenerAdapter{
 				Role pm = e.getGuild().getRoleById(548175887179186191L);
 				TextChannel faqchannel = e.getGuild().getTextChannelById(548187217726537738L);
 				if(e.getMember().getRoles().contains(pm)) {
-					setEmbed_hierarchy(faqchannel);
+					setEmbed_serverinfo(faqchannel);
 					setEmbed_invite(faqchannel);
+					setEmbed_platform(faqchannel);
+					setEmbed_hierarchy(faqchannel);
 					setEmbed_partnerships(faqchannel);
 					setEmbed_beta(faqchannel);
-					setEmbed_platform(faqchannel);
 					setEmbed_report(faqchannel);
-					setEmbed_serverinfo(faqchannel);
 					setEmbed_apply(faqchannel);
 				}
 			}else {
@@ -92,25 +92,26 @@ public class FAQ extends ListenerAdapter{
 		eb.addField("Instagram:", "https://www.instagram.com/redicrafteu/", false);
 		eb.addField("Facebook:", "Site: https://www.facebook.com/redicrafteu/ \nGroup: https://www.facebook.com/groups/370322470364195/", false);
 		eb.addField("YouTube:", "https://www.youtube.com/channel/UCBJhuPBSaucwk_TthujYrBw", false);
+		eb.addField("Twitch:", "", false);
 		chan.sendMessage(eb.build()).queue();
 	}
 	
 	private void setEmbed_serverinfo(TextChannel chan) {
 		EmbedBuilder eb = Embed();
-		eb.setDescription("Questions: What's about the Minecraft-Server? \nAnswer: RediCraft is a Minecraft Network with preference in building.\nOur server is Java-Based and runs on the latest version. Current version: ***1.16.1***.");
+		eb.setDescription("Questions: What's about the Minecraft-Server? \nAnswer: RediCraft is a Minecraft Network with preference in building.\nOur server is Java-Based and runs on the latest version. Current version: ***1.16.2***.");
 		chan.sendMessage(eb.build()).queue();
 	}
 	
 	private void setEmbed_invite(TextChannel chan) {
 		EmbedBuilder eb = Embed();
-		eb.setDescription("Question: How can I invite my friends? \nAnswer: Just create one by yourself.");
+		eb.setDescription("Question: How can I invite my friends? \nAnswer: Just create one by yourself with ``rb!createinvite`` - The bot will DM you.");
 		chan.sendMessage(eb.build()).queue();
 	}
 	
 	private void setEmbed_hierarchy(TextChannel chan) {
 		EmbedBuilder eb = Embed();
 		eb.setDescription("Question: How does the team hierarchy looks like? \nAnswer: It's very simple. You can see it from the following graphic:");
-		eb.setImage("https://redicraft.eu/hierarchie.png");
+		eb.setImage("https://redicraft.eu/redicraft_hierarchie.png");
 		chan.sendMessage(eb.build()).queue();
 	}
 	
