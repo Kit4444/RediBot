@@ -112,13 +112,14 @@ public class UserCommands extends ListenerAdapter{
 			}
 			eb.setDescription("Current Botversion: " + file.getString("BotInfo.version"));
 			//eb.addField("dd.MM.yyyy", "Annotation", false);
+			eb.addField("19.08.2020", "- Added an Announcement-Command\n- fixed again few bugs\n- added Playtime in [p]user - Command", false);
 			eb.addField("15.08.2020", "- Added a version-checker\n- extended the [p]help - Command\n- fixed few bugs\n- added for RC the Voter in discord suggestions", false);
 			eb.addField("14.08.2020", "- Reworked some Guildlogging-Messages, so it's more conform to the correct spelling\n- Added Gatewayping on [p]ping\n- Changed JDA-Build to 191", false);
 			eb.addField("20.07.2020", "- Added [p]stream command\n- edited a small row in the RC-Rules\n- Changed some backend code", false);
 			eb.addField("12.07.2020", "- Changed JDA-Version to 4.2.0_177\n- Messagelogging has been reworked and messages are now encrypted\n- added new tags", false);
 			eb.addField("04.07.2020", "- Changed JDA-Version to Release 4.2.0_168\n- Reworked the Messagelogging (for Updating&Deleting) - Bot's messages won't be displayed anymore\n- some backend and frontend changes.", false);
 			eb.addField("21.06.2020", "- Added Discord's new Gateway Intents\n- added new events for the registered guildlogging\n- removed the Sleeps in the FAQ and Ruleset-Thread\n- changed something in the rules §9", false);
-			eb.addField("15.06.2020", "- Changed JDA-Version from build 101 to 165\n- added the [p]changelog command\n- changed some backend code", false);
+			//eb.addField("15.06.2020", "- Changed JDA-Version from build 101 to 165\n- added the [p]changelog command\n- changed some backend code", false);
 			chan.sendMessage(eb.build()).queue();
 		}else if(cont.equalsIgnoreCase(Main.botprefix + "addallusers")) {
 			if(e.getAuthor().getIdLong() == 228145889988837385L) {

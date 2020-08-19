@@ -19,6 +19,7 @@ import org.simpleyaml.exceptions.InvalidConfigurationException;
 import com.sun.xml.internal.messaging.saaj.packaging.mime.util.BASE64DecoderStream;
 import com.sun.xml.internal.messaging.saaj.packaging.mime.util.BASE64EncoderStream;
 
+import at.mlps.botclasses.commands.AnnounceCMD;
 import at.mlps.botclasses.commands.CreateInvite;
 import at.mlps.botclasses.commands.DiscordSugg_Voter;
 import at.mlps.botclasses.commands.FAQ;
@@ -36,6 +37,7 @@ import at.mlps.botclasses.commands.UserCommands;
 import at.mlps.botclasses.commands.UserInfo;
 import at.mlps.botclasses.commands.WhoisCMD;
 import at.mlps.botclasses.guildlogging.guild.GuildLogEvents;
+import at.mlps.botclasses.guildlogging.guild.GuildMemberUpdateBoostTime;
 import at.mlps.botclasses.guildlogging.member.UserUpdateAvatar;
 import at.mlps.botclasses.guildlogging.member.UserUpdateDiscriminator;
 import at.mlps.botclasses.guildlogging.member.UserUpdateName;
@@ -257,6 +259,8 @@ public class Main implements EventListener{
 		builder.addEventListeners(new WhoisCMD());
 		builder.addEventListeners(new HelpCMD());
 		builder.addEventListeners(new DiscordSugg_Voter());
+		builder.addEventListeners(new AnnounceCMD());
+		builder.addEventListeners(new GuildMemberUpdateBoostTime());
 		builder.build();
 	}
 	

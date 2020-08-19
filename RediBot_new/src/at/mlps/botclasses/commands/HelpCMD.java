@@ -23,6 +23,7 @@ public class HelpCMD extends ListenerAdapter{
 					eb.addField(Main.botprefix + "setgame", "Botownercommand", false);
 					chan.sendMessage(eb.build()).queue();
 				}else if(args[1].equalsIgnoreCase("admin")) {
+					eb.addField(Main.botprefix + "announce", "Announce something in a specified channel", false);
 					eb.addField(Main.botprefix + "faq", "Admin Command", false);
 					chan.sendMessage(eb.build()).queue();
 				}else if(args[1].equalsIgnoreCase("mod")) {
@@ -53,6 +54,7 @@ public class HelpCMD extends ListenerAdapter{
 					eb.addField(Main.botprefix + "ping", "See the bot's ping", false);
 					eb.addField(Main.botprefix + "server", "List detailed informations from a specified server.", false);
 					eb.addField(Main.botprefix + "serverinfo", "Displays some informations regarding the guild where the command was sent in.\nThis is just for registered guilds available!", false);
+					eb.addField(Main.botprefix + "whois", "Check the user when he has been registered, joined the guild and so on.", false);
 					chan.sendMessage(eb.build()).queue();
 				}
 			}
