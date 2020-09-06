@@ -37,10 +37,19 @@ public class AnnounceCMD extends ListenerAdapter{
 					long rid = 0L;
 					Role role = null;
 					if(args[1].matches("^[0-9]+$")) {
-						rid = Long.parseLong(args[1]);
-						role = g.getRoleById(rid);
+						if(args[1].equalsIgnoreCase("0")) {
+							rid = e.getGuild().getPublicRole().getIdLong();
+							role = g.getRoleById(rid);
+						}else {
+							rid = Long.parseLong(args[1]);
+							role = g.getRoleById(rid);
+						}
 					}else {
-						role = e.getMessage().getMentionedRoles().get(0);
+						if(args[1].equalsIgnoreCase("none") || args[1].equalsIgnoreCase("null")) {
+							role = null;
+						}else {
+							role = e.getMessage().getMentionedRoles().get(0);
+						}
 					}
 					long uid = 0L;
 					TextChannel achan = null;
@@ -57,7 +66,7 @@ public class AnnounceCMD extends ListenerAdapter{
 					}
 					String msg = sb.toString();
 					EmbedBuilder eb = new EmbedBuilder();
-					eb.setTitle(g.getName() + "» Announcement");
+					eb.setTitle(g.getName() + " » Announcement");
 					eb.setAuthor(m.getUser().getName(), null, m.getUser().getAvatarUrl());
 					eb.setDescription(msg);
 					SimpleDateFormat time = new SimpleDateFormat("dd/MM/yyyy ● HH:mm:ss a z");
@@ -72,7 +81,11 @@ public class AnnounceCMD extends ListenerAdapter{
 							att1 = att.get(0).getUrl();
 						}
 					}
-					achan.sendMessage(":newspaper: | " + role.getAsMention() + " \n" + att1).embed(eb.build()).queue();
+					if(role != null) {
+						achan.sendMessage(":newspaper: | " + role.getAsMention() + " \n" + att1).embed(eb.build()).queue();
+					}else {
+						achan.sendMessage(":newspaper: \n" + att1).embed(eb.build()).queue();
+					}
 				}else {
 					chan.sendMessage("<:deny:678036504702091278> | Insufficent Permissions.").queue();
 				}

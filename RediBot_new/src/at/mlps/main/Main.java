@@ -155,7 +155,7 @@ public class Main implements EventListener{
 		} catch (InvalidConfigurationException | IOException e) {
 			e.printStackTrace();
 		}
-		SimpleDateFormat time = new SimpleDateFormat("dd/MM/yyyy - HH:mm:ss");
+		SimpleDateFormat time = new SimpleDateFormat("dd/MM/yyyy - HH:mm:ss a z");
 		String stime = time.format(new Date());
 		file.addDefault("BotConfig.Activity.Type", "PLAYING");
 		file.addDefault("BotConfig.Activity.Text", "Being a baby.");

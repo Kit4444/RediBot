@@ -42,10 +42,17 @@ public class UserInfo extends ListenerAdapter{
 							ps.setInt(1, id);
 							ResultSet rs = ps.executeQuery();
 							rs.next();
+							//Get money via UUID_UNTRIMMED
+							String uuid = rs.getString("uuid_ut");
+							PreparedStatement ps1 = MySQL.getConnection().prepareStatement("SELECT * FROM redicore_money WHERE uuid_ut = ?");
+							ps1.setString(1, uuid);
+							ResultSet rs1 = ps1.executeQuery();
+							rs1.next();
 							eb.addField("Name:", rs.getString("username"), false);
-							eb.addField("UUID:", rs.getString("uuid"), false);
+							eb.addField("UUID:", uuid, false);
 							eb.setThumbnail("https://minotar.net/armor/body/" + rs.getString("uuid") + "/512.png");
-							eb.addField("Money:", "User " + retMoney(rs.getString("uuid_ut"), "money") + " Coins \nBank: " + retMoney(rs.getString("uuid_ut"), "bankmoney") + " Coins", false);
+							eb.addField("Money:", "Deactivated for some time.", false);
+							//eb.addField("Money:", "User: " + rs1.getLong("money") + " Coins \nBank: " + rs1.getLong("bankmoney") + " Coins", false);
 							eb.addField("First Server Join:", rs.getString("firstjoinstring"), false);
 							eb.addField("Playtime:", retPTime(rs.getInt("playtime")), false);
 							if(rs.getBoolean("isstaff")) {
@@ -98,6 +105,7 @@ public class UserInfo extends ListenerAdapter{
 						chan.sendMessage("<:deny:678036504702091278>  | Only alphanumeric symbols are allowed! (0 - 9)").queue();
 					}
 				}catch (SQLException e1) {
+					e1.printStackTrace();
 					eb.setColor(Color.decode("#AA0000"));
 					eb.addField("Error:", "An error has occured.", false);
 					eb.setThumbnail("https://minotar.net/armor/body/Steve/256.png");
@@ -109,14 +117,6 @@ public class UserInfo extends ListenerAdapter{
 				chan.sendMessage("<:deny:597877001264824320> Usage: " + Main.botprefix + "userinfo <ID>").queue();
 			}
 		}
-	}
-	
-	private int retMoney(String uuid, String type) throws SQLException {
-		PreparedStatement ps = MySQL.getConnection().prepareStatement("SELECT * FROM redicore_money WHERE uuid_ut = ?");
-		ps.setString(1, uuid);
-		ResultSet rs = ps.executeQuery();
-		rs.next();
-		return rs.getInt(type);
 	}
 	
 	private String retPTime(int time) {

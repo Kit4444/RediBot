@@ -1,6 +1,5 @@
 package at.mlps.botclasses.commands;
 
-import java.awt.Color;
 import java.util.List;
 
 import at.mlps.botclasses.guildlogging.guild.GuildLogEvents;
@@ -22,13 +21,24 @@ public class WhoisCMD extends ListenerAdapter{
 		String[] args = e.getMessage().getContentRaw().split(" ");
 		GuildLogEvents gl = new GuildLogEvents();
 		EmbedBuilder eb = new EmbedBuilder();
-		eb.setColor(Color.decode("#55FF55"));
 		if(args.length == 1) {
 			if(args[0].equalsIgnoreCase(Main.botprefix + "whois")) {
 				eb.setAuthor(m.getUser().getName() + "#" + m.getUser().getDiscriminator(), m.getUser().getAvatarUrl());
 				eb.setDescription(m.getAsMention());
 				eb.addField("Joined", gl.retDate(m.getTimeJoined()), false);
 				eb.addField("Registered", gl.retDate(m.getUser().getTimeCreated()), false);
+				if(m.isOwner()) {
+					eb.addField("Owner of the guild:", "yes", false);
+				}else {
+					eb.addField("Owner of the guild:", "no", false);
+				}
+				if(m.getTimeBoosted() != null) {
+					eb.addField("Nitro Booster:", "yes, since: " + gl.retDate(m.getTimeBoosted()), false);
+				}else {
+					eb.addField("Nitro Booster:", "no", false);
+				}
+				eb.setColor(m.getColor());
+				eb.addField("Onlinestatus:", m.getOnlineStatus().getKey(), false);
 				eb.setThumbnail(m.getUser().getAvatarUrl());
 				List<Role> roles = m.getRoles();
 				StringBuilder sb = new StringBuilder();
@@ -54,11 +64,22 @@ public class WhoisCMD extends ListenerAdapter{
 				}else {
 					m2 = e.getMessage().getMentionedMembers().get(0);
 				}
-				
 				eb.setAuthor(m2.getUser().getName() + "#" + m2.getUser().getDiscriminator(), m2.getUser().getAvatarUrl());
 				eb.setDescription(m2.getAsMention());
 				eb.addField("Joined", gl.retDate(m2.getTimeJoined()), false);
 				eb.addField("Registered", gl.retDate(m2.getUser().getTimeCreated()), false);
+				if(m2.isOwner()) {
+					eb.addField("Owner of the guild:", "yes", false);
+				}else {
+					eb.addField("Owner of the guild:", "no", false);
+				}
+				if(m2.getTimeBoosted() != null) {
+					eb.addField("Nitro Booster:", "yes, since: " + gl.retDate(m2.getTimeBoosted()), false);
+				}else {
+					eb.addField("Nitro Booster:", "no", false);
+				}
+				eb.setColor(m2.getColor());
+				eb.addField("Onlinestatus:", m2.getOnlineStatus().getKey(), false);
 				eb.setThumbnail(m2.getUser().getAvatarUrl());
 				List<Role> roles = m2.getRoles();
 				StringBuilder sb = new StringBuilder();

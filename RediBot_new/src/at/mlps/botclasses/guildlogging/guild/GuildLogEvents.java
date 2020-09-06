@@ -122,7 +122,7 @@ public class GuildLogEvents extends ListenerAdapter{
         EmbedBuilder eb = new EmbedBuilder();
 		eb.setColor(red);
 		eb.setTitle("Member left");
-		eb.setDescription(m.getUser().getName() + "#" + m.getUser().getDiscriminator() + " has left the guild.\nJoindate: " + file.getString("Members.Date." + g.getIdLong() + "." + m.getIdLong()));
+		eb.setDescription(m.getUser().getName() + "#" + m.getUser().getDiscriminator() + " has left the guild.\nJoindate: " + retDate(e.getMember().getTimeJoined()));
 		eb.setFooter(stime, g.getIconUrl());
 		sendMsg(eb, g);
 	}
@@ -402,7 +402,11 @@ public class GuildLogEvents extends ListenerAdapter{
 		if(!e.getAuthor().isBot() || !e.isWebhookMessage()) {
 			String messageold = e.getMessage().getContentRaw();
 			String messagenew = Main.encrypt(messageold);
-			insertMsg(g.getIdLong(), e.getMessageIdLong(), messagenew, e.getAuthor().getIdLong(), e.getAuthor().isBot());
+			if(e.getMessage().getAttachments().size() == 0) {
+				insertMsg(g.getIdLong(), e.getMessageIdLong(), messagenew, e.getAuthor().getIdLong(), e.getAuthor().isBot(), "noAttach");
+			}else {
+				insertMsg(g.getIdLong(), e.getMessageIdLong(), messagenew, e.getAuthor().getIdLong(), e.getAuthor().isBot(), e.getMessage().getAttachments().get(0).getUrl());
+			}
 		}
 	}
 	
@@ -414,6 +418,7 @@ public class GuildLogEvents extends ListenerAdapter{
         EmbedBuilder eb = new EmbedBuilder();
         String messageold = retMsg(g.getIdLong(), e.getMessageIdLong());
         String messagenew = Main.decrypt(messageold);
+        String attachUri = getAttach(g.getIdLong(), e.getMessageIdLong());
         eb.setTitle("Message has been updated.");
         eb.setDescription("Member: " + m.getAsMention() + "\nChannel: " + e.getChannel().getAsMention() + "\nJump to Message: " + e.getMessage().getJumpUrl());
         if(messagenew.length() >= 512) {
@@ -425,6 +430,9 @@ public class GuildLogEvents extends ListenerAdapter{
         	eb.addField("New Message:", e.getMessage().getContentStripped().substring(0, 512), false);
         }else {
         	eb.addField("New Message:", e.getMessage().getContentStripped(), false);
+        }
+        if(!attachUri.equalsIgnoreCase("nouri") || !attachUri.equalsIgnoreCase("noAttach")) {
+        	eb.addField("Attachment:", attachUri, false);
         }
         eb.setFooter(stime);
 		eb.setColor(orange);
@@ -440,6 +448,7 @@ public class GuildLogEvents extends ListenerAdapter{
         EmbedBuilder eb = new EmbedBuilder();
         String messageold = retMsg(g.getIdLong(), e.getMessageIdLong());
         String messagenew = Main.decrypt(messageold);
+        String attachUri = getAttach(g.getIdLong(), e.getMessageIdLong());
         eb.setTitle("Message has been deleted.");
         if(retMID(g.getIdLong(), e.getMessageIdLong()) != 0L) {
         	Member m = g.getMemberById(retMID(g.getIdLong(), e.getMessageIdLong()));
@@ -452,6 +461,9 @@ public class GuildLogEvents extends ListenerAdapter{
         }else {
         	 eb.addField("Message:", messagenew + " ", false);
         }
+        if(!attachUri.equalsIgnoreCase("nouri") || !attachUri.equalsIgnoreCase("noAttach")) {
+        	eb.addField("Attachment:", attachUri, false);
+        }
         eb.setFooter(stime);
 		eb.setColor(orange);
 		if(!isBotMessage(g.getIdLong(), e.getMessageIdLong())) {
@@ -459,14 +471,19 @@ public class GuildLogEvents extends ListenerAdapter{
 		}
 	}
 	
-	public void insertMsg(long guildid, long msgid, String msgtxt, long memberid, boolean botmsg) {
+	public void insertMsg(long guildid, long msgid, String msgtxt, long memberid, boolean botmsg, String attachURI) {
+		SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy - HH:mm:ss a z");
+		
 		try {
-			PreparedStatement ps = MySQL.getConnection().prepareStatement("INSERT INTO redibot_msglog (guildid, msgid, msgtxt, memberid, botmsg) VALUES (?, ?, ?, ?, ?)");
+			PreparedStatement ps = MySQL.getConnection().prepareStatement("INSERT INTO redibot_msglog (guildid, msgid, msgtxt, memberid, botmsg, datetime, umsgtxt, attachURI) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
 			ps.setLong(1, guildid);
 			ps.setLong(2, msgid);
 			ps.setString(3, msgtxt);
 			ps.setLong(4, memberid);
 			ps.setBoolean(5, botmsg);
+			ps.setString(6, sdf.format(new Date()));
+			ps.setString(7, msgtxt);
+			ps.setString(8, attachURI);
 			ps.executeUpdate();
 			ps.close();
 		}catch (SQLException e) {
@@ -516,6 +533,26 @@ public class GuildLogEvents extends ListenerAdapter{
 		return msg;
 	}
 	
+	public String getAttach(long guildid, long msgid) {
+		String s = "";
+		HashMap<String, Object> hm = new HashMap<>();
+		hm.put("guildid", guildid);
+		hm.put("msgid", msgid);
+		try {
+			if(Main.mysql.isInDatabase("redibot_msglog", hm)) {
+				PreparedStatement ps = MySQL.getConnection().prepareStatement("SELECT * FROM redibot_msglog WHERE guildid = ? AND msgid = ?");
+				ps.setLong(1, guildid);
+				ps.setLong(2, msgid);
+				ResultSet rs = ps.executeQuery();
+				rs.next();
+				s = rs.getString("attachURI");
+			}
+		}catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return s;
+	}
+	
 	public long retMID(long guildid, long msgid) {
 		long id = 0L;
 		HashMap<String, Object> hm = new HashMap<>();
@@ -563,26 +600,6 @@ public class GuildLogEvents extends ListenerAdapter{
 	public String retDate(OffsetDateTime odt) {
 		return odt.format(DateTimeFormatter.ofPattern("dd.MM.yyyy - HH:mm:ss"));
 	}
-	
-	/*public void welcCon() {
-		System.out.println("#####   ######  #####   #  #####    ####   #######");
-		System.out.println("#    #  #       #    #  #  #    #  #    #     #");
-		System.out.println("#    #  #       #    #  #  #    #  #    #     #");
-		System.out.println("#    #  #       #    #  #  #    #  #    #     #");
-		System.out.println("#####   #####   #    #  #  #####   #    #     #");
-		System.out.println("# #     #       #    #  #  #    #  #    #     #");
-		System.out.println("#  #    #       #    #  #  #    #  #    #     #");
-		System.out.println("#   #   #       #    #  #  #    #  #    #     #");
-		System.out.println("#    #  #       #    #  #  #    #  #    #     #");
-		System.out.println("#    #  ######  #####   #  #####    ####      #");
-		YamlFile file = new YamlFile("configuration.yml");
-		try {
-			file.load();
-		} catch (InvalidConfigurationException | IOException e1) {
-			e1.printStackTrace();
-		}
-		System.out.print("RediBot has been loaded. Version: " + file.getString("BotInfo.version") + " Javaversion: " + System.getProperty("java.version") + "\n");
-	}*/
 	
 	public void welcCon() {
 		System.out.println("####################################");
