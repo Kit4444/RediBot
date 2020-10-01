@@ -114,42 +114,19 @@ public class UserCommands extends ListenerAdapter{
 			eb.setDescription("Current Botversion: " + file.getString("BotInfo.version"));
 			//eb.addField("dd.MM.yyyy", "Annotation", false);
 			eb.setColor(Color.green);
+			eb.addField("01.10.2020", "- updated JDA Minorversion from 202 to 207\n- MySQL-Connection will stay now on keepAlive\n- optimized the GC\n- implemented a settings command and the settings to control the bot\n- when purging messages, a small chatlog will be sent and deleted afterwards\n- changed the stream announcements embed\n- changed the announcements embed\n- on the GuildMemberRemoveEvent the roles will be displayed what the user had before leaving - Joindate will be given from API and not anymore from config\n- Roles will be mentioned now in [p]serverinfo and [p]whois\n- prepared DB for Chatlevel-System", false);
 			eb.addField("06.09.2020", "- Added Attachment-Support for Messagelogging\n- Reworked the Announcement-Feature, roles can be pinged, is not a must.\n- Disabled Moneyview for [p]user \n- added some more infos on [p]whois Command \nChanged JDA-Build 202\n- Added the detailed online-since feature on [p]botinfo", false);
 			eb.addField("19.08.2020", "- Added an Announcement-Command\n- fixed again few bugs\n- added Playtime in [p]user - Command", false);
 			eb.addField("15.08.2020", "- Added a version-checker\n- extended the [p]help - Command\n- fixed few bugs\n- added for RC the Voter in discord suggestions", false);
 			eb.addField("14.08.2020", "- Reworked some Guildlogging-Messages, so it's more conform to the correct spelling\n- Added Gatewayping on [p]ping\n- Changed JDA-Build to 191", false);
 			eb.addField("20.07.2020", "- Added [p]stream command\n- edited a small row in the RC-Rules\n- Changed some backend code", false);
 			eb.addField("12.07.2020", "- Changed JDA-Version to 4.2.0_177\n- Messagelogging has been reworked and messages are now encrypted\n- added new tags", false);
-			eb.addField("04.07.2020", "- Changed JDA-Version to Release 4.2.0_168\n- Reworked the Messagelogging (for Updating&Deleting) - Bot's messages won't be displayed anymore\n- some backend and frontend changes.", false);
+			//eb.addField("04.07.2020", "- Changed JDA-Version to Release 4.2.0_168\n- Reworked the Messagelogging (for Updating&Deleting) - Bot's messages won't be displayed anymore\n- some backend and frontend changes.", false);
 			//eb.addField("21.06.2020", "- Added Discord's new Gateway Intents\n- added new events for the registered guildlogging\n- removed the Sleeps in the FAQ and Ruleset-Thread\n- changed something in the rules §9", false);
 			//eb.addField("15.06.2020", "- Changed JDA-Version from build 101 to 165\n- added the [p]changelog command\n- changed some backend code", false);
 			chan.sendMessage(eb.build()).queue();
-		}else if(cont.equalsIgnoreCase(Main.botprefix + "addallusers")) {
-			if(e.getAuthor().getIdLong() == 228145889988837385L) {
-				YamlFile file = new YamlFile("configuration.yml");
-				try {
-					file.load();
-				} catch (InvalidConfigurationException | IOException e1) {
-					e1.printStackTrace();
-				}
-				SimpleDateFormat time = new SimpleDateFormat("dd/MM/yy - HH:mm:ss");
-		        String stime = time.format(new Date());
-		        int i = 0;
-		        for(Member m : e.getGuild().getMembers()) {
-		        	i++;
-		        	file.set("Members.ID." + e.getGuild().getIdLong() + "." + m.getIdLong(), true);
-					file.set("Members.Date." + e.getGuild().getIdLong() + "." + m.getIdLong(), stime);
-		        }
-		        try {
-					file.save();
-					chan.sendMessage("Successfully saved " + i + " members for " + e.getGuild().getName() + ".").queue();
-				} catch (IOException e1) {
-					chan.sendMessage("Errored while saving members. Stacktrace:" + e1.getStackTrace()).queue();
-					e1.printStackTrace();
-				}
-			}else {
-				chan.sendMessage("You can't do that!").queue();
-			}
+		}else if(cont.equalsIgnoreCase(Main.botprefix + "911")) {
+			chan.sendMessage("Hello, how can I help you?").queue();
 		}
 	}
 	

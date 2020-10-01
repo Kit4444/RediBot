@@ -3,10 +3,10 @@ package at.mlps.main;
 import java.io.IOException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
 import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
 import javax.crypto.NoSuchPaddingException;
@@ -31,6 +31,7 @@ import at.mlps.botclasses.commands.PurgeCommand;
 import at.mlps.botclasses.commands.RegisterGuilds;
 import at.mlps.botclasses.commands.Serverinfo;
 import at.mlps.botclasses.commands.SetStatesCMD;
+import at.mlps.botclasses.commands.SettingsCommand;
 import at.mlps.botclasses.commands.StreamAdvCMD;
 import at.mlps.botclasses.commands.Tags;
 import at.mlps.botclasses.commands.UserCommands;
@@ -83,6 +84,7 @@ public class Main implements EventListener{
 	public static String pw = "MauriceB2400";
 	public static Main instance;
 	public static MySQL mysql;
+	public static Connection conn = at.mlps.rc.mysql.lb.MySQL.getConnection();
 	
 	public static Cipher ecipher;
 	public static Cipher dcipher;
@@ -261,6 +263,7 @@ public class Main implements EventListener{
 		builder.addEventListeners(new DiscordSugg_Voter());
 		builder.addEventListeners(new AnnounceCMD());
 		builder.addEventListeners(new GuildMemberUpdateBoostTime());
+		builder.addEventListeners(new SettingsCommand());
 		builder.build();
 	}
 	

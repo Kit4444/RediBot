@@ -98,6 +98,8 @@ public class StreamAdvCMD extends ListenerAdapter{
 	}
 	
 	private void sendEmbed(String state, String msg, Guild g) {
+		SimpleDateFormat time = new SimpleDateFormat("dd MMMM yyyy");
+        String stime = time.format(new Date());
 		if(g.getIdLong() == 548136727697555496L) {
 			EmbedBuilder eb = new EmbedBuilder();
 			TextChannel streamadv = g.getTextChannelById(732601395446022245L);
@@ -105,15 +107,12 @@ public class StreamAdvCMD extends ListenerAdapter{
 			if(state.equalsIgnoreCase("yt")) {
 				eb.setColor(Color.decode("#c4302b"));
 				eb.setTitle("RediCraft Livestream", "https://www.youtube.com/channel/UCBJhuPBSaucwk_TthujYrBw");
-				eb.setDescription("We are live on YouTube.");
+				eb.setDescription("We are live over YouTube.\n \n" + msg + " ● " + stime);
 			}else if(state.equalsIgnoreCase("twitch")) {
 				eb.setColor(Color.decode("#6441a5"));
-				eb.setDescription("We are live on Twitch.");
+				eb.setDescription("We are live over Twitch.\n \n" + msg + " ● " + stime);
 				eb.setTitle("RediCraft Livestream", "https://www.twitch.tv/redicrafteu");
 			}
-			SimpleDateFormat time = new SimpleDateFormat("dd MMMM yyyy");
-	        String stime = time.format(new Date());
-			eb.setFooter(msg + " ● " + stime);
 			streamadv.sendMessage(streamsub.getAsMention()).embed(eb.build()).queue();
 		}
 	}

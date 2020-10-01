@@ -43,7 +43,7 @@ public class WhoisCMD extends ListenerAdapter{
 				List<Role> roles = m.getRoles();
 				StringBuilder sb = new StringBuilder();
 				for(Role rs : roles) {
-					sb.append(rs.getName());
+					sb.append(rs.getAsMention());
 					sb.append(", ");
 				}
 				if(roles.size() <= 32) {
@@ -84,7 +84,7 @@ public class WhoisCMD extends ListenerAdapter{
 				List<Role> roles = m2.getRoles();
 				StringBuilder sb = new StringBuilder();
 				for(Role rs : roles) {
-					sb.append(rs.getName());
+					sb.append(rs.getAsMention());
 					sb.append(", ");
 				}
 				if(roles.size() <= 32) {

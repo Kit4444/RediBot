@@ -66,39 +66,16 @@ public class GuildLogEvents extends ListenerAdapter{
 		SimpleDateFormat time = new SimpleDateFormat("dd/MM/yy - HH:mm:ss");
         String stime = time.format(new Date());
 		if(g.getIdLong() == redimain) {
-			YamlFile file = new YamlFile("configuration.yml");
-			try {
-				file.load();
-			} catch (InvalidConfigurationException | IOException e1) {
-				e1.printStackTrace();
-			}
 			TextChannel rules = g.getTextChannelById(548187134687838218L);
 			Role guest = e.getGuild().getRoleById(651569972920713226L);
 			g.addRoleToMember(e.getMember(), guest).complete();
-			if(file.getBoolean("Members.ID." + g.getIdLong() + "." + m.getIdLong())) {
-				EmbedBuilder eb = new EmbedBuilder();
-				eb.setTitle("Member has rejoined the server");
-				eb.setDescription("Welcome on RediCraft, " + m.getAsMention() + ".\nBefore you continue using this server, please read our rules carefully through.\nYou can find them in " + rules.getAsMention() + "\n \nHave fun on RediCraft\nThe RediCraft Administration");
-				eb.setThumbnail(m.getUser().getAvatarUrl());
-				eb.setColor(Color.decode("#5555FF"));
-				eb.setFooter("Joindate: " + stime, g.getIconUrl());
-				g.getTextChannelById(637343872422248458L).sendMessage(eb.build()).queue();
-			}else {
-				file.set("Members.ID." + g.getIdLong() + "." + m.getIdLong(), true);
-				file.set("Members.Date." + g.getIdLong() + "." + m.getIdLong(), stime);
-				try {
-					file.save();
-				} catch (IOException e1) {
-					e1.printStackTrace();
-				}
-				EmbedBuilder eb = new EmbedBuilder();
-				eb.setTitle("Member has joined the server");
-				eb.setDescription("Welcome on RediCraft, " + m.getAsMention() + ".\nBefore you continue using this server, please read our rules carefully through.\nYou can find them in " + rules.getAsMention() + "\n \nHave fun on RediCraft\nThe RediCraft Administration");
-				eb.setThumbnail(m.getUser().getAvatarUrl());
-				eb.setFooter("Joindate: " + stime, g.getIconUrl());
-				eb.setColor(Color.decode("#55FF55"));
-				g.getTextChannelById(637343872422248458L).sendMessage(eb.build()).queue();
-			}
+			EmbedBuilder eb = new EmbedBuilder();
+			eb.setTitle("Member has joined the server");
+			eb.setDescription("Welcome on RediCraft, " + m.getAsMention() + ".\nBefore you continue using this server, please read our rules carefully through.\nYou can find them in " + rules.getAsMention() + "\n \nHave fun on RediCraft\nThe RediCraft Administration");
+			eb.setThumbnail(m.getUser().getAvatarUrl());
+			eb.setFooter("Joindate: " + stime, g.getIconUrl());
+			eb.setColor(Color.decode("#55FF55"));
+			g.getTextChannelById(637343872422248458L).sendMessage(eb.build()).queue();
 		}
 		EmbedBuilder eb = new EmbedBuilder();
 		eb.setColor(Color.green);
@@ -111,18 +88,18 @@ public class GuildLogEvents extends ListenerAdapter{
 	public void onGuildMemberRemove(GuildMemberRemoveEvent e) {
 		Guild g = e.getGuild();
 		Member m = e.getMember();
-		YamlFile file = new YamlFile("configuration.yml");
-		try {
-			file.load();
-		} catch (InvalidConfigurationException | IOException e1) {
-			e1.printStackTrace();
-		}
 		SimpleDateFormat time = new SimpleDateFormat("dd/MM/yy - HH:mm:ss");
         String stime = time.format(new Date());
         EmbedBuilder eb = new EmbedBuilder();
 		eb.setColor(red);
 		eb.setTitle("Member left");
 		eb.setDescription(m.getUser().getName() + "#" + m.getUser().getDiscriminator() + " has left the guild.\nJoindate: " + retDate(e.getMember().getTimeJoined()));
+		StringBuilder sb = new StringBuilder();
+		for(Role r : m.getRoles()) {
+			sb.append(r.getAsMention());
+			sb.append(", ");
+		}
+		eb.addField("Roles (" + m.getRoles().size() + "):", sb.toString(), false);
 		eb.setFooter(stime, g.getIconUrl());
 		sendMsg(eb, g);
 	}

@@ -72,12 +72,4 @@ public class HelpCMD extends ListenerAdapter{
 			}
 		}
 	}
-	
-	/*EmbedBuilder eb = new EmbedBuilder();
-	
-	eb.setTitle("Helplist for RediBot");
-	
-	//eb.addField(Main.botprefix + "", "", false);
-	*/
-
 }

@@ -7,11 +7,12 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
+import java.util.Timer;
 import org.simpleyaml.configuration.file.YamlFile;
 import org.simpleyaml.exceptions.InvalidConfigurationException;
 
 import at.mlps.botclasses.guildlogging.guild.GuildLogEvents;
+import at.mlps.main.Runner;
 import at.mlps.rc.mysql.lb.MySQL;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDAInfo;
@@ -52,16 +53,20 @@ public class Ready extends ListenerAdapter{
 			ResultSet rs = ps.executeQuery();
 			while(rs.next()) {
 				long saveguildid = rs.getLong("guildid");
+				@SuppressWarnings("unused")
 				long savetxtchan = rs.getLong("channelid");
 				for(Guild g : e.getJDA().getGuilds()) {
 					if(g.getIdLong() == saveguildid) {
-						g.getTextChannelById(savetxtchan).sendMessage(ebwelc.build()).queue();
+						//g.getTextChannelById(savetxtchan).sendMessage(ebwelc.build()).queue();
 					}
 				}
 			}
 		}catch (SQLException e1) {
 			e1.printStackTrace();
 		}
+		Runner runner = new Runner();
+		Timer t = new Timer();
+		t.scheduleAtFixedRate(runner, 0, 120*1000);
 	}
 	
 	private String retVer() {

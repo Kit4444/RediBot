@@ -78,7 +78,7 @@ public class Serverinfo extends ListenerAdapter{
 			int role = roles.size();
 			StringBuilder sb = new StringBuilder();
 			for(Role rs : roles) {
-				sb.append(rs.getName());
+				sb.append(rs.getAsMention());
 				sb.append(", ");
 			}
 			String guildCreate = e.getGuild().getTimeCreated().format(DateTimeFormatter.ofPattern("dd.MM.yyyy - HH:mm:ss"));

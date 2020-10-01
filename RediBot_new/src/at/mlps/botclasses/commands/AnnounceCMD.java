@@ -69,6 +69,7 @@ public class AnnounceCMD extends ListenerAdapter{
 					eb.setTitle(g.getName() + " » Announcement");
 					eb.setAuthor(m.getUser().getName(), null, m.getUser().getAvatarUrl());
 					eb.setDescription(msg);
+					eb.setColor(m.getColor());
 					SimpleDateFormat time = new SimpleDateFormat("dd/MM/yyyy ● HH:mm:ss a z");
 			        String stime = time.format(new Date());
 					eb.setFooter(stime, g.getIconUrl());
@@ -82,9 +83,17 @@ public class AnnounceCMD extends ListenerAdapter{
 						}
 					}
 					if(role != null) {
-						achan.sendMessage(":newspaper: | " + role.getAsMention() + " \n" + att1).embed(eb.build()).queue();
+						if(att1 == "") {
+							achan.sendMessage(":newspaper: | " + role.getAsMention()).embed(eb.build()).queue();
+						}else {
+							achan.sendMessage(":newspaper: | " + role.getAsMention() + " \n" + att1).embed(eb.build()).queue();
+						}
 					}else {
-						achan.sendMessage(":newspaper: \n" + att1).embed(eb.build()).queue();
+						if(att1 == "") {
+							achan.sendMessage(":newspaper:").embed(eb.build()).queue();
+						}else {
+							achan.sendMessage(":newspaper: \n" + att1).embed(eb.build()).queue();
+						}
 					}
 				}else {
 					chan.sendMessage("<:deny:678036504702091278> | Insufficent Permissions.").queue();
@@ -92,5 +101,4 @@ public class AnnounceCMD extends ListenerAdapter{
 			}
 		}
 	}
-	
 }
