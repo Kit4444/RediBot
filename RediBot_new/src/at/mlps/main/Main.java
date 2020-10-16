@@ -3,10 +3,11 @@ package at.mlps.main;
 import java.io.IOException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Timer;
+
 import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
 import javax.crypto.NoSuchPaddingException;
@@ -20,6 +21,8 @@ import com.sun.xml.internal.messaging.saaj.packaging.mime.util.BASE64DecoderStre
 import com.sun.xml.internal.messaging.saaj.packaging.mime.util.BASE64EncoderStream;
 
 import at.mlps.botclasses.commands.AnnounceCMD;
+import at.mlps.botclasses.commands.ChatLevelCMD;
+import at.mlps.botclasses.commands.ChatLeveling;
 import at.mlps.botclasses.commands.CreateInvite;
 import at.mlps.botclasses.commands.DiscordSugg_Voter;
 import at.mlps.botclasses.commands.FAQ;
@@ -84,7 +87,6 @@ public class Main implements EventListener{
 	public static String pw = "MauriceB2400";
 	public static Main instance;
 	public static MySQL mysql;
-	public static Connection conn = at.mlps.rc.mysql.lb.MySQL.getConnection();
 	
 	public static Cipher ecipher;
 	public static Cipher dcipher;
@@ -142,6 +144,9 @@ public class Main implements EventListener{
 		} catch (SQLException e) {
 			onLog(3, "An error occured while connecting to the database. Error: " + e);
 		}
+		Runner r = new Runner();
+		Timer t = new Timer();
+		t.scheduleAtFixedRate(r, 0, 10000);
 		try {
 			startBot();
 		} catch (InvalidConfigurationException | IOException | LoginException e) {
@@ -264,6 +269,8 @@ public class Main implements EventListener{
 		builder.addEventListeners(new AnnounceCMD());
 		builder.addEventListeners(new GuildMemberUpdateBoostTime());
 		builder.addEventListeners(new SettingsCommand());
+		builder.addEventListeners(new ChatLeveling());
+		builder.addEventListeners(new ChatLevelCMD());
 		builder.build();
 	}
 	

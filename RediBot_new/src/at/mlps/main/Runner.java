@@ -8,10 +8,15 @@ import java.util.TimerTask;
 import at.mlps.rc.mysql.lb.MySQL;
 
 public class Runner extends TimerTask{
+	
+	static int gctimer = 0;
 
 	@Override
 	public void run() {
-		System.gc();
+		gctimer++;
+		if(gctimer == 100) {
+			System.gc();
+		}
 		int code1 = random(0, 5000);
 		int code2 = random(5001, 10000);
 		int code3 = random(10001, 15000);

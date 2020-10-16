@@ -25,7 +25,6 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 public class UserCommands extends ListenerAdapter{
 
 	public void onGuildMessageReceived(GuildMessageReceivedEvent e) {
-		System.gc();
 		String cont = e.getMessage().getContentRaw();
 		MessageChannel chan = e.getChannel();
 		if(cont.equalsIgnoreCase(Main.botprefix + "ping")) {
@@ -113,7 +112,10 @@ public class UserCommands extends ListenerAdapter{
 			}
 			eb.setDescription("Current Botversion: " + file.getString("BotInfo.version"));
 			//eb.addField("dd.MM.yyyy", "Annotation", false);
+			eb.setDescription("Total Updates: 11");
+			eb.setColor(Color.getColor("#5555ff"));
 			eb.setColor(Color.green);
+			eb.addField("16.10.2020", "- added Chatlevels\n- updated JDA Minorversion from 207 to 209\n- Reimplemented the Moneyview in [p]user\n- optimized Code (again)", false);
 			eb.addField("01.10.2020", "- updated JDA Minorversion from 202 to 207\n- MySQL-Connection will stay now on keepAlive\n- optimized the GC\n- implemented a settings command and the settings to control the bot\n- when purging messages, a small chatlog will be sent and deleted afterwards\n- changed the stream announcements embed\n- changed the announcements embed\n- on the GuildMemberRemoveEvent the roles will be displayed what the user had before leaving - Joindate will be given from API and not anymore from config\n- Roles will be mentioned now in [p]serverinfo and [p]whois\n- prepared DB for Chatlevel-System", false);
 			eb.addField("06.09.2020", "- Added Attachment-Support for Messagelogging\n- Reworked the Announcement-Feature, roles can be pinged, is not a must.\n- Disabled Moneyview for [p]user \n- added some more infos on [p]whois Command \nChanged JDA-Build 202\n- Added the detailed online-since feature on [p]botinfo", false);
 			eb.addField("19.08.2020", "- Added an Announcement-Command\n- fixed again few bugs\n- added Playtime in [p]user - Command", false);
