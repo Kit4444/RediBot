@@ -23,7 +23,9 @@ public class TextChannelUpdateSlowmode extends ListenerAdapter{
         eb.addField("New Slowmode:", e.getNewSlowmode() + " seconds", false);
         eb.setFooter(stime);
 		eb.setColor(gl.orange);
-		gl.sendMsg(eb, g);
+		if(gl.enabledLog(g, "textupdateslowmode")) {
+			gl.sendMsg(eb, g);
+		}
 	}
 
 }

@@ -23,7 +23,9 @@ public class TextChannelUpdateParent extends ListenerAdapter{
         eb.addField("New Parent:", e.getNewParent().getName(), false);
         eb.setFooter(stime);
 		eb.setColor(gl.orange);
-		gl.sendMsg(eb, g);
+		if(gl.enabledLog(g, "textupdateparent")) {
+			gl.sendMsg(eb, g);
+		}
 	}
 
 }

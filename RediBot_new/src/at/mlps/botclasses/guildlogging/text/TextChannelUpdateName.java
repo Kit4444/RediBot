@@ -23,7 +23,9 @@ public class TextChannelUpdateName extends ListenerAdapter{
         eb.addField("New Name:", e.getNewName(), false);
         eb.setFooter(stime);
 		eb.setColor(gl.orange);
-		gl.sendMsg(eb, g);
+		if(gl.enabledLog(g, "textupdatename")) {
+			gl.sendMsg(eb, g);
+		}
 	}
 
 }

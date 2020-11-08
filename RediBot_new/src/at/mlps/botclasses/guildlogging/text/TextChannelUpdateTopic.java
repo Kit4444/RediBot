@@ -34,7 +34,9 @@ public class TextChannelUpdateTopic extends ListenerAdapter{
             eb.addField("New Topic:", e.getNewTopic() + " ", false);
             eb.setFooter(stime);
     		eb.setColor(gl.orange);
-    		gl.sendMsg(eb, g);
+    		if(gl.enabledLog(g, "textupdatetopic")) {
+    			gl.sendMsg(eb, g);
+    		}
         }
 	}
 

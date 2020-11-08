@@ -22,7 +22,9 @@ public class TextChannelUpdateNSFW extends ListenerAdapter{
         eb.addField("Is NSFW:", e.getNewValue() + "", false);
         eb.setFooter(stime);
 		eb.setColor(gl.orange);
-		gl.sendMsg(eb, g);
+		if(gl.enabledLog(g, "textupdatensfw")) {
+			gl.sendMsg(eb, g);
+		}
 	}
 
 }

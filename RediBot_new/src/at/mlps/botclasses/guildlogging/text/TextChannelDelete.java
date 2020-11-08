@@ -25,7 +25,9 @@ public class TextChannelDelete extends ListenerAdapter{
     	eb.addField("ID:", e.getChannel().getIdLong() + "", false);
     	eb.setFooter(stime);
 		eb.setColor(gl.red);
-		gl.sendMsg(eb, g);
+		if(gl.enabledLog(g, "textdelete")) {
+			gl.sendMsg(eb, g);
+		}
 	}
 
 }
