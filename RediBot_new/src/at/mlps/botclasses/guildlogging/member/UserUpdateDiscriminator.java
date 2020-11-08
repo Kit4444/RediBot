@@ -24,7 +24,9 @@ public class UserUpdateDiscriminator extends ListenerAdapter{
 		List<Guild> guilds = e.getUser().getMutualGuilds();
 		if(!(guilds.isEmpty()) && !(e.getUser().isBot())) {
 			for(Guild guild : guilds) {
-				gl.sendMsg(eb, guild);
+				if(gl.enabledLog(guild, "userupdatediscriminator")) {
+					gl.sendMsg(eb, guild);
+				}
 			}
 		}
 	}

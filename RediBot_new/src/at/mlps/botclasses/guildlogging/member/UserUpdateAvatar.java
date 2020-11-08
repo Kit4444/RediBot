@@ -25,7 +25,9 @@ public class UserUpdateAvatar extends ListenerAdapter{
 		eb.setFooter(stime);
 		if(!(guilds.isEmpty()) && !(e.getUser().isBot())) {
 			for(Guild guild : guilds) {
-				gl.sendMsg(eb, guild);
+				if(gl.enabledLog(guild, "userupdateavatar")) {
+					gl.sendMsg(eb, guild);
+				}
 			}
 		}
 	}
