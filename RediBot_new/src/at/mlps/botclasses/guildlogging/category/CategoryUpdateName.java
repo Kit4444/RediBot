@@ -22,6 +22,8 @@ public class CategoryUpdateName {
         eb.addField("New Position:", e.getCategory().getParent().getName() + " / " + e.getNewPosition(), false);
         eb.setFooter(stime);
 		eb.setColor(gl.orange);
-		gl.sendMsg(eb, g);
+		if(gl.enabledLog(g, "categoryupdatename")) {
+			gl.sendMsg(eb, g);
+		}
 	}
 }

@@ -23,7 +23,9 @@ public class CategoryCreate {
         eb.addField("Parent:", e.getCategory().getParent().getName(), false);
         eb.setFooter(stime);
 		eb.setColor(gl.orange);
-		gl.sendMsg(eb, g);
+		if(gl.enabledLog(g, "categorycreate")) {
+			gl.sendMsg(eb, g);
+		}
 	}
 
 }

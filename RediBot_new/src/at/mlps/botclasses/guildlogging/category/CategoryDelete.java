@@ -25,7 +25,9 @@ public class CategoryDelete {
         eb.addField("Channels:", "Textchannels: " + e.getCategory().getTextChannels().size() + "\nVoicechannels: " + e.getCategory().getVoiceChannels().size(), false);
         eb.setFooter(stime);
 		eb.setColor(gl.orange);
-		gl.sendMsg(eb, g);
+		if(gl.enabledLog(g, "categorydelete")) {
+			gl.sendMsg(eb, g);
+		}
 	}
 
 }
