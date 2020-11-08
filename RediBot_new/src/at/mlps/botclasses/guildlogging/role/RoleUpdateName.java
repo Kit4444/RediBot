@@ -21,7 +21,9 @@ public class RoleUpdateName extends ListenerAdapter{
 		eb.setColor(gl.orange);
 		eb.setDescription("Role: ``" + e.getRole().getIdLong() + "``\nOld Name: ``" + e.getOldName() + "``\nNew Name: ``" + e.getNewName() + "``");
 		eb.setFooter(stime, g.getIconUrl());
-		gl.sendMsg(eb, g);
+		if(gl.enabledLog(g, "roleupdatename")) {
+			gl.sendMsg(eb, g);
+		}
 	}
 
 }

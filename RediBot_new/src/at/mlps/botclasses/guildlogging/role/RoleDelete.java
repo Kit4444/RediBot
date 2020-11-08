@@ -21,7 +21,9 @@ public class RoleDelete extends ListenerAdapter{
         eb.setDescription("Name: ``" + e.getRole().getName() + "``\nID: ``" + e.getRole().getId() + "``\nCreationdate: `` " + gl.retDate(e.getRole().getTimeCreated()) + "``\nPermissions Raw: ``" + e.getRole().getPermissionsRaw() + "``");
         eb.setFooter(stime);
 		eb.setColor(gl.green);
-        gl.sendMsg(eb, g);
+		if(gl.enabledLog(g, "roledelete")) {
+			gl.sendMsg(eb, g);
+		}
 	}
 
 }

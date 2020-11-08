@@ -21,7 +21,9 @@ public class RoleUpdateMentionable extends ListenerAdapter{
 		eb.setColor(gl.orange);
 		eb.setDescription("Role: ``" + e.getRole().getName() + "``\nMentionable: ``" + e.getNewValue() + "``");
 		eb.setFooter(stime, g.getIconUrl());
-		gl.sendMsg(eb, g);
+		if(gl.enabledLog(g, "roleupdatementionable")) {
+			gl.sendMsg(eb, g);
+		}
 	}
 
 }

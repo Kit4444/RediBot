@@ -21,7 +21,9 @@ public class RoleUpdateHoisted extends ListenerAdapter{
 		eb.setColor(gl.orange);
 		eb.setDescription("Role: ``" + e.getRole().getName() + "``\nHoisted: ``" + e.getNewValue() + "``");
 		eb.setFooter(stime, g.getIconUrl());
-		gl.sendMsg(eb, g);
+		if(gl.enabledLog(g, "roleupdatehoisted")) {
+			gl.sendMsg(eb, g);
+		}
 	}
 
 }

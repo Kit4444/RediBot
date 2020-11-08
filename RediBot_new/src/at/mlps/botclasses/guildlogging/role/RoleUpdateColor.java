@@ -21,7 +21,9 @@ public class RoleUpdateColor extends ListenerAdapter{
 		eb.setColor(e.getNewColor());
 		eb.setDescription("Role: ``" + e.getRole().getName() + "`` \nOld Color: ``" + gl.hexCol(e.getOldColorRaw()) + "``\nNew Color: ``" + gl.hexCol(e.getNewColorRaw()) + "``");
 		eb.setFooter(stime, g.getIconUrl());
-		gl.sendMsg(eb, g);
+		if(gl.enabledLog(g, "roleupdatecolor")) {
+			gl.sendMsg(eb, g);
+		}
 	}
 
 }
