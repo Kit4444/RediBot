@@ -23,7 +23,9 @@ public class VoiceChannelUpdateUserLimit extends ListenerAdapter{
         eb.addField("New Limit:", e.getNewUserLimit() + " Users", false);
         eb.setFooter(stime);
 		eb.setColor(gl.orange);
-		gl.sendMsg(eb, g);
+		if(gl.enabledLog(g, "voiceupdateuserlimit")) {
+			gl.sendMsg(eb, g);
+		}
 	}
 
 }

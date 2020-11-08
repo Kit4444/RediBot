@@ -23,7 +23,9 @@ public class VoiceChannelUpdateParent extends ListenerAdapter{
         eb.addField("New Parent:", e.getNewParent().getName(), false);
         eb.setFooter(stime);
 		eb.setColor(gl.orange);
-		gl.sendMsg(eb, g);
+		if(gl.enabledLog(g, "voiceupdateparent")) {
+			gl.sendMsg(eb, g);
+		}
 	}
 
 }

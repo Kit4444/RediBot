@@ -23,7 +23,9 @@ public class VoiceChannelUpdateName extends ListenerAdapter{
         eb.addField("New Name:", e.getNewName() + "", false);
         eb.setFooter(stime);
 		eb.setColor(gl.orange);
-		gl.sendMsg(eb, g);
+		if(gl.enabledLog(g, "voiceupdatename")) {
+			gl.sendMsg(eb, g);
+		}
 	}
 
 }

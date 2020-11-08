@@ -25,7 +25,9 @@ public class VoiceChannelCreate extends ListenerAdapter{
     	eb.addField("ID:", e.getChannel().getIdLong() + "", false);
     	eb.setFooter(stime);
 		eb.setColor(gl.green);
-		gl.sendMsg(eb, g);
+		if(gl.enabledLog(g, "voicecreate")) {
+			gl.sendMsg(eb, g);
+		}
 	}
 
 }

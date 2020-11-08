@@ -23,7 +23,9 @@ public class VoiceChannelUpdateBitrate extends ListenerAdapter{
         eb.addField("New Bitrate:", e.getNewBitrate() + " Bit", false);
         eb.setFooter(stime);
 		eb.setColor(gl.orange);
-		gl.sendMsg(eb, g);
+		if(gl.enabledLog(g, "voiceupdatebitrate")) {
+			gl.sendMsg(eb, g);
+		}
 	}
 
 }
