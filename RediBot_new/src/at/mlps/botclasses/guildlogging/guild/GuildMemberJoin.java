@@ -20,18 +20,6 @@ public class GuildMemberJoin extends ListenerAdapter{
 		GuildLogEvents gl = new GuildLogEvents();
 		SimpleDateFormat time = new SimpleDateFormat("dd/MM/yy - HH:mm:ss");
         String stime = time.format(new Date());
-		if(g.getIdLong() == gl.redimain) {
-			TextChannel rules = g.getTextChannelById(548187134687838218L);
-			Role guest = e.getGuild().getRoleById(651569972920713226L);
-			g.addRoleToMember(e.getMember(), guest).complete();
-			EmbedBuilder eb = new EmbedBuilder();
-			eb.setTitle("Member has joined the server");
-			eb.setDescription("Welcome on RediCraft, " + m.getAsMention() + ".\nBefore you continue using this server, please read our rules carefully through.\nYou can find them in " + rules.getAsMention() + "\n \nHave fun on RediCraft\nThe RediCraft Administration");
-			eb.setThumbnail(m.getUser().getAvatarUrl());
-			eb.setFooter("Joindate: " + stime, g.getIconUrl());
-			eb.setColor(Color.decode("#55FF55"));
-			g.getTextChannelById(637343872422248458L).sendMessage(eb.build()).queue();
-		}
 		EmbedBuilder eb = new EmbedBuilder();
 		eb.setColor(Color.green);
 		eb.setTitle("Member joined");
