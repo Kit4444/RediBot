@@ -139,6 +139,22 @@ public class GuildLogEvents extends ListenerAdapter{
 		return id;
 	}
 	
+	public void sendWelcome(EmbedBuilder eb, Guild g) {
+		try {
+			PreparedStatement ps = MySQL.getConnection().prepareStatement("SELECT * FROM redibot_guildlog");
+			ResultSet rs = ps.executeQuery();
+			long guildid = g.getIdLong();
+			while(rs.next()) {
+				if(guildid == rs.getLong("guildid")) {
+					long channelid = rs.getLong("welcomechannel");
+					g.getTextChannelById(channelid).sendMessage(eb.build()).queue();
+				}
+			}
+		}catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	public void sendMsg(EmbedBuilder eb, Guild g) {
 		try {
 			PreparedStatement ps = MySQL.getConnection().prepareStatement("SELECT * FROM redibot_guildlog");
@@ -175,12 +191,32 @@ public class GuildLogEvents extends ListenerAdapter{
 		return log;
 	}
 	
+	public boolean isRegistered(long guildid) {
+		HashMap<String, Object> hm = new HashMap<>();
+		hm.put("guildid", guildid);
+		try {
+			if(Main.mysql.isInDatabase("redibot_guildlog", hm)) {
+				return true;
+			}else {
+				return false;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+	
 	public String hexCol(int color) {
 		return String.format("#%06X", (0xFFFFFF & color)).toLowerCase();
 	}
 	
 	public String retDate(OffsetDateTime odt) {
 		return odt.format(DateTimeFormatter.ofPattern("dd.MM.yyyy - HH:mm:ss"));
+	}
+	
+	public String getFormattedDate(String pattern) {
+		SimpleDateFormat sdf = new SimpleDateFormat(pattern);
+		return sdf.format(new Date());
 	}
 	
 	public void welcCon() {
