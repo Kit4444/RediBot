@@ -31,6 +31,8 @@ public class FAQ extends ListenerAdapter{
 					setEmbed_beta(faqchannel);
 					setEmbed_report(faqchannel);
 					setEmbed_apply(faqchannel);
+					setEmbed_serverlock(faqchannel);
+					setEmbed_team(faqchannel);
 				}
 			}else {
 				chan.sendMessage("Error! This guild is not registered for a FAQ for RediCraft!").queue(msg1 -> {
@@ -54,7 +56,9 @@ public class FAQ extends ListenerAdapter{
 					eb.setColor(Color.decode("#55ff55"));
 					eb.setFooter("", e.getGuild().getIconUrl());
 					eb.setTitle("Ruleset Change at " + stime, e.getAuthor().getAvatarUrl());
-					eb.setDescription("Changed the last Message from\n``The Administration`` \nto\n``The RediCraft Team``");
+					eb.setDescription("Changes: \n- §5 | Advertising is now forbidden. \n- §7 | Please avoid any disturbing noises making annoying sounds like burping, squeeking or any other noises.\n- §8 | The unapproved usage of any selfbots is not allowed and forbidden in the ToS of Discord and leads to a permanent ban on this server.\nSpamming in bot-commands is prohibited.\n- §11 | Dyno has been changed to RediBot\n Additions: \n- §13 | Discussing web reports, appeals, feedback tickets, punishments received in-game, on the forum or on discord is not allowed.\r\n" + 
+							"Requesting Game Moderators to moderate in game is not allowed.\r\n" + 
+							"Please use instead the ingame report system or use the web report system.");
 					ruleschangelog.sendMessage(eb.build()).queue();
 				}
 			}else {
@@ -68,7 +72,7 @@ public class FAQ extends ListenerAdapter{
 	private EmbedBuilder Embed() {
 		EmbedBuilder eb = new EmbedBuilder();
 		eb.setColor(Color.decode("#5555ff"));
-		eb.setFooter("", "https://redicraft.eu/redianim.gif");
+		eb.setFooter("", "http://pi.mauricebailey.at/rc_logo1024.png");
 		return eb;
 	}
 	
@@ -84,6 +88,22 @@ public class FAQ extends ListenerAdapter{
 		chan.sendMessage(eb.build()).queue();
 	}
 	
+	private void setEmbed_team(TextChannel chan) {
+		EmbedBuilder eb = Embed();
+		//eb.addField("<Team>", "<Name in Listformat>", false);
+		eb.addField("Project Manager", "MarvinAch\nMaurice Bailey", false);
+		eb.addField("Human Resources", "Inferno", false);
+		eb.addField("Community Manager", "thelottiattack", false);
+		eb.addField("Game Moderation Manager", "RookieCookie", false);
+		eb.addField("Developer", "Krisi\nMarvinAch\nMaurice Bailey", false);
+		eb.addField("Game Moderator", "Marc26075", false);
+		eb.addField("Moderator", "KingGiGi\nMarius\nMaxi", false);
+		eb.addField("Content Team", "KingGiGi", false);
+		eb.addField("Support", "Marius", false);
+		eb.addField("Builder", "Mephistopheles", false);
+		chan.sendMessage(eb.build()).queue();
+	}
+	
 	private void setEmbed_platform(TextChannel chan) {
 		EmbedBuilder eb = Embed();
 		eb.setDescription("Question: Do we have another social media platforms?\nAnswer: For sure we have another social media platforms.");
@@ -92,13 +112,18 @@ public class FAQ extends ListenerAdapter{
 		eb.addField("Instagram:", "https://www.instagram.com/redicrafteu/", false);
 		eb.addField("Facebook:", "Site: https://www.facebook.com/redicrafteu/ \nGroup: https://www.facebook.com/groups/370322470364195/", false);
 		eb.addField("YouTube:", "https://www.youtube.com/channel/UCBJhuPBSaucwk_TthujYrBw", false);
-		eb.addField("Twitch:", "", false);
+		eb.addField("Twitch:", "https://www.twitch.tv/redicrafteu", false);
 		chan.sendMessage(eb.build()).queue();
+	}
+	
+	private void setEmbed_serverlock(TextChannel chan) {
+		EmbedBuilder eb = Embed();
+		eb.setDescription("Question: The Server is released, but I can't play on it! Why? \nAnswer: As some people already though about destroying and grief the Server, we will whitelist our server. \nYou want to play with us? Then fill this Google Forms out truthfully in order to play again on it.\n URL: https://forms.gle/AaQfmEHMo4fGR1VX8");
 	}
 	
 	private void setEmbed_serverinfo(TextChannel chan) {
 		EmbedBuilder eb = Embed();
-		eb.setDescription("Questions: What's about the Minecraft-Server? \nAnswer: RediCraft is a Minecraft Network with preference in building.\nOur server is Java-Based and runs on the latest version. Current version: ***1.16.2***.");
+		eb.setDescription("Question: What's about the Minecraft-Server? \nAnswer: RediCraft is a Minecraft Network with preference in building.\nOur server is Java-Based and runs on the latest version. Current version: ***1.16.3***.");
 		chan.sendMessage(eb.build()).queue();
 	}
 	
@@ -111,7 +136,7 @@ public class FAQ extends ListenerAdapter{
 	private void setEmbed_hierarchy(TextChannel chan) {
 		EmbedBuilder eb = Embed();
 		eb.setDescription("Question: How does the team hierarchy looks like? \nAnswer: It's very simple. You can see it from the following graphic:");
-		eb.setImage("https://redicraft.eu/redicraft_hierarchie.png");
+		eb.setImage("http://pi.mauricebailey.at/redicraft_hierarchie.png");
 		chan.sendMessage(eb.build()).queue();
 	}
 	
@@ -123,81 +148,93 @@ public class FAQ extends ListenerAdapter{
 	
 	private void setEmbed_beta(TextChannel chan) {
 		EmbedBuilder eb = Embed();
-		eb.setDescription("Question: Does RediCraft also accepts beta applications? \nAnswer: Yes, we do! We accept beta applicants. At the moment only via Google Forms.\nLink: https://docs.google.com/forms/d/e/1FAIpQLSdY5xw0SROB947-0CIi_7ElbPGm4aR6-3mhtcl0zHP0kqoM0A/viewform");
+		//eb.setDescription("Question: Does RediCraft also accepts beta applications? \nAnswer: Yes, we do! We accept beta applicants. At the moment only via Google Forms.\nLink: https://docs.google.com/forms/d/e/1FAIpQLSdY5xw0SROB947-0CIi_7ElbPGm4aR6-3mhtcl0zHP0kqoM0A/viewform");
+		eb.setDescription("Question: Does RediCraft also accepts beta application? \nAnswer: We currently don't. We will announce it, when we are searching beta testers again.");
 		chan.sendMessage(eb.build()).queue();
 	}
 
 	private void setEmbed_apply(TextChannel chan) {
 		EmbedBuilder eb = Embed();
-		eb.setDescription("Question: How can I apply for the staff team? \nAnswer: We are announcing this always in #announcements . But you also are able to send us the application here: https://forms.gle/tsemeZadQhNrp1Lx6");
+		eb.setDescription("Question: How can I apply for the staff team? \nAnswer: Use the following Google Forms: https://forms.gle/tsemeZadQhNrp1Lx6");
 		chan.sendMessage(eb.build()).queue();
 	}
 	
 	private void setRulesEmbed_1(TextChannel chan) {
 		EmbedBuilder eb = Rulesembed("55FF55");
-		eb.addField("§1 Warnings and general information:", "Please keep in mind, that the chats are archived in order to investigate any incidents.\r\n" + 
+		eb.addField("§1 General Informations and Warnings", "Please keep in mind that the chats are archived in order to investigate any incidents.\r\n" + 
 				"Please be aware that the investigation of such incidents may take some time.\r\n" + 
-				"The staff is not responsible for the things that happen on the server! You as the users have a certain amount of individual responsibility!\r\n" + 
+				"The staff is not responsible for the things that happens on the server!\r\n" + 
+				"You as the user have a certain amount of individual responsibility!\r\n" + 
 				"We reserve the right to remove users from the chat who are disturbing the chat climate, please respect that!\r\n" + 
 				"\r\n" + 
-				"The Discord Terms of Service and Community Guidlines are strictly enforced.\r\n" + 
+				"The Discord Terms of Service and Community Guidelines are strictly enforced.\r\n" + 
 				"\r\n" + 
 				"Exceptions to the rules can be made by upper staff.", false);
-		eb.addField("§2 Ranks, Rights and Roles:", "Begging for rights or for ranks is forbidden.\r\n" + 
-				"You can claim some ranks yourself. If you want to know which ones, use the command ?ranks in #bot-commands.\r\n" + 
-				"To claim yourself a role, go to #get-roles and tick the corresponding reaction under the bot´s message.", false);
-		eb.addField("§3 Nicknames:", "Nickfakes are not allowed. Please do not make the appearance of a person you are not.\r\n" + 
-				"Nicknames have to be clearly understandable. Therefore, they must not contain any ASCII-art, Zalgo-Text or other unreadable characters.\r\n" + 
-				"Nicknames are not allowed to contain any parts like Staff, Moderator or Admin. That may confuse other users.", false);
-		eb.addField("§4 Profile pictures:", "Avoid any extreme right, gloryfying violent or pornographic content.\r\n" + 
-				"If we have any objections towards your profile pictures as because they contravene these guidelines, we will contact you in order to change your picture.", false);
+		eb.addField("§2 Ranks, Rights and Roles", "Begging for rights nor for ranks is forbidden.\r\n" + 
+				"You can claim some ranks yourself.\r\n" + 
+				"To claim yourself a role, go to #roles and tick the corresponding reaction under the message.", false);
+		eb.addField("§3 Nicknames", "Nickfakes are not allowed.\r\n" + 
+				"Please do not make the appearance of a person you are not.\r\n" + 
+				"Nicknames have to be clearly understandable.\r\n" + 
+				"Therefore, they must not contain any ASCII-Art, Zalgo-Text or other unreadable characters.\r\n" + 
+				"Nicknames are not allowed to contain any parts like Staff, Moderator or Admin.\r\n" + 
+				"That may confuse other users.", false);
+		eb.addField("§4 Profile pictures", "Avoid any extreme right, gloryfying violent or pornographic content.\r\n" + 
+				"If we have any objections towards your profile pictures as because they contravene these guidelines,\r\n" + 
+				"we will contact you in order to change your picture.", false);
 		chan.sendMessage(eb.build()).queue();
 	}
 	
 	private void setRulesEmbed_2(TextChannel chan) {
 		EmbedBuilder eb = Rulesembed("FF5555");
-		eb.addField("§5 Advertisments:", "Advertising other servers (e.g. Discord, Minecraft, TeamSpeak, Streams, Radios) or projects is only allowed in the #advertisments channel but only once per week/seven days.\r\n" + 
-				"\r\n" + 
-				"Advertising Streams or Radios are not limited of the 1 a Week - Rule.\r\n" + 
-				"Please note the pinned message in #advertisments!\r\n" + 
-				"Wooing away other users is strictly prohibited!", false);
-		eb.addField("§6 Chat content, pictures, voice channels:", "This server´s preferred language is English!\r\n" + 
-				"Other languages are only allowed in the specific language channels. You can claim the corresponding roles in #get-roles.\r\n" + 
-				"Spam is forbidden in any condition!\r\n" + 
-				"Bullying, sexual allusions, insults or hostilities as well as racial, extremly right or gloryfying violent statements are strictly prohibited.\r\n" + 
-				"The usage of @here and @everyone is not allowed. If you are using the commands anyways, you may be kicked from the server!\r\n" + 
-				"Pictures are allowed in the designated language channels and in #general as long as they refer to the current discussion and the current content of the chat.\r\n" + 
-				"Random pictures that do not refer to the current discussion must be posted in #shares.", false);
-		eb.addField("§7 Voice channels and channel hopping:", "Frequent changing between server voice channels is strictly prohibited.\r\n" + 
+		eb.addField("§5 Advertisments", "Advertising other servers (e.g. Discord, Minecraft, TeamSpeak, Streams, Radios, etc.) or projects are not permitted.\r\n" + 
+				"Wooing away other users is strictly prohibited.", false);
+		eb.addField("§6 Chat content, pictures, voice channels", "This server's preferred language is english.\r\n" + 
+				"Other languages are only allowed in the specific language channels.\r\n" + 
+				"You can claim the role(s) in #roles \r\n" + 
+				"Spam is forbidden in any condition.\r\n" + 
+				"Bullying, secual allusions, insults or hostilities as well as racial, extremly right or gloryfying violent statements are strictly prohibited.\r\n" + 
+				"The usage of here and everyone is not allowed.\r\n" + 
+				"If you are using those anyways you risk getting kicked from the server.\r\n" + 
+				"Pictures or videos are allowed in the designated language channels and in #general as long as theys refer to the current discussion and the current content of the chat.\r\n" + 
+				"Random pictures or videos that do not refer to the current discussion must be posted in #shares .", false);
+		eb.addField("§7 Voice channels and channel hopping", "Frequent changing between server voice channels is strictly prohibited.\r\n" + 
 				"When you are in a voice channel, do not interrupt each other!\r\n" + 
 				"Please manage a comfy voice quality.\r\n" + 
-				"Please avoid any disturbing noises.\r\n" + 
+				"Please avoid any disturbing noises making annoying sounds like burping, squeeking or any other noises.\r\n" + 
 				"The usage of voice changers is not allowed.", false);
-		eb.addField("§8 Bots:", "The unapproved usage of any selfbots is not allowed.\r\n" + 
-				"The use of bots is only allowed in #bot-commands.", false);
+		eb.addField("§8 Bots", "The unapproved usage of any selfbots is not allowed and forbidden in the ToS of Discord and leads to a permanent ban on this server.\r\n" + 
+				"The use of bots is only allowed in #bot-commands .\r\n" + 
+				"Spamming in bot-commands is prohibited.", false);
 		chan.sendMessage(eb.build()).queue();
 	}
 	
 	private void setRulesEmbed_3(TextChannel chan) {
 		EmbedBuilder eb = Rulesembed("55FF55");
-		eb.addField("§9 Privacy:", "Our staff-members are not 24/7 available as they also have a private life. Please avoid unnecessary messages and/or pings.\r\n" + 
-				"If you want to contact any staff private, please ask for permission to do that. If this permission is not granted, this decision is final!\r\n" + 
+		eb.addField("§9 Privacy", "Our staff-members are not 24/7 available as they also have a private life.\r\n" + 
+				"Please avoid unnecessary messages and/or pings.\r\n" + 
+				"If you want to contact any staff private, please ask for permission first in order to do that.\r\n" + 
+				"If this permission is not granted, this decision is final!\r\n" + 
 				"Violating this decision may cause a warn!\r\n" + 
-				"Please have also a look at staff´s online-status:\r\n" + 
+				"Please have also a look at staff's online-status:\r\n" + 
 				"<:online:671772876482936862> = Available\r\n" + 
 				"<:idle:671772876449251383> = Absent/AFK - an answer might take a while\r\n" + 
-				"<:dnd:708982976838369320> = Do not disturb\r\n" + 
-				"<:offline:671772876499582996> = Offline, invisible or do not disturb", false);
-		eb.addField("§10 Staff instructions:", "Staff instructions are absolutely to obey.\r\n" + 
+				"<:dnd:708982976838369320>  = Do not Disturb\r\n" + 
+				"<:offline:671772876499582996> = Offline/Invisible or do not disturb", false);
+		eb.addField("§10 Staff instructions", "Staff instructions are absolutely to obey.\r\n" + 
 				"Muting staffs or ignoring staff instructions is not allowed.\r\n" + 
 				"Provoking staff-members or other users is to avoid.\r\n" + 
 				"Not following staff-instructions will lead to consequences as warns, kicks or bans.", false);
-		eb.addField("§11 Moderation:", "Dyno takes over a large amount of server moderation yet the moderators and admins are still watchful!\r\n" + 
-				"It is very important to follow their instructions!\r\n" + 
-				"If you have a problem with a warn, kick or ban as it might be an invalid one or wrong, do not hesitate to contact a Community Manager", false);
-		eb.addField("§12 Data protection:", "Data protection is very important for all of us. Therefore we would like you to pay attention on the following:\r\n" + 
+		eb.addField("§11 Moderation", "Redi Bot takes over an amount of server moderation yet the moderators and admins are still watchful!\r\n" + 
+				"It is very important to follow their instructions.\r\n" + 
+				"If you have a problem with a warn, kick or ban as it might be an invalid one or wrong, do not hesitate to contact a community manager.", false);
+		eb.addField("§12 Data protection", "Data protection is very important for all of us.\r\n" + 
+				"Therefore we would like you to pay attention on the following:\r\n" + 
 				"Do not share private information such as phone numbers, addresses, passwords, etc. in public channels.\r\n" + 
-				"For your own safety our moderators will remove such content, please understand that", false);
+				"For your own safety our moderators will remove such content, please understand that.", false);
+		eb.addField("§13 Bans, Events and Applications", "Discussing web reports, appeals, feedback tickets, punishments received in-game, on the forum or on discord is not allowed.\r\n" + 
+				"Requesting Game Moderators to moderate in game is not allowed.\r\n" + 
+				"Please use instead the ingame report system or use the web report system.", false);
 		chan.sendMessage(eb.build()).queue();
 	}
 	
