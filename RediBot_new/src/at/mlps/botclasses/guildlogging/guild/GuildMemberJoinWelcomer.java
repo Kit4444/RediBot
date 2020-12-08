@@ -1,5 +1,6 @@
 package at.mlps.botclasses.guildlogging.guild;
 
+import java.awt.Color;
 import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -32,6 +33,8 @@ public class GuildMemberJoinWelcomer extends ListenerAdapter{
 	TextChannel rulechannel;
 	GuildLogEvents gl;
 	String date;
+	String color;
+	String thumbnail;
 	
 	public void onGuildMemberJoin(GuildMemberJoinEvent e) {
 		g = e.getGuild();
@@ -55,6 +58,8 @@ public class GuildMemberJoinWelcomer extends ListenerAdapter{
 				}else {
 					rulechannel = g.getTextChannelById(ruleschannel);
 				}
+				color = rs.getString("welcomer_color");
+				thumbnail = rs.getString("welcomer_thumbnail");
 				welcomechannel = rs.getLong("welcomechannel");
 				YamlFile cfg = new YamlFile("guildsettings.yml");
 				try {
@@ -73,7 +78,14 @@ public class GuildMemberJoinWelcomer extends ListenerAdapter{
 				eb.setTitle(formattedReplace(title));
 				eb.setDescription(formattedReplace(text));
 				eb.setFooter(formattedReplace(footer), g.getIconUrl());
-				eb.setThumbnail(m.getUser().getAvatarUrl());
+				if(thumbnail.equalsIgnoreCase("useravatar")) {
+					eb.setThumbnail(m.getUser().getAvatarUrl());
+				}else if(thumbnail.equalsIgnoreCase("guildicon")) {
+					eb.setThumbnail(g.getIconUrl());
+				}else {
+					eb.setThumbnail(thumbnail);
+				}
+				eb.setColor(Color.getColor(color));
 				chan.sendMessage(eb.build()).queue();
 			}
 		}	
