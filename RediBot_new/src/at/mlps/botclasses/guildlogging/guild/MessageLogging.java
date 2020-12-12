@@ -1,7 +1,12 @@
 package at.mlps.botclasses.guildlogging.guild;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
+
+import org.simpleyaml.configuration.file.YamlFile;
+import org.simpleyaml.exceptions.InvalidConfigurationException;
 
 import at.mlps.main.Main;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -46,9 +51,9 @@ public class MessageLogging extends ListenerAdapter{
        	 	eb.addField("Message:", messagenew + " ", false);
         }
         if(e.getMessage().getContentStripped().length() >= 512) {
-        	eb.addField("New Message:", e.getMessage().getContentStripped().substring(0, 512), false);
+        	eb.addField("New Message:", e.getMessage().getContentDisplay().substring(0, 512), false);
         }else {
-        	eb.addField("New Message:", e.getMessage().getContentStripped(), false);
+        	eb.addField("New Message:", e.getMessage().getContentDisplay(), false);
         }
         if(!attachUri.equalsIgnoreCase("nouri") || !attachUri.equalsIgnoreCase("noAttach")) {
         	eb.addField("Attachment:", attachUri, false);
@@ -57,7 +62,20 @@ public class MessageLogging extends ListenerAdapter{
 		eb.setColor(gl.orange);
 		if(!gl.isBotMessage(g.getIdLong(), e.getMessageIdLong())) {
 			if(gl.enabledLog(g, "guildmessageupdate")) {
-				gl.sendMsg(eb, g);
+				YamlFile cfg = new YamlFile("guildsettings.yml");
+				try {
+					cfg.load();
+				} catch (InvalidConfigurationException | IOException e1) {
+					e1.printStackTrace();
+				}
+				if(cfg.contains("Exempts." + g.getIdLong())) {
+					List<Long> exempts = cfg.getLongList("Exempts." + g.getIdLong());
+					if(!exempts.contains(e.getChannel().getIdLong())) {
+						gl.sendMsg(eb, g);
+					}
+				}else {
+					gl.sendMsg(eb, g);
+				}
 			}
 		}
 	}
@@ -68,6 +86,12 @@ public class MessageLogging extends ListenerAdapter{
         String stime = time.format(new Date());
         EmbedBuilder eb = new EmbedBuilder();
         GuildLogEvents gl = new GuildLogEvents();
+        YamlFile cfg = new YamlFile("guildsettings.yml");
+		try {
+			cfg.load();
+		} catch (InvalidConfigurationException | IOException e1) {
+			e1.printStackTrace();
+		}
         String messageold = gl.retMsg(g.getIdLong(), e.getMessageIdLong());
         String messagenew = Main.decrypt(messageold);
         String attachUri = gl.getAttach(g.getIdLong(), e.getMessageIdLong());
@@ -89,8 +113,16 @@ public class MessageLogging extends ListenerAdapter{
         eb.setFooter(stime);
 		eb.setColor(gl.orange);
 		if(!gl.isBotMessage(g.getIdLong(), e.getMessageIdLong())) {
-			if(gl.enabledLog(g, "guildmessagedelete"))
-			gl.sendMsg(eb, g);
+			if(gl.enabledLog(g, "guildmessagedelete")) {
+				if(cfg.contains("Exempts." + g.getIdLong())) {
+					List<Long> exempts = cfg.getLongList("Exempts." + g.getIdLong());
+					if(!exempts.contains(e.getChannel().getIdLong())) {
+						gl.sendMsg(eb, g);
+					}
+				}else {
+					gl.sendMsg(eb, g);
+				}
+			}
 		}
 	}
 }

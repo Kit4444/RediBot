@@ -20,30 +20,29 @@ public class Punishments extends ListenerAdapter{
 		MessageChannel chan = e.getChannel();
 		Guild g = e.getGuild();
 		String[] args = e.getMessage().getContentRaw().split(" ");
-		long modlog = getModlogChannel(g.getIdLong());
-		TextChannel modlogchan = g.getTextChannelById(modlog);
+		TextChannel modlogchan = g.getTextChannelById(getModlogChannel(g.getIdLong()));
 		if(args.length == 1) {
 			if(args[0].equalsIgnoreCase(Main.botprefix + "kick")) {
 				if(isRegistered(g.getIdLong())) {
-					chan.sendMessage("<:deny:678036504702091278> Usage: rb!kick <User@Mention|id> <Reason>\nYou can mention the User or use the Snowflake-ID. You also can attach a picture onto the command, the Bot will always select the first attachment.").queue();
+					chan.sendMessage("<:deny:678036504702091278> Usage: rb!kick <User@Mention|id> <Reason>\nYou can mention the User or use the Snowflake-ID.").queue();
 				}else {
 					chan.sendMessage("<:deny:678036504702091278> ***|*** This guild is not registered.").queue();
 				}
 			}else if(args[0].equalsIgnoreCase(Main.botprefix + "mute")) {
 				if(isRegistered(g.getIdLong())) {
-					chan.sendMessage("<:deny:678036504702091278> Usage: rb!mute <User@Mention|id> <Reason>\\nYou can mention the User or use the Snowflake-ID. You also can attach a picture onto the command, the Bot will always select the first attachment.").queue();
+					chan.sendMessage("<:deny:678036504702091278> Usage: rb!mute <User@Mention|id> <Reason>\\nYou can mention the User or use the Snowflake-ID.").queue();
 				}else {
 					chan.sendMessage("<:deny:678036504702091278> ***|*** This guild is not registered.").queue();
 				}
 			}else if(args[0].equalsIgnoreCase(Main.botprefix + "warn")) {
 				if(isRegistered(g.getIdLong())) {
-					chan.sendMessage("<:deny:678036504702091278> ***This command is not implemented. This is a feature for the next version.***").queue();
+					chan.sendMessage("<:deny:678036504702091278> Usage: rb!mute <User@Mention|id> <Reason>\\\\nYou can mention the User or use the Snowflake-ID.").queue();
 				}else {
 					chan.sendMessage("<:deny:678036504702091278> ***|*** This guild is not registered.").queue();
 				}
 			}else if(args[0].equalsIgnoreCase(Main.botprefix + "ban")) {
 				if(isRegistered(g.getIdLong())) {
-					chan.sendMessage("<:deny:678036504702091278> ***This command is not implemented. This is a feature for the next version.***").queue();
+					chan.sendMessage("<:deny:678036504702091278> Usage: rb!mute <User@Mention|id> <Reason>\\\\nYou can mention the User or use the Snowflake-ID.").queue();
 				}else {
 					chan.sendMessage("<:deny:678036504702091278> ***|*** This guild is not registered.").queue();
 				}
@@ -51,13 +50,13 @@ public class Punishments extends ListenerAdapter{
 		}else {
 			if(args[0].equalsIgnoreCase(Main.botprefix + "kick")) {
 				if(isRegistered(g.getIdLong())) {
-					chan.sendMessage("<:deny:678036504702091278> ***This command is not implemented. This is a feature for the next version.***").queue();
+					chan.sendMessage("<:deny:678036504702091278> Usage: rb!mute <User@Mention|id> <Reason>\\\\nYou can mention the User or use the Snowflake-ID.").queue();
 				}else {
 					chan.sendMessage("<:deny:678036504702091278> ***|*** This guild is not registered.").queue();
 				}
 			}else if(args[0].equalsIgnoreCase(Main.botprefix + "mute")) {
 				if(isRegistered(g.getIdLong())) {
-					chan.sendMessage("<:deny:678036504702091278> ***This command is not implemented. This is a feature for the next version.***").queue();
+					chan.sendMessage("<:deny:678036504702091278> Usage: rb!mute <User@Mention|id> <Reason>\\\\nYou can mention the User or use the Snowflake-ID.").queue();
 				}else {
 					chan.sendMessage("<:deny:678036504702091278> ***|*** This guild is not registered.").queue();
 				}

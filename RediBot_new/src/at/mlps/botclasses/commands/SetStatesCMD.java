@@ -20,14 +20,14 @@ public class SetStatesCMD extends ListenerAdapter{
 		String[] args = e.getMessage().getContentRaw().split(" ");
 		User maurice = e.getJDA().getUserById(228145889988837385L);
 		if(args.length == 1) {
-			if(args[0].equalsIgnoreCase(Main.botprefix + "setactivity")) {
+			if(args[0].equalsIgnoreCase(Main.botprefix + "setonlinestatus")) {
 				if(e.getAuthor() == maurice) {
 					chan.sendMessage("Usage: " + Main.botprefix + "setactivity <online|idle|dnd|offline>").queue();
 				}else {
 					e.getMessage().addReaction("deny:678036504702091278");
 					chan.sendMessage("You are not " + maurice.getName() + "#" + maurice.getDiscriminator() + " !").queue();
 				}
-			}else if(args[0].equalsIgnoreCase(Main.botprefix + "setgame")) {
+			}else if(args[0].equalsIgnoreCase(Main.botprefix + "setactivity")) {
 				if(e.getAuthor() == maurice) {
 					chan.sendMessage("Usage: " + Main.botprefix + "setgame <playing|watching|listening|streaming> <Game mArg>").queue();
 				}else {
@@ -36,7 +36,7 @@ public class SetStatesCMD extends ListenerAdapter{
 				}
 			}
 		}else if(args.length >= 2) {
-			if(args[0].equalsIgnoreCase(Main.botprefix + "setactivity")) {
+			if(args[0].equalsIgnoreCase(Main.botprefix + "setonlinestatus")) {
 				if(e.getAuthor() == maurice) {
 					String mode = args[1];
 					YamlFile file = new YamlFile("configuration.yml");
@@ -87,7 +87,7 @@ public class SetStatesCMD extends ListenerAdapter{
 					e.getMessage().addReaction("deny:678036504702091278");
 					chan.sendMessage("You are not " + maurice.getName() + "#" + maurice.getDiscriminator() + " !").queue();
 				}
-			}else if(args[0].equalsIgnoreCase(Main.botprefix + "setgame")) {
+			}else if(args[0].equalsIgnoreCase(Main.botprefix + "setactivity")) {
 				if(e.getAuthor() == maurice) {
 					StringBuilder sb = new StringBuilder();
 					for(int i = 2; i < args.length; i++) {

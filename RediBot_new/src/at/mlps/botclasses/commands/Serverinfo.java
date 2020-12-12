@@ -28,11 +28,10 @@ public class Serverinfo extends ListenerAdapter{
 			audio = e.getGuild().getVoiceChannels().size();
 			booster = e.getGuild().getBoostCount();
 			member = e.getGuild().getMemberCount();
+			mbooster = e.getGuild().getBoosters().size();
 			Role staffrole = null;
-			Role nbooster = null;
 			if(e.getGuild().getIdLong() == 548136727697555496L) { // redimain
 				staffrole = e.getGuild().getRoleById(552161168412639235L);
-				nbooster = e.getGuild().getRoleById(585532995151200309L);
 			}else if(e.getGuild().getIdLong() == 612372586386423824L) { //redistaff
 				staffrole = e.getGuild().getRoleById(627956904684945448L); 
 			}else if(e.getGuild().getIdLong() == 580465138230886430L) { //redilog
@@ -41,7 +40,6 @@ public class Serverinfo extends ListenerAdapter{
 				staffrole = e.getGuild().getRoleById(656676898096676885L);
 			}else if(e.getGuild().getIdLong() == 376924440321327115L) { //aragonairlines
 				staffrole = e.getGuild().getRoleById(615873724067086381L);
-				nbooster = e.getGuild().getRoleById(585553543927431178L);
 			}else if(e.getGuild().getIdLong() == 641699416339906572L) { //friendsnfamily
 				staffrole = e.getGuild().getRoleById(641834605577633793L);
 			}else {
@@ -69,9 +67,6 @@ public class Serverinfo extends ListenerAdapter{
 				}
 				if(m.getRoles().contains(staffrole)) {
 					staff++;
-				}
-				if(m.getRoles().contains(nbooster)) {
-					mbooster++;
 				}
 			}
 			List<Role> roles = e.getGuild().getRoles();

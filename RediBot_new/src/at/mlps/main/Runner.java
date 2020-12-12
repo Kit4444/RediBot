@@ -14,7 +14,7 @@ public class Runner extends TimerTask{
 	@Override
 	public void run() {
 		gctimer++;
-		if(gctimer == 100) {
+		if(gctimer == 300) {
 			System.gc();
 		}
 		int code1 = random(0, 5000);

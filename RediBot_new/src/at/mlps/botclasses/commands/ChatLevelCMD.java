@@ -4,13 +4,16 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import at.mlps.main.Main;
 import at.mlps.rc.mysql.lb.MySQL;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
@@ -80,6 +83,42 @@ public class ChatLevelCMD extends ListenerAdapter{
 				eb.setDescription(m.getUser().getName() + "'s Level is " + level + "\nNext Level is " + nlevel + "\nProgress:\n" + progr + "\nTotal XP: " + xp);
 				eb.setFooter(g.getName() + ", " + sdf.format(new Date()), g.getIconUrl());
 				e.getChannel().sendMessage(eb.build()).queue();
+			}else if(args[0].equalsIgnoreCase(Main.botprefix + "leaderboard")) {
+				TextChannel chan = e.getChannel();
+				long guildid = g.getIdLong();
+				try {
+					PreparedStatement ps = MySQL.getConnection().prepareStatement("SELECT * FROM redibot_discordchatlevel WHERE guildid = ? ORDER BY level DESC LIMIT 25");
+					ps.setLong(1, guildid);
+					ResultSet rs = ps.executeQuery();
+					List<String> leaderbrd = new ArrayList<>();
+					int i = 0;
+					leaderbrd.add("Toplist | Name | XP | Level");
+					while (rs.next()) {
+						i++;
+						Member member = g.getMemberById(rs.getLong("memberid"));
+						String name = "";
+						if(member == null) {
+							name = "unknown member/" + rs.getLong("memberid");
+						}else {
+							name = member.getUser().getName() + "#" + member.getUser().getDiscriminator();
+						}
+						int level = rs.getInt("mainlevel");
+						int xp = rs.getInt("level");
+						leaderbrd.add("Top " + i + " | " + name + " | " + xp + " XP | Level " + level);
+					}
+					StringBuilder sb = new StringBuilder();
+					for(String s : leaderbrd) {
+						sb.append(s);
+						sb.append("\n");
+					}
+					EmbedBuilder eb = new EmbedBuilder();
+					eb.setDescription("```" + sb.toString() + "```");
+					eb.setColor(m.getColor());
+					eb.setTitle("Top 25 of " + g.getName());
+					chan.sendMessage(eb.build()).queue();
+				} catch (SQLException e1) {
+					e1.printStackTrace();
+				}
 			}
 		}
 	}

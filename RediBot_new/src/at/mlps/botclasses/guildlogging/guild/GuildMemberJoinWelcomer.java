@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Random;
 
 import org.simpleyaml.configuration.file.YamlFile;
 import org.simpleyaml.exceptions.InvalidConfigurationException;
@@ -85,7 +86,15 @@ public class GuildMemberJoinWelcomer extends ListenerAdapter{
 				}else {
 					eb.setThumbnail(thumbnail);
 				}
-				eb.setColor(Color.getColor(color));
+				if(color.equalsIgnoreCase("membercolor")) {
+					eb.setColor(m.getColor());
+				}else if(color.equalsIgnoreCase("random")) {
+					eb.setColor(new Color(getRGB(), getRGB(), getRGB()));
+				}else if(color.startsWith("#")) {
+					eb.setColor(Color.getColor(color.substring(1)));
+				}else if(color.matches("^[0-9]+$")) {
+					eb.setColor(new Color(Integer.valueOf(color)));
+				}
 				chan.sendMessage(eb.build()).queue();
 			}
 		}	
@@ -93,5 +102,14 @@ public class GuildMemberJoinWelcomer extends ListenerAdapter{
 	
 	String formattedReplace(String text) {
 		return text.replace("%servername", guildname).replace("%username", membername).replace("%usermention", membermention).replace("%members", String.valueOf(members)).replace("%ruleschannel", rulechannel.getAsMention()).replace("%date", date);
+	}
+	
+	int getRGB(){
+		Random r = new Random();
+		int number = r.nextInt(255);
+		while(number < 0) {
+			number = r.nextInt(255);
+		}
+		return number;
 	}
 }

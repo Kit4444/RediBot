@@ -25,10 +25,6 @@ public class PurgeCommand extends ListenerAdapter{
 			if(args[0].equalsIgnoreCase(Main.botprefix + "purge") || args[0].equalsIgnoreCase(Main.botprefix + "clear")) {
 				if(e.getMember().hasPermission(Permission.MESSAGE_MANAGE)) {
 					chan.sendMessage("<:deny:597877001264824320> **|** Usage: !purge <Messages (max. 100)>").queue();
-				}else {
-					e.getMember().getUser().openPrivateChannel().queue((channel) -> {
-						channel.sendMessage("Hey you, you can't use the !purge command, as you don't have the Moderator - Role.").queue();
-					});
 				}
 			}
 		}else if(args.length == 2) {
@@ -37,10 +33,6 @@ public class PurgeCommand extends ListenerAdapter{
 				if(e.getMember().hasPermission(Permission.MESSAGE_MANAGE)) {
 					TextChannel chann = (TextChannel) chan;
 					clear(chann, msgs, e.getMember());
-				}else {
-					e.getMember().getUser().openPrivateChannel().queue((channel) -> {
-						channel.sendMessage("Hey you, you can't use the !purge command, as you don't have the Moderator - Role.").queue();
-					});
 				}
 			}
 		}
@@ -58,7 +50,7 @@ public class PurgeCommand extends ListenerAdapter{
 				return;
 			}else {
 				List<String> msgs = new ArrayList<>();
-				messages.forEach(m -> msgs.add(m.getAuthor().getName() + ": " + m.getContentRaw()));
+				messages.forEach(m -> msgs.add(m.getAuthor().getName() + ": " + m.getContentDisplay()));
 				channel.deleteMessages(messages).complete();
 				EmbedBuilder eb = new EmbedBuilder();
 				eb.setTitle((msgtodel + 1) + " Messages has been deleted.");
@@ -71,7 +63,7 @@ public class PurgeCommand extends ListenerAdapter{
 				eb.addField("Messages deleted:", sb.toString(), false);
 				eb.setColor(member.getColor());
 				channel.sendMessage(eb.build()).queue(msg -> {
-					msg.delete().queueAfter(16, TimeUnit.SECONDS);
+					msg.delete().queueAfter(5, TimeUnit.SECONDS);
 				});
 				
 			}

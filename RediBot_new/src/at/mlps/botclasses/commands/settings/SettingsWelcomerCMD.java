@@ -33,7 +33,6 @@ public class SettingsWelcomerCMD extends ListenerAdapter{
 		if(args.length == 1) {
 			if(args[0].equalsIgnoreCase(Main.botprefix + "welcomer")) {
 				chan.sendMessage("In case of you don't know the proper syntax,\nenter this command: ``[p]welcomer help``").queue();
-				//chan.sendMessage("Possible Commands for the Welcomer:\n[p]welcomer setchannel <Mention#Channel|SnowflakeID> | Sets the Channel where the bot post's the joinmessages.\n[p]welcomer removechannel | Remove the Channel (Bot will stop posting the joinmessages)\n[p]welcomer showchannel | This will mention the channel where the bot posts the joinmessages.\n[p]welcomer settext <type> <Your Text> | Set a custom text. (Placeholders and Types are here listed: [p]welcomer help").queue();
 			}
 		}else if(args.length == 2) {
 			if(args[0].equalsIgnoreCase(Main.botprefix + "welcomer")) {
@@ -48,6 +47,7 @@ public class SettingsWelcomerCMD extends ListenerAdapter{
 					eb.addField("[p]welcomer settext <type> <Your Text>", "You also can set a custom text with placeholders.", false);
 					eb.addField("[p]welcomer setcolor <type>", "Sets the color for the embed.", false);
 					eb.addField("[p]welcomer setthumbnail <type>", "Set the thumbnail for the Embed", false);
+					eb.addField("[p]welcomer setrulechannel <Mention#Channel|SnowflakeID>", "Defines the channel for the ``%ruleschannel`` Placeholder.", false);
 					eb.addField("Placeholders for the Text", "%servername - Display's the guildname\n%ruleschannel - Mentions the rulechannel\n%usermention - Mentions the user\n%username - Doesn't mention the user\n%date - Returns the current date for the Central European (Summer) Time (01/01/1970 - 00:00:00)\n%members - Displays the current Members on the server", false);
 					eb.addField("Types for the Text", "title\nmaintext\nfooter", false);
 					eb.addField("Types for the Color", "membercolor\nrandom\n(HEX Colorcode ``#FFFFFF`` or Integer)", false);
@@ -119,6 +119,34 @@ public class SettingsWelcomerCMD extends ListenerAdapter{
 							chan.sendMessage(success + "The Channel " + welcome.getAsMention() + " is saved.\nThe Bot will post now joinmessages there.").queue();
 						} catch (SQLException e1) {
 							chan.sendMessage(failed + "Couldn't save the Welcomechannel.\nErrorcode: " + e1.getMessage()).queue();
+							e1.printStackTrace();
+						}
+					}else {
+						chan.sendMessage(noperm).queue();
+					}
+				}else if(args[1].equalsIgnoreCase("setrulechannel")) {
+					if(hasSettingPerms(m)) {
+						long uid = 0L;
+						TextChannel welcome = null;
+						if(args[2].matches("^[0-9]+$")) {
+							uid = Long.parseLong(args[2]);
+							welcome = g.getTextChannelById(uid);
+						}else {
+							if(args[2].startsWith("!")) {
+								welcome = g.getTextChannelsByName(args[2].substring(1), true).get(0);
+							}else {
+								welcome = e.getMessage().getMentionedChannels().get(0);
+							}
+						}
+						long channelID = welcome.getIdLong();
+						try {
+							PreparedStatement ps = MySQL.getConnection().prepareStatement("UPDATE redibot_guildlog SET welcRuleChannel = ? WHERE guildid = ?");
+							ps.setLong(1, channelID);
+							ps.setLong(2, g.getIdLong());
+							ps.executeUpdate();
+							chan.sendMessage(success + "The Channel " + welcome.getAsMention() + " is saved as rules channel.").queue();
+						} catch (SQLException e1) {
+							chan.sendMessage(failed + "Couldn't save the Rulechannel.\nErrorcode: " + e1.getMessage()).queue();
 							e1.printStackTrace();
 						}
 					}else {

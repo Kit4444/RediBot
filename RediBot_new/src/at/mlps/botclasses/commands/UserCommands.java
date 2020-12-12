@@ -30,7 +30,7 @@ public class UserCommands extends ListenerAdapter{
 		if(cont.equalsIgnoreCase(Main.botprefix + "ping")) {
 			long time = System.currentTimeMillis();
 			chan.sendMessage("Pong!").queue(response -> {
-				response.editMessageFormat("Pong! ``%d ms`` Gatewayping: ``%d ms``", System.currentTimeMillis() - time, e.getJDA().getGatewayPing()).queue();
+				response.editMessageFormat("Pong! ``%d ms``\nGatewayping: ``%d ms``\nShard: ``%d``", System.currentTimeMillis() - time, e.getJDA().getGatewayPing(), e.getJDA().getShardInfo().getShardId()).queue();
 			});
 		}else if(cont.equalsIgnoreCase(Main.botprefix + "botinfo")) {
 			YamlFile file = new YamlFile("configuration.yml");
