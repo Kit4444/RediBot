@@ -5,6 +5,7 @@ import java.util.List;
 import at.mlps.botclasses.guildlogging.guild.GuildLogEvents;
 import at.mlps.main.Main;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Role;
@@ -38,18 +39,28 @@ public class WhoisCMD extends ListenerAdapter{
 					eb.addField("Nitro Booster:", "no", false);
 				}
 				eb.setColor(m.getColor());
-				eb.addField("Onlinestatus:", m.getOnlineStatus().getKey(), false);
+				if(m.getOnlineStatus() == OnlineStatus.ONLINE) {
+					eb.addField("Onlinestatus:", "<:online:671772876482936862> | Online", false);
+				}else if(m.getOnlineStatus() == OnlineStatus.IDLE) {
+					eb.addField("Onlinestatus:", "<:idle:671772876449251383> | Idle", false);
+				}else if(m.getOnlineStatus() == OnlineStatus.DO_NOT_DISTURB) {
+					eb.addField("Onlinestatus:", "<:dnd:708982976838369320> | Do not Disturb", false);
+				}else if(m.getOnlineStatus() == OnlineStatus.OFFLINE) {
+					eb.addField("Onlinestatus:", "<:offline:671772876499582996> | Offline", false);
+				}else {
+					eb.addField("Onlinestatus:", m.getOnlineStatus().getKey(), false);
+				}
 				eb.setThumbnail(m.getUser().getAvatarUrl());
 				List<Role> roles = m.getRoles();
 				StringBuilder sb = new StringBuilder();
 				for(Role rs : roles) {
 					sb.append(rs.getAsMention());
-					sb.append(", ");
+					sb.append(" ");
 				}
 				if(roles.size() <= 32) {
-					eb.addField("Roles [" + roles.size() + " ]", sb.toString(), true);
+					eb.addField("Roles [" + roles.size() + "]", sb.toString(), true);
 				}else {
-					eb.addField("Roles [" + roles.size() + " ]", "Too many roles to list.", true);
+					eb.addField("Roles [" + roles.size() + "]", "Too many roles to list.", true);
 				}
 				eb.setFooter("ID: " + m.getUser().getId(), g.getIconUrl());
 				chan.sendMessage(eb.build()).queue();
@@ -62,7 +73,11 @@ public class WhoisCMD extends ListenerAdapter{
 					uid = Long.parseLong(args[1]);
 					m2 = g.getMemberById(uid);
 				}else {
-					m2 = e.getMessage().getMentionedMembers().get(0);
+					if(args[1].startsWith("!")) {
+						m2 = g.getMembersByName(args[1].substring(1), true).get(0);
+					}else {
+						m2 = e.getMessage().getMentionedMembers().get(0);
+					}
 				}
 				eb.setAuthor(m2.getUser().getName() + "#" + m2.getUser().getDiscriminator(), m2.getUser().getAvatarUrl());
 				eb.setDescription(m2.getAsMention());
@@ -79,18 +94,28 @@ public class WhoisCMD extends ListenerAdapter{
 					eb.addField("Nitro Booster:", "no", false);
 				}
 				eb.setColor(m2.getColor());
-				eb.addField("Onlinestatus:", m2.getOnlineStatus().getKey(), false);
+				if(m2.getOnlineStatus() == OnlineStatus.ONLINE) {
+					eb.addField("Onlinestatus:", "<:online:671772876482936862> | Online", false);
+				}else if(m2.getOnlineStatus() == OnlineStatus.IDLE) {
+					eb.addField("Onlinestatus:", "<:idle:671772876449251383> | Idle", false);
+				}else if(m2.getOnlineStatus() == OnlineStatus.DO_NOT_DISTURB) {
+					eb.addField("Onlinestatus:", "<:dnd:708982976838369320> | Do not Disturb", false);
+				}else if(m2.getOnlineStatus() == OnlineStatus.OFFLINE) {
+					eb.addField("Onlinestatus:", "<:offline:671772876499582996> | Offline", false);
+				}else {
+					eb.addField("Onlinestatus:", m2.getOnlineStatus().getKey(), false);
+				}
 				eb.setThumbnail(m2.getUser().getAvatarUrl());
 				List<Role> roles = m2.getRoles();
 				StringBuilder sb = new StringBuilder();
 				for(Role rs : roles) {
 					sb.append(rs.getAsMention());
-					sb.append(", ");
+					sb.append(" ");
 				}
 				if(roles.size() <= 32) {
-					eb.addField("Roles [" + roles.size() + " ]", sb.toString(), true);
+					eb.addField("Roles [" + roles.size() + "]", sb.toString(), true);
 				}else {
-					eb.addField("Roles [" + roles.size() + " ]", "Too many roles to list.", true);
+					eb.addField("Roles [" + roles.size() + "]", "Too many roles to list.", true);
 				}
 				eb.setFooter("ID: " + m2.getUser().getId(), g.getIconUrl());
 				chan.sendMessage(eb.build()).queue();

@@ -33,7 +33,7 @@ public class UserCommands extends ListenerAdapter{
 				response.editMessageFormat("Pong! ``%d ms``\nGatewayping: ``%d ms``\nShard: ``%d``", System.currentTimeMillis() - time, e.getJDA().getGatewayPing(), e.getJDA().getShardInfo().getShardId()).queue();
 			});
 		}else if(cont.equalsIgnoreCase(Main.botprefix + "botinfo")) {
-			YamlFile file = new YamlFile("configuration.yml");
+			YamlFile file = new YamlFile("configs/configuration.yml");
 			try {
 				file.load();
 			} catch (InvalidConfigurationException | IOException e1) {
@@ -64,7 +64,8 @@ public class UserCommands extends ListenerAdapter{
 					i++;
 				}
 			}
-			eb.addField("Members:", "Serving " + i + " Members", true);
+			eb.addField("Members:", "Serving " + i + " Members", false);
+			eb.addField("Shards", "Shard " + e.getJDA().getShardInfo().getShardId() + " of 4", false);
 			eb.addField("Ram", "Usage: " + String.valueOf((run.totalMemory() - run.freeMemory()) / 1048576L) + "mb / Allocated: " + String.valueOf(run.totalMemory() / 1048576L) + "mb", false);
 			if(MySQL.isConnected()) {
 				eb.addField("DB Connection:", "connected", true);
@@ -89,7 +90,7 @@ public class UserCommands extends ListenerAdapter{
 			chan.sendMessage("Here you are! <:cheesesandwich:708988688486629376>").queue();
 		}else if(cont.equalsIgnoreCase(Main.botprefix + "about")) {
 			EmbedBuilder eb = new EmbedBuilder();
-			YamlFile file = new YamlFile("configuration.yml");
+			YamlFile file = new YamlFile("configs/configuration.yml");
 			try {
 				file.load();
 			} catch (InvalidConfigurationException | IOException e1) {
@@ -127,8 +128,6 @@ public class UserCommands extends ListenerAdapter{
 			//eb.addField("21.06.2020", "- Added Discord's new Gateway Intents\n- added new events for the registered guildlogging\n- removed the Sleeps in the FAQ and Ruleset-Thread\n- changed something in the rules §9", false);
 			//eb.addField("15.06.2020", "- Changed JDA-Version from build 101 to 165\n- added the [p]changelog command\n- changed some backend code", false);
 			chan.sendMessage(eb.build()).queue();
-		}else if(cont.equalsIgnoreCase(Main.botprefix + "911")) {
-			chan.sendMessage("Hello, how can I help you?").queue();
 		}
 	}
 	
@@ -182,4 +181,6 @@ public class UserCommands extends ListenerAdapter{
 		}
 		return "Weeks: " + weeks + ", Days: " + days + ", Hours: " + hours + ", Minutes: " + minutes + ", Seconds: " + seconds;
 	}
+	
+	
 }

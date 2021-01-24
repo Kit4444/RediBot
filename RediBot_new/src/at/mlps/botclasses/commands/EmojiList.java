@@ -45,8 +45,8 @@ public class EmojiList extends ListenerAdapter{
 			ebAnim.setDescription(sbAnim.toString());
 			ebNonAnim.setColor(m.getColor());
 			ebAnim.setColor(m.getColor());
-			ebNonAnim.setAuthor("Static Emojis", g.getIconUrl());
-			ebAnim.setAuthor("Animated Emojis", g.getIconUrl());
+			ebNonAnim.setAuthor("Static Emojis (" + nonAnim.size() + ")", g.getIconUrl());
+			ebAnim.setAuthor("Animated Emojis (" + Anim.size() + ")", g.getIconUrl());
 			chan.sendMessage(ebNonAnim.build()).queue();
 			chan.sendMessage(ebAnim.build()).queue();
 		}

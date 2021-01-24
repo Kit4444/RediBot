@@ -20,23 +20,23 @@ public class SetStatesCMD extends ListenerAdapter{
 		String[] args = e.getMessage().getContentRaw().split(" ");
 		User maurice = e.getJDA().getUserById(228145889988837385L);
 		if(args.length == 1) {
-			if(args[0].equalsIgnoreCase(Main.botprefix + "setonlinestatus")) {
+			if(args[0].equalsIgnoreCase(Main.botprefix + "setstatus")) {
 				if(e.getAuthor() == maurice) {
-					chan.sendMessage("Usage: " + Main.botprefix + "setactivity <online|idle|dnd|offline>").queue();
+					chan.sendMessage("Usage: " + Main.botprefix + "setstatus <online|idle|dnd|offline>").queue();
 				}else {
 					e.getMessage().addReaction("deny:678036504702091278");
 					chan.sendMessage("You are not " + maurice.getName() + "#" + maurice.getDiscriminator() + " !").queue();
 				}
 			}else if(args[0].equalsIgnoreCase(Main.botprefix + "setactivity")) {
 				if(e.getAuthor() == maurice) {
-					chan.sendMessage("Usage: " + Main.botprefix + "setgame <playing|watching|listening|streaming> <Game mArg>").queue();
+					chan.sendMessage("Usage: " + Main.botprefix + "setactivity <playing|watching|listening|streaming> <Game mArg>").queue();
 				}else {
 					e.getMessage().addReaction("deny:678036504702091278");
 					chan.sendMessage("You are not " + maurice.getName() + "#" + maurice.getDiscriminator() + " !").queue();
 				}
 			}
 		}else if(args.length >= 2) {
-			if(args[0].equalsIgnoreCase(Main.botprefix + "setonlinestatus")) {
+			if(args[0].equalsIgnoreCase(Main.botprefix + "setstatus")) {
 				if(e.getAuthor() == maurice) {
 					String mode = args[1];
 					YamlFile file = new YamlFile("configuration.yml");
@@ -80,7 +80,7 @@ public class SetStatesCMD extends ListenerAdapter{
 							e1.printStackTrace(); 
 						}
 					}else {
-						chan.sendMessage("Usage: " + Main.botprefix + "setactivity **<online|idle|dnd|offline>**").queue();
+						chan.sendMessage("Usage: " + Main.botprefix + "setstatus **<online|idle|dnd|offline>**").queue();
 						e.getMessage().addReaction("deny:678036504702091278").queue();
 					}
 				}else {
@@ -144,7 +144,7 @@ public class SetStatesCMD extends ListenerAdapter{
 							e1.printStackTrace();
 						}
 					}else {
-						chan.sendMessage("Usage: " + Main.botprefix + "setgame **<playing|watching|listening|streaming>** <Game mArg>").queue();
+						chan.sendMessage("Usage: " + Main.botprefix + "setactivity **<playing|watching|listening|streaming>** <Game mArg>").queue();
 					}
 				}else {
 					e.getMessage().addReaction("deny:678036504702091278");

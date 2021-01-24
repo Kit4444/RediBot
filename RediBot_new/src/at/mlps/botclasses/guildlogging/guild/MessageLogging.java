@@ -62,7 +62,7 @@ public class MessageLogging extends ListenerAdapter{
 		eb.setColor(gl.orange);
 		if(!gl.isBotMessage(g.getIdLong(), e.getMessageIdLong())) {
 			if(gl.enabledLog(g, "guildmessageupdate")) {
-				YamlFile cfg = new YamlFile("guildsettings.yml");
+				YamlFile cfg = new YamlFile("configs/guildsettings.yml");
 				try {
 					cfg.load();
 				} catch (InvalidConfigurationException | IOException e1) {
@@ -86,7 +86,7 @@ public class MessageLogging extends ListenerAdapter{
         String stime = time.format(new Date());
         EmbedBuilder eb = new EmbedBuilder();
         GuildLogEvents gl = new GuildLogEvents();
-        YamlFile cfg = new YamlFile("guildsettings.yml");
+        YamlFile cfg = new YamlFile("configs/guildsettings.yml");
 		try {
 			cfg.load();
 		} catch (InvalidConfigurationException | IOException e1) {

@@ -21,7 +21,7 @@ public class RegisterGuilds extends ListenerAdapter{
 		String[] args = e.getMessage().getContentRaw().split(" ");
 		if(args.length == 1) {
 			if(args[0].equalsIgnoreCase(Main.botprefix + "registerguild")) {
-				chan.sendMessage("***Usage***: " + Main.botprefix + "registerguild <Channel@Mention>").queue();
+				chan.sendMessage("***Usage***: " + Main.botprefix + "registerguild <Channel#Mention>").queue();
 			}
 		}else if(args.length == 2) {
 			if(args[0].equalsIgnoreCase(Main.botprefix + "registerguild")) {
@@ -33,7 +33,7 @@ public class RegisterGuilds extends ListenerAdapter{
 						chan.sendMessage("<:deny:678036504702091278> This guild is already registered.").queue();
 					}else {
 						insertDB(guildid, logchannelid);
-						chan.sendMessage("<:approved:678036504391581730> This guild has been registered.\nGuild: " + g.getName() + "\nLogchannel: " + logchannel.getAsMention()).queue();
+						chan.sendMessage("<:approved:678036504391581730> This guild has been registered.\nGuild: " + g.getName() + "\nLogchannel: " + logchannel.getAsMention() + "\n \nPlease set up the Bot now for your guild!\n[p]configuration").queue();
 					}
 				}else {
 					User u = e.getJDA().getUserById(228145889988837385L);

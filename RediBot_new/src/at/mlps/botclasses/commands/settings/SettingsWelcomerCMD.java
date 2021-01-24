@@ -24,6 +24,8 @@ public class SettingsWelcomerCMD extends ListenerAdapter{
 	String noperm = "<:deny:678036504702091278> Error - You are not permissible to do that!";
 	String success = "<:approved:678036504391581730> Success - ";
 	String failed = "<:deny:678036504702091278> Error - ";
+	//TODO add a subcommand "[p]welcomer exampleembed" to see how it could look like
+	
 	
 	public void onGuildMessageReceived(GuildMessageReceivedEvent e) {
 		String[] args = e.getMessage().getContentRaw().split(" ");
@@ -41,6 +43,7 @@ public class SettingsWelcomerCMD extends ListenerAdapter{
 					eb.setAuthor(m.getUser().getName() + "#" + m.getUser().getDiscriminator(), m.getUser().getAvatarUrl());
 					eb.setTitle("Guide for the [p]welcomer Command");
 					eb.addField("[p]welcomer help", "Displays this Embed", false);
+					//eb.addField("[p]welcomer exampleembed", "Shows an example embed how the current settings are look like", false);
 					eb.addField("[p]welcomer setchannel <Mention#Channel|SnowflakeID>", "Set the Channel where the bot posts the join message.", false);
 					eb.addField("[p]welcomer removechannel", "Stops the bot posting the message in the channel.", false);
 					eb.addField("[p]welcomer showchannel", "The bot will mention the Channel where he posts the messages.", false);
@@ -48,7 +51,7 @@ public class SettingsWelcomerCMD extends ListenerAdapter{
 					eb.addField("[p]welcomer setcolor <type>", "Sets the color for the embed.", false);
 					eb.addField("[p]welcomer setthumbnail <type>", "Set the thumbnail for the Embed", false);
 					eb.addField("[p]welcomer setrulechannel <Mention#Channel|SnowflakeID>", "Defines the channel for the ``%ruleschannel`` Placeholder.", false);
-					eb.addField("Placeholders for the Text", "%servername - Display's the guildname\n%ruleschannel - Mentions the rulechannel\n%usermention - Mentions the user\n%username - Doesn't mention the user\n%date - Returns the current date for the Central European (Summer) Time (01/01/1970 - 00:00:00)\n%members - Displays the current Members on the server", false);
+					eb.addField("Placeholders for the Text", "%servername - Display's the guildname\n%usermention - Mentions the user\n%usernamewodisc - Plain Username without Discriminator (User~~#1234~~)\n%usernamewdisc - Plain Username with Discriminator (User#1234)\n%date - Returns the current date for the Central European (Summer) Time (01/01/1970 - 00:00:00)\n%members - Displays the current Members on the server", false);
 					eb.addField("Types for the Text", "title\nmaintext\nfooter", false);
 					eb.addField("Types for the Color", "membercolor\nrandom\n(HEX Colorcode ``#FFFFFF`` or Integer)", false);
 					eb.addField("Typed for the Thumbnail", "useravatar\nguildicon\n(own URL)", false);
@@ -283,7 +286,7 @@ public class SettingsWelcomerCMD extends ListenerAdapter{
 	private void setWelcomeText(long guildid, String node, String text, TextChannel chan) {
 		boolean isRegistered = isRegistered(guildid);
 		if(isRegistered == true) {
-			YamlFile cfg = new YamlFile("guildsettings.yml");
+			YamlFile cfg = new YamlFile("configs/guildsettings.yml");
 			try {
 				if(!cfg.exists()) {
 					cfg.createNewFile(true);

@@ -36,39 +36,41 @@ public class SettingsPrefixCMD extends ListenerAdapter{
 						current = "rb!";
 						e1.printStackTrace();
 					}
-					e.getChannel().sendMessage("The current prefix for " + g.getName() + " is ``" + current + "`` !\nDo you want to have another prefix? -> [p]prefix <newPrefix>");
+					e.getChannel().sendMessage("The current prefix for " + g.getName() + " is ``" + current + "`` !\nDo you want to have another prefix? -> [p]prefix <newPrefix>").queue();
 				}
 			}
 		}if(args.length == 2) {
 			if(args[0].equalsIgnoreCase(Main.botprefix + "prefix")) {
-				if(hasSettingPerms(e.getMember())) {
-					if(args[1].equalsIgnoreCase("reset")) {
-						try {
-							PreparedStatement ps = MySQL.getConnection().prepareStatement("UPDATE redibot_guildlog SET botprefix = ? WHERE guildid = ?");
-							ps.setString(1, "rb!");
-							ps.setLong(2, g.getIdLong());
-							ps.executeUpdate();
-							e.getChannel().sendMessage(success + "The Prefix for " + g.getName() + " has been resetted to the default! Prefix: ``rb!``").queue();
-						}catch (SQLException e1) {
-							e1.printStackTrace();
-						}
-					}else {
-						if(args[1].length() >= 1 && args[1].length() <= 8) {
+				if(isRegistered(g.getIdLong())) {
+					if(hasSettingPerms(e.getMember())) {
+						if(args[1].equalsIgnoreCase("reset")) {
 							try {
 								PreparedStatement ps = MySQL.getConnection().prepareStatement("UPDATE redibot_guildlog SET botprefix = ? WHERE guildid = ?");
-								ps.setString(1, args[1]);
+								ps.setString(1, "rb!");
 								ps.setLong(2, g.getIdLong());
 								ps.executeUpdate();
-								e.getChannel().sendMessage(success + "The Prefix for " + g.getName() + " has been changed to ``" + args[1] + "``!").queue();
+								e.getChannel().sendMessage(success + "The Prefix for " + g.getName() + " has been resetted to the default! Prefix: ``rb!``").queue();
 							}catch (SQLException e1) {
 								e1.printStackTrace();
 							}
 						}else {
-							e.getChannel().sendMessage(failed + "The prefix can't be longer than 8 chars or shorter than 1 char.\nActual length: " + args[1].length()).queue();
+							if(args[1].length() >= 1 && args[1].length() <= 8) {
+								try {
+									PreparedStatement ps = MySQL.getConnection().prepareStatement("UPDATE redibot_guildlog SET botprefix = ? WHERE guildid = ?");
+									ps.setString(1, args[1]);
+									ps.setLong(2, g.getIdLong());
+									ps.executeUpdate();
+									e.getChannel().sendMessage(success + "The Prefix for " + g.getName() + " has been changed to ``" + args[1] + "``!").queue();
+								}catch (SQLException e1) {
+									e1.printStackTrace();
+								}
+							}else {
+								e.getChannel().sendMessage(failed + "The prefix can't be longer than 8 chars or shorter than 1 char.\nActual length: " + args[1].length()).queue();
+							}
 						}
+					}else {
+						e.getChannel().sendMessage(noperm).queue();
 					}
-				}else {
-					e.getChannel().sendMessage(noperm).queue();
 				}
 			}
 		}

@@ -17,7 +17,6 @@ public class HelpCMD extends ListenerAdapter{
 				eb.setColor(e.getMember().getColor());
 				eb.setDescription("All commands are listed in alphabetic order.");
 				if(args[1].equalsIgnoreCase("botowner")) {
-					eb.addField(Main.botprefix + "addallusers", "Saves all users to File. (Optional for leavemsg)", false);
 					eb.addField(Main.botprefix + "registerguild", "Botownercommand - registers a guild for guildlogging", false);
 					eb.addField(Main.botprefix + "setactivity", "Botownercommand", false);
 					eb.addField(Main.botprefix + "setgame", "Botownercommand", false);

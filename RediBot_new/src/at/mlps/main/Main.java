@@ -6,7 +6,6 @@ import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Timer;
 
 import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
@@ -32,6 +31,7 @@ import at.mlps.botclasses.commands.HelpCMD;
 import at.mlps.botclasses.commands.ImgManClassCMD;
 import at.mlps.botclasses.commands.LOA;
 import at.mlps.botclasses.commands.MCServerinfo;
+import at.mlps.botclasses.commands.NewYearClass;
 import at.mlps.botclasses.commands.Punishments;
 import at.mlps.botclasses.commands.PurgeCommand;
 import at.mlps.botclasses.commands.RegisterGuilds;
@@ -43,7 +43,10 @@ import at.mlps.botclasses.commands.Tags;
 import at.mlps.botclasses.commands.UserCommands;
 import at.mlps.botclasses.commands.UserInfo;
 import at.mlps.botclasses.commands.WhoisCMD;
+import at.mlps.botclasses.commands.settings.InviteChannelCMD;
+import at.mlps.botclasses.commands.settings.JoinRolesCMD;
 import at.mlps.botclasses.commands.settings.MessageExemptCMD;
+import at.mlps.botclasses.commands.settings.SettingsGuildlog;
 import at.mlps.botclasses.commands.settings.SettingsPrefixCMD;
 import at.mlps.botclasses.commands.settings.SettingsWelcomerCMD;
 import at.mlps.botclasses.guildlogging.emote.EmoteAdd;
@@ -71,6 +74,7 @@ import at.mlps.botclasses.guildlogging.guild.MessageLogging;
 import at.mlps.botclasses.guildlogging.member.UserUpdateAvatar;
 import at.mlps.botclasses.guildlogging.member.UserUpdateDiscriminator;
 import at.mlps.botclasses.guildlogging.member.UserUpdateName;
+import at.mlps.botclasses.guildlogging.member.UserUpdateOnlineStatus;
 import at.mlps.botclasses.guildlogging.privat.GuildJoin;
 import at.mlps.botclasses.guildlogging.privat.GuildLeave;
 import at.mlps.botclasses.guildlogging.privat.GuildUnavailable;
@@ -99,6 +103,8 @@ import at.mlps.botclasses.guildlogging.voicejoinleavemove.GuildVoiceJoin;
 import at.mlps.botclasses.guildlogging.voicejoinleavemove.GuildVoiceLeave;
 import at.mlps.botclasses.guildlogging.voicejoinleavemove.GuildVoiceMove;
 import at.mlps.rc.mysql.lpb.MySQL;
+import at.mlps.reactionroles.RR_Command;
+import at.mlps.reactionroles.RR_Listener;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Activity;
@@ -124,7 +130,7 @@ public class Main implements EventListener{
 	public static String botprefix = "rb!";
 
 	public static void main(String[] args) {
-		YamlFile file = new YamlFile("configuration.yml");
+		YamlFile file = new YamlFile("configs/configuration.yml");
 		if(!file.exists()) {
 			try {
 				file.createNewFile(true);
@@ -173,9 +179,6 @@ public class Main implements EventListener{
 		} catch (SQLException e) {
 			onLog(3, "An error occured while connecting to the database. Error: " + e);
 		}
-		Runner r = new Runner();
-		Timer t = new Timer();
-		t.scheduleAtFixedRate(r, 0, 10000);
 		try {
 			startBot();
 		} catch (InvalidConfigurationException | IOException | LoginException e) {
@@ -184,7 +187,7 @@ public class Main implements EventListener{
 	}
 	
 	static void setCFG() {
-		YamlFile file = new YamlFile("configuration.yml");
+		YamlFile file = new YamlFile("configs/configuration.yml");
 		try {
 			file.load();
 			onLog(1, "Loaded Config file");
@@ -215,7 +218,7 @@ public class Main implements EventListener{
 	}
 	
 	static void startBot() throws InvalidConfigurationException, IOException, LoginException {
-		YamlFile file = new YamlFile("configuration.yml");
+		YamlFile file = new YamlFile("configs/configuration.yml");
 		file.load();
 		JDABuilder builder = JDABuilder.createDefault(file.getString("BotConfig.Bottoken"));
 		if(at.mlps.rc.mysql.lb.MySQL.isConnected()) {
@@ -264,6 +267,7 @@ public class Main implements EventListener{
 		builder.addEventListeners(new UserUpdateAvatar());
 		builder.addEventListeners(new UserUpdateDiscriminator());
 		builder.addEventListeners(new UserUpdateName());
+		builder.addEventListeners(new UserUpdateOnlineStatus());
 		builder.addEventListeners(new GuildJoin());
 		builder.addEventListeners(new GuildLeave());
 		builder.addEventListeners(new GuildUnavailable());
@@ -329,6 +333,12 @@ public class Main implements EventListener{
 		builder.addEventListeners(new ImgManClassCMD());
 		builder.addEventListeners(new SettingsPrefixCMD());
 		builder.addEventListeners(new MessageExemptCMD());
+		builder.addEventListeners(new JoinRolesCMD());
+		builder.addEventListeners(new InviteChannelCMD());
+		builder.addEventListeners(new NewYearClass());
+		builder.addEventListeners(new SettingsGuildlog());
+		builder.addEventListeners(new RR_Command());
+		builder.addEventListeners(new RR_Listener());
 		builder.build();
 	}
 	

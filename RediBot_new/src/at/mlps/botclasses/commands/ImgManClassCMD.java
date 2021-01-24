@@ -53,7 +53,7 @@ public class ImgManClassCMD extends ListenerAdapter{
 					e1.printStackTrace();
 				}
 					
-				File input = new File("img/yellow_levelup.png");
+				File input = new File("img/templates/yellow_levelup.png");
 				File pfp = new File("img/tmp/avatar_" + e.getAuthor().getIdLong() + ".png");
 				image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 				try {
@@ -71,7 +71,7 @@ public class ImgManClassCMD extends ListenerAdapter{
 				//Minecraftia.ttf - 12 / 24px
 				Font mcfont = null;
 				try {
-					mcfont = Font.createFont(Font.TRUETYPE_FONT, new File("Minecraftia.ttf"));
+					mcfont = Font.createFont(Font.TRUETYPE_FONT, new File("fonts/Minecraftia.ttf"));
 					GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
 					ge.registerFont(mcfont);
 				} catch (FontFormatException e2) {

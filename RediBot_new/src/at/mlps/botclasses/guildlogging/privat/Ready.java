@@ -12,6 +12,7 @@ import org.simpleyaml.configuration.file.YamlFile;
 import org.simpleyaml.exceptions.InvalidConfigurationException;
 
 import at.mlps.botclasses.guildlogging.guild.GuildLogEvents;
+import at.mlps.main.RebootClass;
 import at.mlps.main.Runner;
 import at.mlps.rc.mysql.lb.MySQL;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -28,7 +29,7 @@ public class Ready extends ListenerAdapter{
 		
 		EmbedBuilder ebwelc = new EmbedBuilder();
 		ebwelc.setDescription("```####################################\n#                                  #\n# ###  #### ###  # ###   ##  ##### #\n# #  # #    #  # # #  # #  #   #   #\n# #  # #    #  # # #  # #  #   #   #\n# ###  ###  #  # # ###  #  #   #   #\n# # #  #    #  # # #  # #  #   #   #\n# #  # #    #  # # #  # #  #   #   #\n# #  # #### ###  # ###   ##    #   #\n#                                  #\n####################################```");
-		YamlFile file = new YamlFile("configuration.yml");
+		YamlFile file = new YamlFile("configs/configuration.yml");
 		try {
 			file.load();
 		} catch (InvalidConfigurationException | IOException e1) {
@@ -66,7 +67,11 @@ public class Ready extends ListenerAdapter{
 		}
 		Runner runner = new Runner();
 		Timer t = new Timer();
-		t.scheduleAtFixedRate(runner, 0, 120*1000);
+		t.scheduleAtFixedRate(runner, 0, 60*1000);
+		//NewYearScheduler nys = new NewYearScheduler(e.getJDA());
+		//t.scheduleAtFixedRate(nys, 0, 1000);
+		RebootClass rc = new RebootClass();
+		t.scheduleAtFixedRate(rc, 0, 1000);
 	}
 	
 	private String retVer() {

@@ -94,11 +94,11 @@ public class FAQ extends ListenerAdapter{
 		eb.addField("Project Manager", "MarvinAch\nMaurice Bailey", false);
 		eb.addField("Human Resources", "Inferno", false);
 		eb.addField("Community Manager", "thelottiattack", false);
-		eb.addField("Game Moderation Manager", "RookieCookie", false);
-		eb.addField("Developer", "Krisi\nMarvinAch\nMaurice Bailey", false);
-		eb.addField("Game Moderator", "Marc26075", false);
-		eb.addField("Moderator", "KingGiGi\nMarius\nMaxi", false);
-		eb.addField("Content Team", "KingGiGi", false);
+		eb.addField("Game Moderation Manager", "Marc26705", false);
+		eb.addField("Developer", "MarvinAch\nMaurice Bailey", false);
+		eb.addField("Game Moderator", "Krisi", false);
+		eb.addField("Moderator", "Marius\nMaxi", false);
+		eb.addField("Content Team", "", false);
 		eb.addField("Support", "Marius", false);
 		eb.addField("Builder", "Mephistopheles", false);
 		chan.sendMessage(eb.build()).queue();
@@ -119,11 +119,12 @@ public class FAQ extends ListenerAdapter{
 	private void setEmbed_serverlock(TextChannel chan) {
 		EmbedBuilder eb = Embed();
 		eb.setDescription("Question: The Server is released, but I can't play on it! Why? \nAnswer: As some people already though about destroying and grief the Server, we will whitelist our server. \nYou want to play with us? Then fill this Google Forms out truthfully in order to play again on it.\n URL: https://forms.gle/AaQfmEHMo4fGR1VX8");
+		chan.sendMessage(eb.build()).queue();
 	}
 	
 	private void setEmbed_serverinfo(TextChannel chan) {
 		EmbedBuilder eb = Embed();
-		eb.setDescription("Question: What's about the Minecraft-Server? \nAnswer: RediCraft is a Minecraft Network with preference in building.\nOur server is Java-Based and runs on the latest version. Current version: ***1.16.3***.");
+		eb.setDescription("Question: What's about the Minecraft-Server? \nAnswer: RediCraft is a Minecraft Network with preference in building.\nOur server is Java-Based and runs on the latest version. Current version: ***1.16.4***.");
 		chan.sendMessage(eb.build()).queue();
 	}
 	

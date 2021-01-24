@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Random;
 
 import org.simpleyaml.configuration.file.YamlFile;
@@ -14,6 +15,7 @@ import at.mlps.rc.mysql.lb.MySQL;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -27,7 +29,8 @@ public class GuildMemberJoinWelcomer extends ListenerAdapter{
 	Member m;
 	String guildname;
 	int members;
-	String membername;
+	String membernamewodisc;
+	String membernamewdisc;
 	String membermention;
 	long ruleschannel;
 	long welcomechannel;
@@ -45,7 +48,8 @@ public class GuildMemberJoinWelcomer extends ListenerAdapter{
 			EmbedBuilder eb = new EmbedBuilder();
 			guildname = g.getName();
 			members = g.getMemberCount();
-			membername = m.getUser().getName();
+			membernamewodisc = m.getUser().getName();
+			membernamewdisc = m.getUser().getName() + "#" + m.getUser().getDiscriminator();
 			membermention = m.getAsMention();
 			date = gl.getFormattedDate("dd/MM/yyyy - HH:mm:ss");
 			try {
@@ -62,7 +66,7 @@ public class GuildMemberJoinWelcomer extends ListenerAdapter{
 				color = rs.getString("welcomer_color");
 				thumbnail = rs.getString("welcomer_thumbnail");
 				welcomechannel = rs.getLong("welcomechannel");
-				YamlFile cfg = new YamlFile("guildsettings.yml");
+				YamlFile cfg = new YamlFile("configs/guildsettings.yml");
 				try {
 					cfg.load();
 				} catch (InvalidConfigurationException | IOException e1) {
@@ -71,6 +75,15 @@ public class GuildMemberJoinWelcomer extends ListenerAdapter{
 				title = cfg.getString("Welcomer." + g.getIdLong() + ".welcTitle");
 				text = cfg.getString("Welcomer." + g.getIdLong() + ".welcText");
 				footer = cfg.getString("Welcomer." + g.getIdLong() + ".welcFooter");
+				if(cfg.contains("Joinroles." + g.getIdLong())) {
+					List<Long> joinroles = cfg.getLongList("Joinroles." + g.getIdLong());
+					for(Long l : joinroles) {
+						Role role = g.getRoleById(l);
+						if(role != null) {
+							g.addRoleToMember(m.getUser().getIdLong(), role).queue();
+						}
+					}
+				}
 				rs.close();
 			}catch (SQLException e1) {
 			}
@@ -101,7 +114,7 @@ public class GuildMemberJoinWelcomer extends ListenerAdapter{
 	}
 	
 	String formattedReplace(String text) {
-		return text.replace("%servername", guildname).replace("%username", membername).replace("%usermention", membermention).replace("%members", String.valueOf(members)).replace("%ruleschannel", rulechannel.getAsMention()).replace("%date", date);
+		return text.replace("%servername", guildname).replace("%usernamewodisc", membernamewodisc).replace("%usernamewdisc", membernamewdisc).replace("%usermention", membermention).replace("%members", String.valueOf(members)).replace("%ruleschannel", rulechannel.getAsMention()).replace("%date", date);
 	}
 	
 	int getRGB(){

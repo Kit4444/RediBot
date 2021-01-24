@@ -231,7 +231,7 @@ public class GuildLogEvents extends ListenerAdapter{
 		System.out.println("# #  # #### ###  # ###   ##    #   #");
 		System.out.println("#                                  #");
 		System.out.println("####################################");
-		YamlFile file = new YamlFile("configuration.yml");
+		YamlFile file = new YamlFile("configs/configuration.yml");
 		try {
 			file.load();
 		} catch (InvalidConfigurationException | IOException e1) {

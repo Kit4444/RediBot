@@ -3,6 +3,8 @@ package at.mlps.botclasses.commands;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
@@ -37,7 +39,7 @@ public class CreateInvite extends ListenerAdapter{
 								e.getChannel().sendMessage("Hey, " + e.getAuthor().getAsMention() + ", I've sent you the Invite in your DMs. The URL is just available for " + retPTime(invMaxTime) + " or " + invMaxUses + " use(s).").queue(sm -> {
 									sm.delete().queueAfter(30, TimeUnit.SECONDS);
 								});
-								pchannel.sendMessage("Hello " + e.getAuthor().getAsMention() + "! You have requested a invite code for RediCraft.\nInvite: " + inv.getUrl() + " \nInfo, the URL is just available for 30 minutes or one use. That's not a permanent invite.").queue();
+								pchannel.sendMessage("Hello " + e.getAuthor().getAsMention() + "! You have requested a invite code for RediCraft.\nInvite: " + inv.getUrl() + " \nInfo, the URL is just available for " + retPTime(invMaxTime) + " or " + invMaxUses + " use(s). That's not a permanent invite.").queue();
 								
 							});
 						});
@@ -66,7 +68,7 @@ public class CreateInvite extends ListenerAdapter{
 		}
 	}
 	
-	private String retPTime(long time) {
+	/*private String retPTime(long time) {
 		long seconds = time;
 		long minutes = 0;
 		long hours = 0;
@@ -88,5 +90,16 @@ public class CreateInvite extends ListenerAdapter{
 		}else {
 			return "Days: " + days + ", Time: " + hours + ":" + minutes + ":" + seconds;
 		}
+	}*/
+	
+	private String retPTime(long time) {
+		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+		if(time >= 86400) {
+			sdf = new SimpleDateFormat("dd HH:mm:ss");
+		}else {
+			sdf = new SimpleDateFormat("HH:mm:ss");
+		}
+		String sdff = sdf.format(new Date((time * 1000)));
+		return sdff;
 	}
 }

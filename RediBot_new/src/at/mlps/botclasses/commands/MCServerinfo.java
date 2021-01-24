@@ -143,6 +143,7 @@ public class MCServerinfo extends ListenerAdapter{
 			int allocRam = rs.getInt("ramavailable");
 			int currPlayer = rs.getInt("currPlayers");
 			int maxPlayer = rs.getInt("maxPlayers");
+			int staffmembers = rs.getInt("currStaffmembers");
 			boolean online = rs.getBoolean("online");
 			boolean staffs = rs.getBoolean("staffserver");
 			boolean monitoring = rs.getBoolean("monitoring");
@@ -159,7 +160,7 @@ public class MCServerinfo extends ListenerAdapter{
 					eb.addField("Staffserver:", "yes", false);
 				}
 				eb.addField("Serverversion:", version, false);
-				eb.addField("Players:", "Online: " + currPlayer + " **|** (" + loadPlayer + "% player load factor)", false);
+				eb.addField("Players:", "Online: " + currPlayer + "(" + staffmembers + " are Staffs)" + " **|** (" + loadPlayer + "% player load factor)", false);
 				if(monitoring == true) {
 					eb.addField("Monitored:", "This server is currently getting monitored.", false);
 				}
