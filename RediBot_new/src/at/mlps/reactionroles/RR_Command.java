@@ -9,6 +9,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
+import com.vdurmont.emoji.EmojiParser;
+
 import at.mlps.main.Main;
 import at.mlps.rc.mysql.lb.MySQL;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -47,9 +49,6 @@ public class RR_Command extends ListenerAdapter{
 					eb.addField("[p]rr togglerole <Channel#Mention|ID> <MessageID> <Emote>", "Switch between Single use (Verification Mode) and default use (removeable)", false);
 					eb.addField("[p]rr listroles <Channel#Mention|ID> <MessageID>", "Displays a List, which Emote gives/removes the Role and if Single use Default use.", false);
 					chan.sendMessage(eb.build()).queue();
-				}else {
-					String emote = args[1];
-					chan.sendMessage("``" + emote + "``").queue();
 				}
 			}
 		}else if(args.length == 4) {
@@ -133,23 +132,35 @@ public class RR_Command extends ListenerAdapter{
 						if(args[3].matches("^[0-9]+$")) {
 							long messagekey = Long.parseLong(args[3]);
 							
-							String reaction_old = args[4];
-							String reaction = "";
-							if(reaction_old.length() == 1) {
-								reaction = reaction_old;
+							String currentReaction = args[4];
+							String oldReaction = EmojiParser.parseToAliases(currentReaction);
+							String newReaction = "";
+							if(oldReaction.charAt(0) == ':' && oldReaction.charAt(oldReaction.length() - 1) == ':') {
+								newReaction = oldReaction;
 							}else {
-								if(reaction_old.charAt(1) == 'a') {
-									reaction = reaction_old.substring(1, (reaction_old.length() - 1));
+								if(oldReaction.charAt(1) == 'a') {
+									newReaction = oldReaction.substring(1, (oldReaction.length() - 1));
 								}else {
-									reaction = reaction_old.substring(2, (reaction_old.length() - 1));
+									newReaction = oldReaction.substring(2, (oldReaction.length() - 1));
 								}
 							}
 							
-							int result = deleteRR(g.getIdLong(), m.getIdLong(), messagekey, channel.getIdLong(), reaction);
+							int result = deleteRR(g.getIdLong(), m.getIdLong(), messagekey, channel.getIdLong(), newReaction);
 							String answer = "";
 							switch(result){
 							case 0: answer = failed + "An Error occured."; break;
-							case 1: answer = success + "Deleted the Reaction Role."; break;
+							case 1: answer = success + "Deleted the Reaction Role.";
+							if(oldReaction.charAt(0) == ':' && oldReaction.charAt(oldReaction.length() - 1) == ':') {
+								channel.removeReactionById(messagekey, args[4]).queue();
+							}else {
+								if(oldReaction.charAt(1) == 'a') {
+									channel.removeReactionById(messagekey, oldReaction.substring(1, (oldReaction.length() - 1))).queue();
+								}else {
+									channel.removeReactionById(messagekey, oldReaction.substring(2, (oldReaction.length() - 1))).queue();
+								}
+							}
+							
+							break;
 							case 2: answer = failed + "This reaction is not registered"; break;
 							}
 							chan.sendMessage(answer).queue();
@@ -176,18 +187,20 @@ public class RR_Command extends ListenerAdapter{
 						if(args[3].matches("^[0-9]+$")) {
 							long messagekey = Long.parseLong(args[3]);
 							
-							String reaction_old = args[4];
-							String reaction = "";
-							if(reaction_old.length() == 1) {
-								reaction = reaction_old;
+							String currentReaction = args[4];
+							String oldReaction = EmojiParser.parseToAliases(currentReaction);
+							String newReaction = "";
+							if(oldReaction.charAt(0) == ':' && oldReaction.charAt(oldReaction.length() - 1) == ':') {
+								newReaction = oldReaction;
 							}else {
-								if(reaction_old.charAt(1) == 'a') {
-									reaction = reaction_old.substring(1, (reaction_old.length() - 1));
+								if(oldReaction.charAt(1) == 'a') {
+									newReaction = oldReaction.substring(1, (oldReaction.length() - 1));
 								}else {
-									reaction = reaction_old.substring(2, (reaction_old.length() - 1));
+									newReaction = oldReaction.substring(2, (oldReaction.length() - 1));
 								}
 							}
-							int result = updateSingleUseRR(g.getIdLong(), m.getIdLong(), messagekey, channel.getIdLong(), reaction);
+							
+							int result = updateSingleUseRR(g.getIdLong(), m.getIdLong(), messagekey, channel.getIdLong(), newReaction);
 							String answer = "";
 							switch(result) {
 							case 5: answer = success + "This role is now in default mode"; break;
@@ -236,21 +249,36 @@ public class RR_Command extends ListenerAdapter{
 									role = e.getMessage().getMentionedRoles().get(0);
 								}
 							}
-							String reaction_old = args[5];
+							String reaction_old = EmojiParser.parseToAliases(args[5]);
 							String reaction = "";
-							if(reaction_old.length() == 1) {
+							if(reaction_old.charAt(0) == ':' && reaction_old.charAt(reaction_old.length() - 1) == ':') {
 								reaction = reaction_old;
-							}else if(reaction_old.charAt(1) == 'a') {
-								reaction = reaction_old.substring(1, (reaction_old.length() - 1));
 							}else {
-								reaction = reaction_old.substring(2, (reaction_old.length() - 1));
+								if(reaction_old.charAt(1) == 'a') {
+									reaction = reaction_old.substring(1, (reaction_old.length() - 1));
+								}else {
+									reaction = reaction_old.substring(2, (reaction_old.length() - 1));
+								}
 							}
 							int result = insertRR(g.getIdLong(), m.getIdLong(), role.getIdLong(), messagekey, channel.getIdLong(), reaction);
 							String answer = "";
 							switch(result) {
 							case 0: answer = failed + "Could not add a reaction role."; break;
 							case 1: answer = failed + "This Reaction already exists."; break;
-							case 2: answer = success + "Added the Reaction Role."; channel.addReactionById(messagekey, reaction).queue(); break;
+							case 2: answer = success + "Added the Reaction Role.";
+							String currentReaction = args[5];
+							String oldReaction = EmojiParser.parseToAliases(currentReaction);
+							if(oldReaction.charAt(0) == ':' && oldReaction.charAt(oldReaction.length() - 1) == ':') {
+								channel.addReactionById(messagekey, args[5]).queue();
+							}else {
+								if(oldReaction.charAt(1) == 'a') {
+									channel.addReactionById(messagekey, oldReaction.substring(1, (oldReaction.length() - 1))).queue();
+								}else {
+									channel.addReactionById(messagekey, oldReaction.substring(2, (oldReaction.length() - 1))).queue();
+								}
+							}
+							break;
+							
 							}
 							chan.sendMessage(answer).queue();
 						}else {

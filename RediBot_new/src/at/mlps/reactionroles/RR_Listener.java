@@ -4,6 +4,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import com.vdurmont.emoji.EmojiParser;
+
 import at.mlps.rc.mysql.lb.MySQL;
 import net.dv8tion.jda.api.entities.Emote;
 import net.dv8tion.jda.api.entities.Role;
@@ -18,12 +20,18 @@ public class RR_Listener extends ListenerAdapter{
 			long guildid = e.getGuild().getIdLong();
 			long channelid = e.getChannel().getIdLong();
 			long messageid = e.getMessageIdLong();
-			Emote emote = e.getReactionEmote().getEmote();
+			Emote emote = null;
 			String emoteKey = "";
-			if(emote.isAnimated()) {
-				emoteKey = "a:" + emote.getName() + ":" + emote.getIdLong();
-			}else {
-				emoteKey = emote.getName() + ":" + emote.getIdLong();
+			if(e.getReactionEmote().isEmote()) {
+				emote = e.getReactionEmote().getEmote();
+				if(emote.isAnimated()) {
+					emoteKey = "a:" + emote.getName() + ":" + emote.getIdLong();
+				}else {
+					emoteKey = emote.getName() + ":" + emote.getIdLong();
+				}
+			}else if(e.getReactionEmote().isEmoji()) {
+				emoteKey = EmojiParser.parseToAliases(e.getReactionEmote().getEmoji());
+				
 			}
 			try {
 				PreparedStatement ps = MySQL.getConnection().prepareStatement("SELECT roleid FROM redibot_reactionroles WHERE guildid = ? AND channelid = ? AND messageid = ? AND emote = ?");
@@ -53,12 +61,18 @@ public class RR_Listener extends ListenerAdapter{
 			long guildid = e.getGuild().getIdLong();
 			long channelid = e.getChannel().getIdLong();
 			long messageid = e.getMessageIdLong();
-			Emote emote = e.getReactionEmote().getEmote();
+			Emote emote = null;
 			String emoteKey = "";
-			if(emote.isAnimated()) {
-				emoteKey = "a:" + emote.getName() + ":" + emote.getIdLong();
-			}else {
-				emoteKey = emote.getName() + ":" + emote.getIdLong();
+			if(e.getReactionEmote().isEmote()) {
+				emote = e.getReactionEmote().getEmote();
+				if(emote.isAnimated()) {
+					emoteKey = "a:" + emote.getName() + ":" + emote.getIdLong();
+				}else {
+					emoteKey = emote.getName() + ":" + emote.getIdLong();
+				}
+			}else if(e.getReactionEmote().isEmoji()) {
+				emoteKey = EmojiParser.parseToAliases(e.getReactionEmote().getEmoji());
+				
 			}
 			boolean singleuse = isSingleUse(guildid, channelid, messageid, emoteKey);
 			if(!singleuse) {
