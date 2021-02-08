@@ -42,9 +42,9 @@ public class RR_Command extends ListenerAdapter{
 				if(args[1].equalsIgnoreCase("help")) {
 					EmbedBuilder eb = new EmbedBuilder();
 					eb.setAuthor(m.getUser().getName() + "#" + m.getUser().getDiscriminator(), m.getUser().getAvatarUrl());
-					eb.setTitle("Guide for the [p]messagelogging Command");
+					eb.setTitle("Guide for the [p]reactionroles Command");
 					eb.addField("[p]rr help", "Displays this Embed", false);
-					eb.addField("[p]rr addrole <Channel#Mention|ID> <MessageID> <Role@Mention|ID> <Emote>", "Adds a Reaction role in the Message.", false);
+					eb.addField("[p]rr addrole <Channel#Mention|ID> <MessageID> <Emote> <Role@Mention|ID>", "Adds a Reaction role in the Message.", false);
 					eb.addField("[p]rr removerole <Channel#Mention|ID> <MessageID> <Emote>", "Removes a Reaction Role from the Message.", false);
 					eb.addField("[p]rr togglerole <Channel#Mention|ID> <MessageID> <Emote>", "Switch between Single use (Verification Mode) and default use (removeable)", false);
 					eb.addField("[p]rr listroles <Channel#Mention|ID> <MessageID>", "Displays a List, which Emote gives/removes the Role and if Single use Default use.", false);
@@ -234,22 +234,11 @@ public class RR_Command extends ListenerAdapter{
 								channel = e.getMessage().getMentionedChannels().get(0);
 							}
 						}
+						
 						if(args[3].matches("^[0-9]+$")) {
 							long messagekey = Long.parseLong(args[3]);
 							
-							long rolekey = 0l;
-							Role role = null;
-							if(args[4].matches("^[0-9]+$")) {
-								rolekey = Long.parseLong(args[4]);
-								role = g.getRoleByBot(rolekey);
-							}else {
-								if(args[4].startsWith("!")) {
-									role = g.getRolesByName(args[4].substring(1), true).get(0);
-								}else {
-									role = e.getMessage().getMentionedRoles().get(0);
-								}
-							}
-							String reaction_old = EmojiParser.parseToAliases(args[5]);
+							String reaction_old = EmojiParser.parseToAliases(args[4]);
 							String reaction = "";
 							if(reaction_old.charAt(0) == ':' && reaction_old.charAt(reaction_old.length() - 1) == ':') {
 								reaction = reaction_old;
@@ -260,6 +249,20 @@ public class RR_Command extends ListenerAdapter{
 									reaction = reaction_old.substring(2, (reaction_old.length() - 1));
 								}
 							}
+							
+							long rolekey = 0l;
+							Role role = null;
+							if(args[5].matches("^[0-9]+$")) {
+								rolekey = Long.parseLong(args[5]);
+								role = g.getRoleByBot(rolekey);
+							}else {
+								if(args[5].startsWith("!")) {
+									role = g.getRolesByName(args[5].substring(1).replace("%20", " "), true).get(0);
+								}else {
+									role = e.getMessage().getMentionedRoles().get(0);
+								}
+							}
+							
 							int result = insertRR(g.getIdLong(), m.getIdLong(), role.getIdLong(), messagekey, channel.getIdLong(), reaction);
 							String answer = "";
 							switch(result) {
