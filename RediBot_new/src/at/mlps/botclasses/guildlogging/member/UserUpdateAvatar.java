@@ -20,7 +20,11 @@ public class UserUpdateAvatar extends ListenerAdapter{
         EmbedBuilder eb = new EmbedBuilder();
         String fname = e.getUser().getName() + "#" + e.getUser().getDiscriminator();
 		eb.setDescription(e.getUser().getAsMention() + " / " + fname + " has updated their avatar.");
-		eb.setImage(e.getNewAvatarUrl());
+		if(e.getNewAvatarUrl() != null) {
+			eb.setImage(e.getNewAvatarUrl());
+		}else {
+			eb.setImage(e.getUser().getDefaultAvatarUrl());
+		}
 		eb.setColor(gl.green);
 		eb.setFooter(stime);
 		if(!(guilds.isEmpty()) && !(e.getUser().isBot())) {

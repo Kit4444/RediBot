@@ -18,9 +18,7 @@ public class TextChannelUpdateSlowmode extends ListenerAdapter{
         String stime = time.format(new Date());
         EmbedBuilder eb = new EmbedBuilder();
         eb.setTitle("Channel has been updated.");
-        eb.setDescription("Textchannel: " + e.getChannel().getAsMention());
-        eb.addField("Old Slowmode:", e.getOldSlowmode() + " seconds", false);
-        eb.addField("New Slowmode:", e.getNewSlowmode() + " seconds", false);
+        eb.setDescription("Textchannel: " + e.getChannel().getAsMention() + "\nOld Slowmode: " + e.getOldSlowmode() + "\nNew Slowmode: " + e.getNewSlowmode());
         eb.setFooter(stime);
 		eb.setColor(gl.orange);
 		if(gl.enabledLog(g, "textupdateslowmode")) {

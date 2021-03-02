@@ -30,7 +30,7 @@ public class GuildInviteCreate extends ListenerAdapter{
     		eb.addField("Time Valid:", e.getInvite().getMaxAge() + " seconds", false);
     	}
     	eb.addField("Current Uses: ", e.getInvite().getUses() + " ", false);
-    	eb.setFooter(stime);
+    	eb.setFooter(g.getName() + " - " + stime);
     	if(gl.enabledLog(g, "guildinvitecreate")) {
     		gl.sendMsg(eb, g);
     	}

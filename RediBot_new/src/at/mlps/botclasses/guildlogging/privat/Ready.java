@@ -65,9 +65,9 @@ public class Ready extends ListenerAdapter{
 		}catch (SQLException e1) {
 			e1.printStackTrace();
 		}
-		Runner runner = new Runner();
+		Runner runner = new Runner(e.getJDA());
 		Timer t = new Timer();
-		t.scheduleAtFixedRate(runner, 0, 60*1000);
+		t.scheduleAtFixedRate(runner, 0, 60000);
 		//NewYearScheduler nys = new NewYearScheduler(e.getJDA());
 		//t.scheduleAtFixedRate(nys, 0, 1000);
 		RebootClass rc = new RebootClass();

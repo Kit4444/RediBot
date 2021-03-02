@@ -18,9 +18,7 @@ public class TextChannelUpdateParent extends ListenerAdapter{
         String stime = time.format(new Date());
         EmbedBuilder eb = new EmbedBuilder();
         eb.setTitle("Channel has been moved.");
-        eb.setDescription("Textchannel: " + e.getChannel().getAsMention());
-        eb.addField("Old Parent:", e.getOldParent().getName(), false);
-        eb.addField("New Parent:", e.getNewParent().getName(), false);
+        eb.setDescription("Textchannel: " + e.getChannel().getAsMention() + " \nOld Parent: " + e.getOldParent().getName() + " \nNew Parent: " + e.getNewParent().getName());
         eb.setFooter(stime);
 		eb.setColor(gl.orange);
 		if(gl.enabledLog(g, "textupdateparent")) {

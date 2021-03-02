@@ -18,9 +18,7 @@ public class TextChannelUpdateName extends ListenerAdapter{
         String stime = time.format(new Date());
         EmbedBuilder eb = new EmbedBuilder();
         eb.setTitle("Channel has been updated.");
-        eb.setDescription("Textchannel: " + e.getChannel().getAsMention());
-        eb.addField("Old Name:", e.getOldName(), false);
-        eb.addField("New Name:", e.getNewName(), false);
+        eb.setDescription("Textchannel: " + e.getChannel().getAsMention() + "\nOld Name: " + e.getOldName() + "\nNew Name: " + e.getNewName());
         eb.setFooter(stime);
 		eb.setColor(gl.orange);
 		if(gl.enabledLog(g, "textupdatename")) {

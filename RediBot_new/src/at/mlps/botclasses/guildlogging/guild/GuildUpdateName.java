@@ -21,7 +21,7 @@ public class GuildUpdateName extends ListenerAdapter{
     	eb.setDescription("The guild has now a new name.");
     	eb.addField("Old Name:", e.getOldName(), false);
     	eb.addField("New Name:", e.getNewName(), false);
-    	eb.setFooter(stime);
+    	eb.setFooter(g.getName() + " - " + stime);
     	if(gl.enabledLog(g, "guildupdatename")) {
     		gl.sendMsg(eb, g);
     	}

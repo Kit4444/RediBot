@@ -29,9 +29,7 @@ public class TextChannelUpdateTopic extends ListenerAdapter{
         EmbedBuilder eb = new EmbedBuilder();
         if(!exemptchannels.contains(e.getChannel().getIdLong())) {
         	eb.setTitle("Channel has been updated.");
-            eb.setDescription("Textchannel: " + e.getChannel().getAsMention());
-            eb.addField("Old Topic:", e.getOldTopic() + " ", false);
-            eb.addField("New Topic:", e.getNewTopic() + " ", false);
+            eb.setDescription("Textchannel: " + e.getChannel().getAsMention() + "\nOld Topic: " + e.getOldTopic() + "\nNew Topic: " + e.getNewTopic());
             eb.setFooter(stime);
     		eb.setColor(gl.orange);
     		if(gl.enabledLog(g, "textupdatetopic")) {

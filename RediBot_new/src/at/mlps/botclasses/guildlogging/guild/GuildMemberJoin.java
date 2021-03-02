@@ -12,6 +12,7 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
 public class GuildMemberJoin extends ListenerAdapter{
 	
+	//modlog (-> GuildMemberJoinWelcomer is for the Welcomer (if set))
 	public void onGuildMemberJoin(GuildMemberJoinEvent e){
 		Guild g = e.getGuild();
 		Member m = e.getMember();
@@ -21,8 +22,9 @@ public class GuildMemberJoin extends ListenerAdapter{
 		EmbedBuilder eb = new EmbedBuilder();
 		eb.setColor(Color.green);
 		eb.setTitle("Member joined");
-		eb.setDescription( m.getAsMention() + " has joined the guild.");
-		eb.setFooter(stime, g.getIconUrl());
+		eb.setThumbnail(m.getUser().getAvatarUrl());
+		eb.setDescription( m.getAsMention() + " has joined the guild. \n \nAccount Creation: " + gl.retDate(m.getTimeCreated()));
+		eb.setFooter(g.getName() + " - " + stime, g.getIconUrl());
 		if(gl.enabledLog(g, "guildmemberjoin")) {
 			gl.sendMsg(eb, g);
 		}

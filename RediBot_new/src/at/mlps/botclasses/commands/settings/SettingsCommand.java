@@ -1,8 +1,6 @@
-package at.mlps.botclasses.commands;
+package at.mlps.botclasses.commands.settings;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import at.mlps.main.Main;
@@ -21,20 +19,18 @@ public class SettingsCommand extends ListenerAdapter{
 		if(args.length == 1) {
 			if(args[0].equalsIgnoreCase(Main.botprefix + "settings") || args[0].equalsIgnoreCase(Main.botprefix + "configuration")) {
 				List<String> cmdex = new ArrayList<>();
-				cmdex.add("[p]welcomer help - ***Say hello to your new members***");
+				cmdex.add("[p]welcomer help - Say hello to your new members");
 				cmdex.add("[p]prefix - ***A prefix can be set, but it doesn't work yet***");
-				cmdex.add("[p]guildlogs help - ***This Bot also can log like guildupdates or memberupdates***");
-				cmdex.add("[p]messagelogging - ***You have a super secret channel noone should know about?***");
-				cmdex.add("[p]joinroles - ***Give newly joined members a role***");
+				cmdex.add("[p]guildlogs help - This Bot also can log like guildupdates or memberupdates");
+				cmdex.add("[p]messagelogging - You have a super secret channel noone should know about?");
+				cmdex.add("[p]joinroles - Give newly joined members a role");
+				cmdex.add("[p]reactionroles - Let your users claim roles by reacting to a message.");
 				cmdex.add("[p]invitechannel - ***Under work***");
 				cmdex.add("[p]automod - ***This feature does NOT exists yet***");
 				
 				EmbedBuilder eb = new EmbedBuilder();
 				eb.setColor(m.getColor());
 				eb.setDescription("You can configure some modules individually for this guild.\nThis Command just shows you the other commands.\n \nPermission needed: Owner / Server Admin / Manage Server");
-				SimpleDateFormat time = new SimpleDateFormat("dd/MM/yyyy - HH:mm:ss a z");
-				String member = m.getUser().getName() + "#" + m.getUser().getDiscriminator();
-				eb.setFooter("Requested by: " + member + " at " + time.format(new Date()));
 				eb.addField("Commands:", getFromList(cmdex), false);
 				chan.sendMessage(eb.build()).queue();
 			}

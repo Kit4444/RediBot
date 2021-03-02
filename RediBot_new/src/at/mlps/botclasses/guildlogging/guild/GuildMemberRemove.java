@@ -21,6 +21,7 @@ public class GuildMemberRemove extends ListenerAdapter{
         EmbedBuilder eb = new EmbedBuilder();
 		eb.setColor(gl.red);
 		eb.setTitle("Member left");
+		eb.setThumbnail(m.getUser().getAvatarUrl());
 		eb.setDescription(m.getUser().getName() + "#" + m.getUser().getDiscriminator() + " has left the guild.\nJoindate: " + gl.retDate(e.getMember().getTimeJoined()));
 		StringBuilder sb = new StringBuilder();
 		for(Role r : m.getRoles()) {
@@ -28,7 +29,7 @@ public class GuildMemberRemove extends ListenerAdapter{
 			sb.append(", ");
 		}
 		eb.addField("Roles (" + m.getRoles().size() + "):", sb.toString(), false);
-		eb.setFooter(stime, g.getIconUrl());
+		eb.setFooter(g.getName() + " - " + stime, g.getIconUrl());
 		if(gl.enabledLog(g, "guildmemberremove"))
 		gl.sendMsg(eb, g);
 	}

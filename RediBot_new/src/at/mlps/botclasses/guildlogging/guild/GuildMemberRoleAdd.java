@@ -31,7 +31,7 @@ public class GuildMemberRoleAdd extends ListenerAdapter{
 			}
 			eb.setDescription("User: " + m.getAsMention() + "\nRoles added: " + sb.toString());
 		}
-		eb.setFooter(stime, g.getIconUrl());
+		eb.setFooter(g.getName() + " - " + stime, g.getIconUrl());
 		if(g.getIdLong() == gl.redimain) {
 			Role guest = e.getGuild().getRoleById(651569972920713226L);
 			Role player = e.getGuild().getRoleById(548175925901000734L);

@@ -20,7 +20,7 @@ public class GuildInviteDelete extends ListenerAdapter{
 		eb.setColor(gl.green);
     	eb.setDescription("The guild has now lost an invite.");
     	eb.addField("InviteURL:", e.getUrl(), false);
-    	eb.setFooter(stime);
+    	eb.setFooter(g.getName() + " - " + stime);
     	if(gl.enabledLog(g, "guildinvitedelete")) {
     		gl.sendMsg(eb, g);
     	}

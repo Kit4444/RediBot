@@ -21,7 +21,7 @@ public class GuildUpdateRegion extends ListenerAdapter{
     	eb.setDescription("The guild is now in a new region.");
     	eb.addField("Old Region:", e.getOldRegion().getName(), false);
     	eb.addField("New Region:", e.getNewRegion().getName(), false);
-    	eb.setFooter(stime);
+    	eb.setFooter(g.getName() + " - " + stime);
     	if(gl.enabledLog(g, "guildupdateregion")) {
     		gl.sendMsg(eb, g);
     	}

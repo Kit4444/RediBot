@@ -55,10 +55,10 @@ public class FAQ extends ListenerAdapter{
 					EmbedBuilder eb = new EmbedBuilder();
 					eb.setColor(Color.decode("#55ff55"));
 					eb.setFooter("", e.getGuild().getIconUrl());
-					eb.setTitle("Ruleset Change at " + stime, e.getAuthor().getAvatarUrl());
-					eb.setDescription("Changes: \n- §5 | Advertising is now forbidden. \n- §7 | Please avoid any disturbing noises making annoying sounds like burping, squeeking or any other noises.\n- §8 | The unapproved usage of any selfbots is not allowed and forbidden in the ToS of Discord and leads to a permanent ban on this server.\nSpamming in bot-commands is prohibited.\n- §11 | Dyno has been changed to RediBot\n Additions: \n- §13 | Discussing web reports, appeals, feedback tickets, punishments received in-game, on the forum or on discord is not allowed.\r\n" + 
-							"Requesting Game Moderators to moderate in game is not allowed.\r\n" + 
-							"Please use instead the ingame report system or use the web report system.");
+					eb.setAuthor("Rules Changed at: " + stime, null, e.getAuthor().getAvatarUrl());
+					eb.setDescription("Changes: \n- §6 Added: ``Any language is allowed for the channels regarding Minecraft <-> Discord (Preferred language is still english) / The usage of the global chat should be kept as a minimum, please choose always the designated serverchannel to avoid spam.`` \r\n"
+							+ "- §9 Added: ``Please also do not spam them regarding Ingame things, use the official ways in order to not risk to getting punished.``\r\n" +
+							"- §9 Changed: ``Streaming means Do not Disturb`` - Don't disturb People who are streaming");
 					ruleschangelog.sendMessage(eb.build()).queue();
 				}
 			}else {
@@ -72,7 +72,7 @@ public class FAQ extends ListenerAdapter{
 	private EmbedBuilder Embed() {
 		EmbedBuilder eb = new EmbedBuilder();
 		eb.setColor(Color.decode("#5555ff"));
-		eb.setFooter("", "http://pi.mauricebailey.at/rc_logo1024.png");
+		eb.setFooter("", "https://i.imgur.com/8Ol1sjr.png");
 		return eb;
 	}
 	
@@ -91,16 +91,16 @@ public class FAQ extends ListenerAdapter{
 	private void setEmbed_team(TextChannel chan) {
 		EmbedBuilder eb = Embed();
 		//eb.addField("<Team>", "<Name in Listformat>", false);
-		eb.addField("Project Manager", "MarvinAch\nMaurice Bailey", false);
+		eb.addField("Project Manager", "BlackSoul_\nMarvinAch", false);
 		eb.addField("Human Resources", "Inferno", false);
-		eb.addField("Community Manager", "thelottiattack", false);
-		eb.addField("Game Moderation Manager", "Marc26705", false);
-		eb.addField("Developer", "MarvinAch\nMaurice Bailey", false);
-		eb.addField("Game Moderator", "Krisi", false);
-		eb.addField("Moderator", "Marius\nMaxi", false);
-		eb.addField("Content Team", "", false);
-		eb.addField("Support", "Marius", false);
-		eb.addField("Builder", "Mephistopheles", false);
+		eb.addField("Community Manager", "Marius", false);
+		eb.addField("Game Moderation Manager", "Sabbi", false);
+		eb.addField("Developer", "BlackSoul_", false);
+		eb.addField("Game Moderator", "Just\\_AHD\nKrisi\nxKingBax\\_", false);
+		eb.addField("Moderator", "Maxi", false);
+		eb.addField("Content Team", "none", false);
+		eb.addField("Support", "none", false);
+		eb.addField("Builder", "Andariel", false);
 		chan.sendMessage(eb.build()).queue();
 	}
 	
@@ -124,7 +124,7 @@ public class FAQ extends ListenerAdapter{
 	
 	private void setEmbed_serverinfo(TextChannel chan) {
 		EmbedBuilder eb = Embed();
-		eb.setDescription("Question: What's about the Minecraft-Server? \nAnswer: RediCraft is a Minecraft Network with preference in building.\nOur server is Java-Based and runs on the latest version. Current version: ***1.16.4***.");
+		eb.setDescription("Question: What's about the Minecraft-Server? \nAnswer: RediCraft is a Minecraft Network with preference in building.\nOur server is Java-Based and runs on the latest version. Current version: ***1.16.5***.");
 		chan.sendMessage(eb.build()).queue();
 	}
 	
@@ -137,13 +137,13 @@ public class FAQ extends ListenerAdapter{
 	private void setEmbed_hierarchy(TextChannel chan) {
 		EmbedBuilder eb = Embed();
 		eb.setDescription("Question: How does the team hierarchy looks like? \nAnswer: It's very simple. You can see it from the following graphic:");
-		eb.setImage("http://pi.mauricebailey.at/redicraft_hierarchie.png");
+		eb.setImage("https://i.imgur.com/qnuSMd3.png");
 		chan.sendMessage(eb.build()).queue();
 	}
 	
 	private void setEmbed_partnerships(TextChannel chan) {
 		EmbedBuilder eb = Embed();
-		eb.setDescription("Question: Does RediCraft also accept partnerships? \nAnswer: Yes, we do! We accept partnerships. Currently 'only' via Google Forms, but as it was implemented in the homepage, everything will be done via it.\nLink: https://docs.google.com/forms/d/e/1FAIpQLSdtjPsI2LWSzRB67txJT9CzBxacNVhp_kZ4UIqHhBez8x_kvw/viewform");
+		eb.setDescription("Question: Does RediCraft also accept partnerships? \nAnswer: Yes, we do! We accept partnerships. Link: https://docs.google.com/forms/d/e/1FAIpQLSdtjPsI2LWSzRB67txJT9CzBxacNVhp_kZ4UIqHhBez8x_kvw/viewform");
 		chan.sendMessage(eb.build()).queue();
 	}
 	
@@ -190,7 +190,7 @@ public class FAQ extends ListenerAdapter{
 		EmbedBuilder eb = Rulesembed("FF5555");
 		eb.addField("§5 Advertisments", "Advertising other servers (e.g. Discord, Minecraft, TeamSpeak, Streams, Radios, etc.) or projects are not permitted.\r\n" + 
 				"Wooing away other users is strictly prohibited.", false);
-		eb.addField("§6 Chat content, pictures, voice channels", "This server's preferred language is english.\r\n" + 
+		eb.addField("§6 Chat content, pictures and voice channels", "This server's preferred language is english.\r\n" + 
 				"Other languages are only allowed in the specific language channels.\r\n" + 
 				"You can claim the role(s) in #roles \r\n" + 
 				"Spam is forbidden in any condition.\r\n" + 
@@ -198,7 +198,9 @@ public class FAQ extends ListenerAdapter{
 				"The usage of here and everyone is not allowed.\r\n" + 
 				"If you are using those anyways you risk getting kicked from the server.\r\n" + 
 				"Pictures or videos are allowed in the designated language channels and in #general as long as theys refer to the current discussion and the current content of the chat.\r\n" + 
-				"Random pictures or videos that do not refer to the current discussion must be posted in #shares .", false);
+				"Random pictures or videos that do not refer to the current discussion must be posted in #shares .\r\n" + 
+				"Any language is allowed for the channels regarding Minecraft <-> Discord (Prefered Language is still english)\r\n" + 
+				"The usage of the global chat should be kept as a minimum, please choose always the designated serverchannel to avoid spam.", false);
 		eb.addField("§7 Voice channels and channel hopping", "Frequent changing between server voice channels is strictly prohibited.\r\n" + 
 				"When you are in a voice channel, do not interrupt each other!\r\n" + 
 				"Please manage a comfy voice quality.\r\n" + 
@@ -217,11 +219,13 @@ public class FAQ extends ListenerAdapter{
 				"If you want to contact any staff private, please ask for permission first in order to do that.\r\n" + 
 				"If this permission is not granted, this decision is final!\r\n" + 
 				"Violating this decision may cause a warn!\r\n" + 
+				"Please also do not spam them regarding Ingame things, use the official ways in order to not risk to getting warned.\r\n" + 
 				"Please have also a look at staff's online-status:\r\n" + 
 				"<:online:671772876482936862> = Available\r\n" + 
 				"<:idle:671772876449251383> = Absent/AFK - an answer might take a while\r\n" + 
-				"<:dnd:708982976838369320>  = Do not Disturb\r\n" + 
-				"<:offline:671772876499582996> = Offline/Invisible or do not disturb", false);
+				"<:dnd:708982976838369320> = Do not Disturb\r\n" + 
+				"<:offline:671772876499582996> = Offline/Invisible or do not disturb\r\n" +
+				"<:streaming:671772876713492510> = Do not Disturb (Streaming)", false);
 		eb.addField("§10 Staff instructions", "Staff instructions are absolutely to obey.\r\n" + 
 				"Muting staffs or ignoring staff instructions is not allowed.\r\n" + 
 				"Provoking staff-members or other users is to avoid.\r\n" + 

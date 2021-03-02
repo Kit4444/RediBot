@@ -1,6 +1,7 @@
 package at.mlps.main;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
@@ -9,18 +10,30 @@ import java.sql.SQLException;
 import java.util.Random;
 import java.util.TimerTask;
 
+import org.simpleyaml.configuration.file.YamlFile;
+import org.simpleyaml.exceptions.InvalidConfigurationException;
+
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import at.mlps.rc.mysql.lb.MySQL;
+import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.OnlineStatus;
+import net.dv8tion.jda.api.entities.Activity;
+import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Member;
 
 public class Runner extends TimerTask{
 	
-	static int gctimer = 0;
+	static int timer = 0;
+	
+	public JDA api;
+	public Runner(JDA api) {
+		this.api = api;
+	}
 
 	@Override
 	public void run() {
-		
 		String pl = returnRadio1("https://api.laut.fm/station/redifm", "current_playlist", "name");
 		String art = returnRadio1("https://api.laut.fm/station/redifm/current_song", "artist", "name");
 		String tra = returnRadio("https://api.laut.fm/station/redifm/current_song", "title");
@@ -54,6 +67,50 @@ public class Runner extends TimerTask{
 			Main.mysql.update("UPDATE useless_testtable SET toupdate = '" + gcode2 + "' WHERE type = 'bot_my2';");
 		} catch (SQLException e1) {
 			e1.printStackTrace();
+		}
+		
+		timer++;
+		if(timer == 1) {
+			//redifm
+			api.getPresence().setActivity(Activity.listening("RediFM | " + tra + " - " + art));
+		}else if(timer == 2) {
+			//watching
+			int guilds = 0;
+			int members = 0;
+			for(Guild g : api.getGuilds()) {
+				guilds++;
+				for(@SuppressWarnings("unused") Member m : g.getMembers()) {
+					members++;
+				}
+			}
+			api.getPresence().setActivity(Activity.watching("over " + guilds + " Guilds and " + members + " Members"));
+		}else if(timer == 3) {
+			//defaultstate (cfg)
+			timer = 0;
+			YamlFile file = new YamlFile("configs/configuration.yml");
+			try {
+				file.load();
+			} catch (InvalidConfigurationException | IOException e) {
+				e.printStackTrace();
+			}
+			if(file.getString("BotConfig.Activity.Type").equalsIgnoreCase("PLAYING")) {
+				api.getPresence().setActivity(Activity.playing(file.getString("BotConfig.Activity.Text")));
+			}else if(file.getString("BotConfig.Activity.Type").equalsIgnoreCase("WATCHING")) {
+				api.getPresence().setActivity(Activity.watching(file.getString("BotConfig.Activity.Text")));
+			}else if(file.getString("BotConfig.Activity.Type").equalsIgnoreCase("LISTENING")) {
+				api.getPresence().setActivity(Activity.listening(file.getString("BotConfig.Activity.Text")));
+			}else if(file.getString("BotConfig.Activity.Type").equalsIgnoreCase("STREAMING")) {
+				api.getPresence().setActivity(Activity.streaming(file.getString("BotConfig.Activity.Text"), file.getString("BotConfig.Activity.StreamURL")));
+			}
+			if(file.getString("BotConfig.Activity.Onlinestatus").equalsIgnoreCase("ONLINE")) {
+				api.getPresence().setStatus(OnlineStatus.ONLINE);
+			}else if(file.getString("BotConfig.Activity.Onlinestatus").equalsIgnoreCase("IDLE")) {
+				api.getPresence().setStatus(OnlineStatus.IDLE);
+			}else if(file.getString("BotConfig.Activity.Onlinestatus").equalsIgnoreCase("DONOTDISTURB")) {
+				api.getPresence().setStatus(OnlineStatus.DO_NOT_DISTURB);
+			}else if(file.getString("BotConfig.Activity.Onlinestatus").equalsIgnoreCase("OFFLINE")) {
+				api.getPresence().setStatus(OnlineStatus.OFFLINE);
+			}
 		}
 	}
 	
@@ -89,7 +146,7 @@ public class Runner extends TimerTask{
 		}else {
 			s = (String) jo.get(node).toString();
 		}
-		return s;
+		return s.replace("\"", "");
 	}
 	
 	private static String returnRadio1(String uri, String node, String subnode) {
@@ -116,7 +173,7 @@ public class Runner extends TimerTask{
 			JsonObject sub = (JsonObject) jo.get(node);
 			s = (String) sub.get(subnode).toString();
 		}
-		return s;
+		return s.replace("\"", "");
 	}
 	
 	private static String returnRadioListeners() {
@@ -130,6 +187,6 @@ public class Runner extends TimerTask{
 		}catch (Exception e) {
 			e.printStackTrace();
 		}
-		return s;
+		return s.replace("\"", "");
 	}
 }

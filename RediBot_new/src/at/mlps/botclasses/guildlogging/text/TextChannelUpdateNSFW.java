@@ -18,8 +18,7 @@ public class TextChannelUpdateNSFW extends ListenerAdapter{
         String stime = time.format(new Date());
         EmbedBuilder eb = new EmbedBuilder();
         eb.setTitle("Channel has been updated.");
-        eb.setDescription("Textchannel: " + e.getChannel().getAsMention());
-        eb.addField("Is NSFW:", e.getNewValue() + "", false);
+        eb.setDescription("Textchannel: " + e.getChannel().getAsMention() + "\nNSFW: " + e.getNewValue());
         eb.setFooter(stime);
 		eb.setColor(gl.orange);
 		if(gl.enabledLog(g, "textupdatensfw")) {

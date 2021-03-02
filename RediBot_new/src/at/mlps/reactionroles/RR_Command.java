@@ -269,10 +269,10 @@ public class RR_Command extends ListenerAdapter{
 							case 0: answer = failed + "Could not add a reaction role."; break;
 							case 1: answer = failed + "This Reaction already exists."; break;
 							case 2: answer = success + "Added the Reaction Role.";
-							String currentReaction = args[5];
+							String currentReaction = args[4];
 							String oldReaction = EmojiParser.parseToAliases(currentReaction);
 							if(oldReaction.charAt(0) == ':' && oldReaction.charAt(oldReaction.length() - 1) == ':') {
-								channel.addReactionById(messagekey, args[5]).queue();
+								channel.addReactionById(messagekey, args[4]).queue();
 							}else {
 								if(oldReaction.charAt(1) == 'a') {
 									channel.addReactionById(messagekey, oldReaction.substring(1, (oldReaction.length() - 1))).queue();

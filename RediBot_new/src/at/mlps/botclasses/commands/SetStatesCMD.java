@@ -39,7 +39,7 @@ public class SetStatesCMD extends ListenerAdapter{
 			if(args[0].equalsIgnoreCase(Main.botprefix + "setstatus")) {
 				if(e.getAuthor() == maurice) {
 					String mode = args[1];
-					YamlFile file = new YamlFile("configuration.yml");
+					YamlFile file = new YamlFile("configs/configuration.yml");
 					try {
 						file.load();
 					} catch (InvalidConfigurationException e1) { e1.printStackTrace(); } catch (IOException e1) { e1.printStackTrace(); }
@@ -95,7 +95,7 @@ public class SetStatesCMD extends ListenerAdapter{
 					}
 					String reason = sb.toString().trim();
 					String state = args[1];
-					YamlFile file = new YamlFile("configuration.yml");
+					YamlFile file = new YamlFile("configs/configuration.yml");
 					try {
 						file.load();
 					} catch (InvalidConfigurationException e1) { e1.printStackTrace(); } catch (IOException e1) { e1.printStackTrace(); }

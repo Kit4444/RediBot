@@ -21,7 +21,7 @@ public class GuildUpdateVerificationLevel extends ListenerAdapter{
     	eb.setDescription("The guild has now a new verification level.");
     	eb.addField("Old VL:", e.getOldValue().toString(), false);
     	eb.addField("New VL:", e.getNewValue().toString(), false);
-    	eb.setFooter(stime);
+    	eb.setFooter(g.getName() + " - " + stime);
     	if(gl.enabledLog(g, "guildupdateverificationlevel")) {
     		gl.sendMsg(eb, g);
     	}

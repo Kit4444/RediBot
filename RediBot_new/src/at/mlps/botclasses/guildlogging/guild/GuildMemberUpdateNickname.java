@@ -23,7 +23,7 @@ public class GuildMemberUpdateNickname extends ListenerAdapter{
 		eb.addField("Old Nick:", e.getOldNickname() + " ", false);
 		eb.addField("New Nick:", e.getNewNickname() + " ", false);
 		eb.setColor(gl.orange);
-		eb.setFooter(stime, g.getIconUrl());
+		eb.setFooter(g.getName() + " - " + stime, g.getIconUrl());
 		if(gl.enabledLog(g, "guildmemberupdatenickname")) {
 			gl.sendMsg(eb, g);
 		}

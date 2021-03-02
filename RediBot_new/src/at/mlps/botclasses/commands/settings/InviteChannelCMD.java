@@ -1,11 +1,15 @@
 package at.mlps.botclasses.commands.settings;
 
+import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+
+import org.simpleyaml.configuration.file.YamlFile;
+import org.simpleyaml.exceptions.InvalidConfigurationException;
 
 import at.mlps.main.Main;
 import at.mlps.rc.mysql.lb.MySQL;
@@ -92,6 +96,15 @@ public class InviteChannelCMD extends ListenerAdapter{
 				if(args[1].equalsIgnoreCase("setchannel")) {
 					if(isRegistered(g.getIdLong())) {
 						if(hasSettingPerms(m)) {
+							YamlFile cfg = new YamlFile("configs/guildsettings.yml");
+							try {
+								cfg.load();
+							} catch (InvalidConfigurationException e2) {
+								e2.printStackTrace();
+							} catch (IOException e2) {
+								e2.printStackTrace();
+							}
+							
 							long uid = 0L;
 							TextChannel welcome = null;
 							if(args[2].matches("^[0-9]+$")) {
@@ -101,13 +114,12 @@ public class InviteChannelCMD extends ListenerAdapter{
 								welcome = e.getMessage().getMentionedChannels().get(0);
 							}
 							long channelid = welcome.getIdLong();
+							cfg.set("InviteChannel." + g.getIdLong() + ".Channel", channelid);
 							try {
-								PreparedStatement ps = MySQL.getConnection().prepareStatement("UPDATE redibot_guildlog SET InviteChanel = ? WHERE guildid = ?");
-								ps.setLong(1, channelid);
-								ps.setLong(2, g.getIdLong());
-								ps.executeUpdate();
-								chan.sendMessage(" Success - The Channel " + welcome.getAsMention() + " has been saved.").queue();
-							}catch (SQLException e1) {
+								cfg.save();
+								chan.sendMessage(success + "Invites will be created from " + welcome.getAsMention()).queue();
+							} catch (IOException e1) {
+								e1.printStackTrace();
 							}
 						}else {
 							chan.sendMessage(noperm).queue();
@@ -116,39 +128,42 @@ public class InviteChannelCMD extends ListenerAdapter{
 				}else if(args[1].equalsIgnoreCase("setmaxtime")) {
 					if(isRegistered(g.getIdLong())) {
 						if(hasSettingPerms(m)) {
+							YamlFile cfg = new YamlFile("configs/guildsettings.yml");
+							try {
+								cfg.load();
+							} catch (InvalidConfigurationException e2) {
+								e2.printStackTrace();
+							} catch (IOException e2) {
+								e2.printStackTrace();
+							}
 							int time = 0;
 							if(args[2].matches("^[0-9]+$")) {
 								time = Integer.parseInt(args[2]);
 								if(time == 0) {
+									cfg.set("InviteChannel." + g.getIdLong() + ".Time", time);
 									try {
-										PreparedStatement ps = MySQL.getConnection().prepareStatement("UPDATE redibot_guildlog SET InviteMaxTime = ? WHERE guildid = ?");
-										ps.setInt(1, time);
-										ps.setLong(2, g.getIdLong());
-										ps.executeUpdate();
+										cfg.save();
 										chan.sendMessage(success + "Invites created over the bot are now permanently.").queue();
-									} catch (SQLException e1) {
+									} catch (IOException e1) {
 										e1.printStackTrace();
 									}
 								}else {
+									cfg.set("InviteChannel." + g.getIdLong() + ".Time", time);
 									try {
-										PreparedStatement ps = MySQL.getConnection().prepareStatement("UPDATE redibot_guildlog SET InviteMaxTime = ? WHERE guildid = ?");
-										ps.setInt(1, time);
-										ps.setLong(2, g.getIdLong());
-										ps.executeUpdate();
-										chan.sendMessage(success + "Invites created over the bot have now a " + retPTime(time) + " second limit.").queue();
-									} catch (SQLException e1) {
+										cfg.save();
+										chan.sendMessage(success + "Invites created over the bot have now a " + retPTime(time) + " limit.").queue();
+									} catch (IOException e1) {
 										e1.printStackTrace();
 									}
+									
 								}
 							}else {
 								if(args[2].equalsIgnoreCase("permanent")) {
+									cfg.set("InviteChannel." + g.getIdLong() + ".Time", 0);
 									try {
-										PreparedStatement ps = MySQL.getConnection().prepareStatement("UPDATE redibot_guildlog SET InviteMaxTime = ? WHERE guildid = ?");
-										ps.setInt(1, 0);
-										ps.setLong(2, g.getIdLong());
-										ps.executeUpdate();
+										cfg.save();
 										chan.sendMessage(success + "Invites created over the bot are now permanently.").queue();
-									} catch (SQLException e1) {
+									} catch (IOException e1) {
 										e1.printStackTrace();
 									}
 								}else {
@@ -162,39 +177,41 @@ public class InviteChannelCMD extends ListenerAdapter{
 				}else if(args[1].equalsIgnoreCase("setmaxuses")) {
 					if(isRegistered(g.getIdLong())) {
 						if(hasSettingPerms(m)) {
+							YamlFile cfg = new YamlFile("configs/guildsettings.yml");
+							try {
+								cfg.load();
+							} catch (InvalidConfigurationException e2) {
+								e2.printStackTrace();
+							} catch (IOException e2) {
+								e2.printStackTrace();
+							}
 							int uses = 0;
 							if(args[2].matches("^[0-9]+$")) {
 								uses = Integer.parseInt(args[2]);
 								if(uses == 0) {
+									cfg.set("InviteChannel." + g.getIdLong() + ".Uses", 0);
 									try {
-										PreparedStatement ps = MySQL.getConnection().prepareStatement("UPDATE redibot_guildlog SET InviteUses = ? WHERE guildid = ?");
-										ps.setInt(1, 0);
-										ps.setLong(2, g.getIdLong());
-										ps.executeUpdate();
-										chan.sendMessage("Success - Invites created over the bot have now unlimited uses.").queue();
-									} catch (SQLException e1) {
+										cfg.save();
+										chan.sendMessage(success + "Invites created over the bot have now unlimited uses.").queue();
+									} catch (IOException e1) {
 										e1.printStackTrace();
 									}
 								}else {
+									cfg.set("InviteChannel." + g.getIdLong() + ".Uses", uses);
 									try {
-										PreparedStatement ps = MySQL.getConnection().prepareStatement("UPDATE redibot_guildlog SET InviteMaxTime = ? WHERE guildid = ?");
-										ps.setInt(1, uses);
-										ps.setLong(2, g.getIdLong());
-										ps.executeUpdate();
-										chan.sendMessage("Success - Invites created over the bot have now " + uses + " uses maximal.").queue();
-									} catch (SQLException e1) {
+										cfg.save();
+										chan.sendMessage(success + "Invites created over the bot have now " + uses + " uses maximal.").queue();
+									} catch (IOException e1) {
 										e1.printStackTrace();
 									}
 								}
 							}else {
 								if(args[2].equalsIgnoreCase("unlimited")) {
+									cfg.set("InviteChannel." + g.getIdLong() + ".Uses", 0);
 									try {
-										PreparedStatement ps = MySQL.getConnection().prepareStatement("UPDATE redibot_guildlog SET InviteUses = ? WHERE guildid = ?");
-										ps.setInt(1, 0);
-										ps.setLong(2, g.getIdLong());
-										ps.executeUpdate();
-										chan.sendMessage("Success - Invites created over the bot have now unlimited uses.").queue();
-									} catch (SQLException e1) {
+										cfg.save();
+										chan.sendMessage(success + "Invites created over the bot have now unlimited uses.").queue();
+									} catch (IOException e1) {
 										e1.printStackTrace();
 									}
 								}else {
@@ -225,6 +242,16 @@ public class InviteChannelCMD extends ListenerAdapter{
 		}
 	}
 	
+	private String retPTime(long time) {
+		SimpleDateFormat sdf = null;
+		if(time >= 86400) {
+			sdf = new SimpleDateFormat("dd HH:mm:ss");
+		}else {
+			sdf = new SimpleDateFormat("HH:mm:ss");
+		}
+		return sdf.format(new Date((time * 1000)));
+	}
+	
 	/*private String retPTime(long time) {
 		long seconds = time;
 		long minutes = 0;
@@ -252,16 +279,6 @@ public class InviteChannelCMD extends ListenerAdapter{
 			}
 		}
 	}*/
-	
-	private String retPTime(long time) {
-		SimpleDateFormat sdf = null;
-		if(time >= 86400) {
-			sdf = new SimpleDateFormat("dd HH:mm:ss");
-		}else {
-			sdf = new SimpleDateFormat("HH:mm:ss");
-		}
-		return sdf.format(new Date(time));
-	}
 	
 	private boolean hasSettingPerms(Member m) {
 		boolean boo = false;

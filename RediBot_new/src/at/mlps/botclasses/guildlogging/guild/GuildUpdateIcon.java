@@ -20,9 +20,7 @@ public class GuildUpdateIcon extends ListenerAdapter{
 		eb.setDescription("Guild Icon has been updated.");
 		eb.setImage(e.getNewIconUrl());
 		eb.setColor(gl.green);
-		eb.setFooter(stime);
-		eb.addField("Old AvatarURL:", e.getOldIconUrl(), false);
-		eb.addField("New AvatarURL:", e.getNewIconUrl(), false);
+		eb.setFooter(g.getName() + " - " + stime);
 		if(gl.enabledLog(g, "guildupdateicon")) {
 			gl.sendMsg(eb, g);
 		}

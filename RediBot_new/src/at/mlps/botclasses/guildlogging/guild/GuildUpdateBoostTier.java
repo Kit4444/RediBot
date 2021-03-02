@@ -21,7 +21,7 @@ public class GuildUpdateBoostTier extends ListenerAdapter{
     	eb.setDescription("The Boostlevel has been changed.");
     	eb.addField("Old Values", "Max. Bitrate: " + e.getOldBoostTier().getMaxBitrate() + "\nMax. Emotes: " + e.getOldBoostTier().getMaxEmotes() + "\nMax. Filesize: " + e.getOldBoostTier().getMaxFileSize(), false);
     	eb.addField("New Count", "Max. Bitrate: " + e.getNewBoostTier().getMaxBitrate() + "\nMax. Emotes: " + e.getNewBoostTier().getMaxEmotes() + "\nMax. Filesize: " + e.getNewBoostTier().getMaxFileSize(), false);
-    	eb.setFooter(stime);
+    	eb.setFooter(g.getName() + " - " + stime);
     	if(gl.enabledLog(g, "guildupdateboosttier")) {
     		gl.sendMsg(eb, g);
     	}

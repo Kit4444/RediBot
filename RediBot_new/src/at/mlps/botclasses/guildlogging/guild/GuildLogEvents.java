@@ -104,7 +104,7 @@ public class GuildLogEvents extends ListenerAdapter{
 		hm.put("msgid", msgid);
 		try {
 			if(Main.mysql.isInDatabase("redibot_msglog", hm)) {
-				PreparedStatement ps = MySQL.getConnection().prepareStatement("SELECT * FROM redibot_msglog WHERE guildid = ? AND msgid = ?");
+				PreparedStatement ps = MySQL.getConnection().prepareStatement("SELECT attachURI FROM redibot_msglog WHERE guildid = ? AND msgid = ?");
 				ps.setLong(1, guildid);
 				ps.setLong(2, msgid);
 				ResultSet rs = ps.executeQuery();

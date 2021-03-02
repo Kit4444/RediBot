@@ -21,7 +21,7 @@ public class GuildUpdateOwner extends ListenerAdapter{
     	eb.setDescription("The guild has now a new owner.");
     	eb.addField("Old Owner:", e.getOldOwner().getAsMention() + " / " + e.getOldOwner().getUser().getName() + "#" + e.getOldOwner().getUser().getDiscriminator(), false);
     	eb.addField("New Owner:", e.getNewOwner().getAsMention() + " / " + e.getNewOwner().getUser().getName() + "#" + e.getNewOwner().getUser().getDiscriminator(), false);
-    	eb.setFooter(stime);
+    	eb.setFooter(g.getName() + " - " + stime);
     	if(gl.enabledLog(g, "guildupdateowner")) {
     		gl.sendMsg(eb, g);
     	}

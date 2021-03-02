@@ -21,7 +21,7 @@ public class GuildUpdateExplicitContent extends ListenerAdapter{
     	eb.setDescription("The guild has now a new explicit content level.");
     	eb.addField("Old ECL:", e.getOldLevel().getDescription(), false);
     	eb.addField("New ECL:", e.getNewLevel().getDescription(), false);
-    	eb.setFooter(stime);
+    	eb.setFooter(g.getName() + " - " + stime);
     	if(gl.enabledLog(g, "guildupdateexplicitcontentlevel")) {
     		gl.sendMsg(eb, g);
     	}

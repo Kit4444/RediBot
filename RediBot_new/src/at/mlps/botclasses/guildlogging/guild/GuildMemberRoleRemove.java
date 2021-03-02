@@ -31,7 +31,7 @@ public class GuildMemberRoleRemove extends ListenerAdapter{
 			}
 			eb.setDescription("User: " + m.getAsMention() + "\nRoles removed: " + sb.toString());
 		}
-		eb.setFooter(stime, g.getIconUrl());
+		eb.setFooter(g.getName() + " - " + stime, g.getIconUrl());
 		if(gl.enabledLog(g, "guildmemberroleremove")) {
 			gl.sendMsg(eb, g);
 		}

@@ -21,7 +21,7 @@ public class GuildUpdateBoostCount extends ListenerAdapter{
     	eb.setDescription("The Boostcount has been changed.");
     	eb.addField("Old Count", e.getOldBoostCount() + "", false);
     	eb.addField("New Count", e.getNewBoostCount() + "", false);
-    	eb.setFooter(stime);
+    	eb.setFooter(g.getName() + " - " + stime);
     	if(gl.enabledLog(g, "guildupdateboostcount")) {
     		gl.sendMsg(eb, g);
     	}

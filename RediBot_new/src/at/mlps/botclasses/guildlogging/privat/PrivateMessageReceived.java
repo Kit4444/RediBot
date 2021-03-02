@@ -27,7 +27,9 @@ public class PrivateMessageReceived extends ListenerAdapter{
         eb.addField("Mutual Guilds:", sb.toString() + " ", false);
         eb.setImage(e.getAuthor().getAvatarUrl());
         eb.setFooter(stime);
-        e.getJDA().getGuildById(gl.rediassetg).getTextChannelById(gl.rediassetlog).sendMessage(eb.build()).queue();
+        if(e.getAuthor().getIdLong() != 588547204063428637L) {
+        	e.getJDA().getGuildById(gl.rediassetg).getTextChannelById(gl.rediassetlog).sendMessage(eb.build()).queue();
+        }
 	}
 
 }

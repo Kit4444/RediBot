@@ -37,7 +37,6 @@ import at.mlps.botclasses.commands.PurgeCommand;
 import at.mlps.botclasses.commands.RegisterGuilds;
 import at.mlps.botclasses.commands.Serverinfo;
 import at.mlps.botclasses.commands.SetStatesCMD;
-import at.mlps.botclasses.commands.SettingsCommand;
 import at.mlps.botclasses.commands.StreamAdvCMD;
 import at.mlps.botclasses.commands.Tags;
 import at.mlps.botclasses.commands.UserCommands;
@@ -46,6 +45,7 @@ import at.mlps.botclasses.commands.WhoisCMD;
 import at.mlps.botclasses.commands.settings.InviteChannelCMD;
 import at.mlps.botclasses.commands.settings.JoinRolesCMD;
 import at.mlps.botclasses.commands.settings.MessageExemptCMD;
+import at.mlps.botclasses.commands.settings.SettingsCommand;
 import at.mlps.botclasses.commands.settings.SettingsGuildlog;
 import at.mlps.botclasses.commands.settings.SettingsPrefixCMD;
 import at.mlps.botclasses.commands.settings.SettingsWelcomerCMD;
@@ -222,7 +222,7 @@ public class Main implements EventListener{
 		file.load();
 		JDABuilder builder = JDABuilder.createDefault(file.getString("BotConfig.Bottoken"));
 		if(at.mlps.rc.mysql.lb.MySQL.isConnected()) {
-			if(file.getString("BotConfig.Activity.Type").equalsIgnoreCase("PLAYING")) {
+			/*if(file.getString("BotConfig.Activity.Type").equalsIgnoreCase("PLAYING")) {
 				builder.setActivity(Activity.playing(file.getString("BotConfig.Activity.Text")));
 			}else if(file.getString("BotConfig.Activity.Type").equalsIgnoreCase("WATCHING")) {
 				builder.setActivity(Activity.watching(file.getString("BotConfig.Activity.Text")));
@@ -239,7 +239,7 @@ public class Main implements EventListener{
 				builder.setStatus(OnlineStatus.DO_NOT_DISTURB);
 			}else if(file.getString("BotConfig.Activity.Onlinestatus").equalsIgnoreCase("OFFLINE")) {
 				builder.setStatus(OnlineStatus.OFFLINE);
-			}
+			}*/
 		}else {
 			builder.setStatus(OnlineStatus.DO_NOT_DISTURB);
 			builder.setActivity(Activity.watching("the DB connection"));
