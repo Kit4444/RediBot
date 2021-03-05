@@ -9,7 +9,6 @@ import at.mlps.rc.mysql.lb.MySQL;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.TextChannel;
-import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
@@ -25,10 +24,10 @@ public class RegisterGuilds extends ListenerAdapter{
 			}
 		}else if(args.length == 2) {
 			if(args[0].equalsIgnoreCase(Main.botprefix + "registerguild")) {
-				TextChannel logchannel = e.getMessage().getMentionedChannels().get(0);
-				long logchannelid = logchannel.getIdLong();
-				long guildid = g.getIdLong();
-				if(e.getAuthor().getIdLong() == 228145889988837385L) {
+				if(e.getMember().isOwner()) {
+					TextChannel logchannel = e.getMessage().getMentionedChannels().get(0);
+					long logchannelid = logchannel.getIdLong();
+					long guildid = g.getIdLong();
 					if(checkDB(guildid)) {
 						chan.sendMessage("<:deny:678036504702091278> This guild is already registered.").queue();
 					}else {
@@ -36,8 +35,7 @@ public class RegisterGuilds extends ListenerAdapter{
 						chan.sendMessage("<:approved:678036504391581730> This guild has been registered.\nGuild: " + g.getName() + "\nLogchannel: " + logchannel.getAsMention() + "\n \nPlease set up the Bot now for your guild!\n[p]configuration").queue();
 					}
 				}else {
-					User u = e.getJDA().getUserById(228145889988837385L);
-					chan.sendMessage("<:deny:678036504702091278> You can't use this command. This command can just execute " + u.getName() + "#" + u.getDiscriminator()).queue();
+					chan.sendMessage("<:deny:678036504702091278> Error - You're not the Guildowner.").queue();
 				}
 			}
 		}else {
