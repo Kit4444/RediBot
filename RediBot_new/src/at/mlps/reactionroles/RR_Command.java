@@ -274,7 +274,7 @@ public class RR_Command extends ListenerAdapter{
 							if(oldReaction.charAt(0) == ':' && oldReaction.charAt(oldReaction.length() - 1) == ':') {
 								channel.addReactionById(messagekey, args[4]).queue();
 							}else {
-								if(oldReaction.charAt(1) == 'a') {
+								if(oldReaction.charAt(0) == '<' && oldReaction.charAt(1) == 'a') {
 									channel.addReactionById(messagekey, oldReaction.substring(1, (oldReaction.length() - 1))).queue();
 								}else {
 									channel.addReactionById(messagekey, oldReaction.substring(2, (oldReaction.length() - 1))).queue();
