@@ -17,13 +17,16 @@ public class HelpCMD extends ListenerAdapter{
 				eb.setColor(e.getMember().getColor());
 				eb.setDescription("All commands are listed in alphabetic order.");
 				if(args[1].equalsIgnoreCase("botowner")) {
-					eb.addField(Main.botprefix + "registerguild", "Botownercommand - registers a guild for guildlogging", false);
 					eb.addField(Main.botprefix + "setactivity", "Botownercommand", false);
 					eb.addField(Main.botprefix + "setgame", "Botownercommand", false);
 					chan.sendMessage(eb.build()).queue();
+				}else if(args[1].equalsIgnoreCase("owner")) {
+					eb.addField(Main.botprefix + "registerguild", "Guildownercommand - registers a Guild.", false);
 				}else if(args[1].equalsIgnoreCase("admin")) {
 					eb.addField(Main.botprefix + "announce", "Announce something in a specified channel", false);
 					eb.addField(Main.botprefix + "faq", "Admin Command", false);
+					eb.addField(Main.botprefix + "rr", "Reaction Role Setup Command", false);
+					eb.addField(Main.botprefix + "setmuterole", "Sets a Role for the mute-Command", false);
 					chan.sendMessage(eb.build()).queue();
 				}else if(args[1].equalsIgnoreCase("mod")) {
 					eb.addField(Main.botprefix + "ban", "Bans a member from the guild.", false);
@@ -62,6 +65,7 @@ public class HelpCMD extends ListenerAdapter{
 				EmbedBuilder eb = new EmbedBuilder();
 				eb.setTitle("Helplist");
 				eb.addField(Main.botprefix + "help botowner", "Those commands are just available for the bot creator", false);
+				eb.addField(Main.botprefix + "help owner", "Those commands are limited to guildowners.", false);
 				eb.addField(Main.botprefix + "help admin", "Those commands are just available for server admins", false);
 				eb.addField(Main.botprefix + "help mod", "Those commands are just available for server mods and higher", false);
 				eb.addField(Main.botprefix + "help redicraft", "Those commands are mostly useable for everyone. RediCraft-Specific", false);
