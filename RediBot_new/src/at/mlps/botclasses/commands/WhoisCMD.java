@@ -1,5 +1,6 @@
 package at.mlps.botclasses.commands;
 
+import java.awt.Color;
 import java.util.List;
 
 import at.mlps.botclasses.guildlogging.guild.GuildLogEvents;
@@ -79,45 +80,50 @@ public class WhoisCMD extends ListenerAdapter{
 						m2 = e.getMessage().getMentionedMembers().get(0);
 					}
 				}
-				eb.setAuthor(m2.getUser().getName() + "#" + m2.getUser().getDiscriminator(), m2.getUser().getAvatarUrl());
-				eb.setDescription(m2.getAsMention());
-				eb.addField("Joined", gl.retDate(m2.getTimeJoined()), false);
-				eb.addField("Registered", gl.retDate(m2.getUser().getTimeCreated()), false);
-				if(m2.isOwner()) {
-					eb.addField("Owner of the guild:", "yes", false);
+				if(m2 == null) {
+					eb.setDescription("Error - This user is either not on the guild or there is a mistake.");
+					eb.setColor(Color.decode("#aa0000"));
 				}else {
-					eb.addField("Owner of the guild:", "no", false);
+					eb.setAuthor(m2.getUser().getName() + "#" + m2.getUser().getDiscriminator(), m2.getUser().getAvatarUrl());
+					eb.setDescription(m2.getAsMention());
+					eb.addField("Joined", gl.retDate(m2.getTimeJoined()), false);
+					eb.addField("Registered", gl.retDate(m2.getUser().getTimeCreated()), false);
+					if(m2.isOwner()) {
+						eb.addField("Owner of the guild:", "yes", false);
+					}else {
+						eb.addField("Owner of the guild:", "no", false);
+					}
+					if(m2.getTimeBoosted() != null) {
+						eb.addField("Nitro Booster:", "yes, since: " + gl.retDate(m2.getTimeBoosted()), false);
+					}else {
+						eb.addField("Nitro Booster:", "no", false);
+					}
+					eb.setColor(m2.getColor());
+					if(m2.getOnlineStatus() == OnlineStatus.ONLINE) {
+						eb.addField("Onlinestatus:", "<:online:671772876482936862> | Online", false);
+					}else if(m2.getOnlineStatus() == OnlineStatus.IDLE) {
+						eb.addField("Onlinestatus:", "<:idle:671772876449251383> | Idle", false);
+					}else if(m2.getOnlineStatus() == OnlineStatus.DO_NOT_DISTURB) {
+						eb.addField("Onlinestatus:", "<:dnd:708982976838369320> | Do not Disturb", false);
+					}else if(m2.getOnlineStatus() == OnlineStatus.OFFLINE) {
+						eb.addField("Onlinestatus:", "<:offline:671772876499582996> | Offline", false);
+					}else {
+						eb.addField("Onlinestatus:", m2.getOnlineStatus().getKey(), false);
+					}
+					eb.setThumbnail(m2.getUser().getAvatarUrl());
+					List<Role> roles = m2.getRoles();
+					StringBuilder sb = new StringBuilder();
+					for(Role rs : roles) {
+						sb.append(rs.getAsMention());
+						sb.append(" ");
+					}
+					if(roles.size() <= 32) {
+						eb.addField("Roles [" + roles.size() + "]", sb.toString(), true);
+					}else {
+						eb.addField("Roles [" + roles.size() + "]", "Too many roles to list.", true);
+					}
+					eb.setFooter("ID: " + m2.getUser().getId(), g.getIconUrl());
 				}
-				if(m2.getTimeBoosted() != null) {
-					eb.addField("Nitro Booster:", "yes, since: " + gl.retDate(m2.getTimeBoosted()), false);
-				}else {
-					eb.addField("Nitro Booster:", "no", false);
-				}
-				eb.setColor(m2.getColor());
-				if(m2.getOnlineStatus() == OnlineStatus.ONLINE) {
-					eb.addField("Onlinestatus:", "<:online:671772876482936862> | Online", false);
-				}else if(m2.getOnlineStatus() == OnlineStatus.IDLE) {
-					eb.addField("Onlinestatus:", "<:idle:671772876449251383> | Idle", false);
-				}else if(m2.getOnlineStatus() == OnlineStatus.DO_NOT_DISTURB) {
-					eb.addField("Onlinestatus:", "<:dnd:708982976838369320> | Do not Disturb", false);
-				}else if(m2.getOnlineStatus() == OnlineStatus.OFFLINE) {
-					eb.addField("Onlinestatus:", "<:offline:671772876499582996> | Offline", false);
-				}else {
-					eb.addField("Onlinestatus:", m2.getOnlineStatus().getKey(), false);
-				}
-				eb.setThumbnail(m2.getUser().getAvatarUrl());
-				List<Role> roles = m2.getRoles();
-				StringBuilder sb = new StringBuilder();
-				for(Role rs : roles) {
-					sb.append(rs.getAsMention());
-					sb.append(" ");
-				}
-				if(roles.size() <= 32) {
-					eb.addField("Roles [" + roles.size() + "]", sb.toString(), true);
-				}else {
-					eb.addField("Roles [" + roles.size() + "]", "Too many roles to list.", true);
-				}
-				eb.setFooter("ID: " + m2.getUser().getId(), g.getIconUrl());
 				chan.sendMessage(eb.build()).queue();
 			}
 		}else {
