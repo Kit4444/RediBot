@@ -49,6 +49,7 @@ import at.mlps.botclasses.commands.settings.SettingsCommand;
 import at.mlps.botclasses.commands.settings.SettingsGuildlog;
 import at.mlps.botclasses.commands.settings.SettingsPrefixCMD;
 import at.mlps.botclasses.commands.settings.SettingsWelcomerCMD;
+import at.mlps.botclasses.commands.settings.SettingsXPLevel;
 import at.mlps.botclasses.guildlogging.emote.EmoteAdd;
 import at.mlps.botclasses.guildlogging.emote.EmoteRemove;
 import at.mlps.botclasses.guildlogging.emote.EmoteUpdateName;
@@ -339,6 +340,7 @@ public class Main implements EventListener{
 		builder.addEventListeners(new SettingsGuildlog());
 		builder.addEventListeners(new RR_Command());
 		builder.addEventListeners(new RR_Listener());
+		builder.addEventListeners(new SettingsXPLevel());
 		builder.build();
 	}
 	

@@ -23,6 +23,7 @@ public class SettingsCommand extends ListenerAdapter{
 				cmdex.add("[p]prefix - ***A prefix can be set, but it doesn't work yet***");
 				cmdex.add("[p]guildlogs help - This Bot also can log like guildupdates or memberupdates");
 				cmdex.add("[p]messagelogging - You have a super secret channel noone should know about?");
+				cmdex.add("[p]xpsettings - Settings for the XP Leveling");
 				cmdex.add("[p]joinroles - Give newly joined members a role");
 				cmdex.add("[p]reactionroles - Let your users claim roles by reacting to a message.");
 				cmdex.add("[p]invitechannel - ***Under work***");
