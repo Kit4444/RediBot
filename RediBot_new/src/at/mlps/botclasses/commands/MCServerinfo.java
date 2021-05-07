@@ -5,7 +5,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import at.mlps.main.Main;
 import at.mlps.rc.mysql.lb.MySQL;
@@ -31,12 +33,38 @@ public class MCServerinfo extends ListenerAdapter{
         		eb.setColor(e.getMember().getColor());
         		eb.setTitle("RediCraft Serverstats");
         		eb.setFooter("Requested from: " + e.getAuthor().getName() + "#" + e.getAuthor().getDiscriminator() + " at " + stime, e.getAuthor().getAvatarUrl());
-        		setEBField(eb, "Lobby");
-        		setEBField(eb, "Creative");
-        		setEBField(eb, "Survival");
-        		setEBField(eb, "SkyBlock");
-        		setEBField(eb, "Towny");
-        		setEBField(eb, "Farmserver");
+        		try {
+					PreparedStatement ps = MySQL.getConnection().prepareStatement("SELECT * FROM redicore_serverstats ORDER BY serverid ASC");
+					ResultSet rs = ps.executeQuery();
+					int maxPlayers = getBCSlots();
+					while(rs.next()) {
+						boolean hide = rs.getBoolean("hide");
+						if(!hide) {
+							double tps = Double.valueOf(rs.getString("tps"));
+							int ram = rs.getInt("ramusage");
+							int allocRam = rs.getInt("ramavailable");
+							List<String> arr = new ArrayList<>();
+							arr.add("Onlinestatus: " + onlinestatus(rs.getBoolean("online"), tps));
+							if(rs.getBoolean("online")) {
+								arr.add("Status: " + mlstatus(rs.getBoolean("monitoring"), rs.getBoolean("locked")));
+								arr.add("Players: " + rs.getInt("currPlayers") + "(Staff: " + rs.getInt("currStaffmembers") + ") / " + maxPlayers);
+								arr.add("RAM: " + ram + "MB / " + allocRam + "MB");
+								arr.add("Version: " + rs.getString("version"));
+								arr.add("Staffserver: " + humanBool(rs.getBoolean("staffserver")));
+								arr.add("Hybridserver: " + humanBool(rs.getBoolean("hybrid")));
+								arr.add("Dynmap: " + humanBool(rs.getBoolean("dynmap")));
+							}
+							StringBuilder sb = new StringBuilder();
+							for(String s : arr) {
+								sb.append(s);
+								sb.append("\n");
+							}
+							eb.addField("Server: " + rs.getString("servername") + " (" + rs.getString("serverid") + ")", sb.toString(), true);
+						}
+					}
+				} catch (SQLException e1) {
+					e1.printStackTrace();
+				}
         		chan.sendMessage(eb.build()).queue();
         	}else if(args[0].equalsIgnoreCase(Main.botprefix + "server")) {
         		chan.sendMessage("<:deny:678036504702091278> | Usage: " + Main.botprefix + "server <Server> - (To retrieve a list of possible server just do ``" + Main.botprefix + "server list``").queue();
@@ -70,6 +98,22 @@ public class MCServerinfo extends ListenerAdapter{
         		chan.sendMessage("<:deny:678036504702091278> | Usage: " + Main.botprefix + "server <Server> - (To retrieve a list of possible server just do ``" + Main.botprefix + "server list``").queue();
         	}
         }
+	}
+	
+	int getBCSlots() throws SQLException {
+		PreparedStatement ps = MySQL.getConnection().prepareStatement("SELECT maxPlayers FROM redicore_serverstats WHERE servername = ?");
+		ps.setString(1, "BungeeCord");
+		ResultSet rs = ps.executeQuery();
+		rs.next();
+		return rs.getInt("maxPlayers");
+	}
+	
+	String humanBool(boolean bool) {
+		if(bool) {
+			return "yes";
+		}else {
+			return "no";
+		}
 	}
 	
 	void setEBField(EmbedBuilder eb, String server) {
@@ -121,6 +165,30 @@ public class MCServerinfo extends ListenerAdapter{
 			s = "ERRORED!";
 		}
 		return s;
+	}
+	
+	String onlinestatus(boolean status, double tps) {
+		if(status) {
+			if(tps >= 19.8 && tps <= 20.2) {
+				return "<:online:671772876482936862>";
+			}else {
+				return "<:idle:671772876449251383>";
+			}
+		}else {
+			return "<:dnd:708982976838369320>";
+		}
+	}
+	
+	String mlstatus(boolean mtstatus, boolean lckstatus) {
+		if(mtstatus && lckstatus) {
+			return ":closed_lock_with_key: :hammer_pick:";
+		}else if(mtstatus && !lckstatus) {
+			return ":hammer_pick:";
+		}else if(!mtstatus && lckstatus) {
+			return ":closed_lock_with_key:";
+		}else {
+			return ":unlock:";
+		}
 	}
 	
 	void setEmbedNew(Guild g, User m, MessageChannel chan, String server) {
