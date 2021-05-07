@@ -138,6 +138,7 @@ public class Punishments extends ListenerAdapter{
 							m.getUser().openPrivateChannel().queue(pm -> {
 								pm.sendMessage("You were kicked from " + g.getName() + ".\nAdmin: " + operator.getUser().getName() + "#" + operator.getUser().getDiscriminator() + "\nReason: " + text).queue();
 							});
+							e.getMessage().delete().queue();
 							insertDB(m.getUser(), operator, g, 0, "KICK", sdf.format(new Date()), text);
 							sendModlog(modlogchan, m, operator, g, 0, "Kick", sdf.format(new Date()), text);
 							g.kick(m, text).queue();
@@ -186,6 +187,7 @@ public class Punishments extends ListenerAdapter{
 									m.getUser().openPrivateChannel().queue(pm -> {
 										pm.sendMessage("You were muted permanently in " + g.getName() + ".\nAdmin: " + operator.getUser().getName() + "#" + operator.getUser().getDiscriminator() + "\nReason: " + text).queue();
 									});
+									e.getMessage().delete().queue();
 									insertDB(m.getUser(), operator, g, 0, "MUTE", sdf.format(new Date()), text);
 									sendModlog(modlogchan, m, operator, g, 0, "Permanent Mute", sdf.format(new Date()), text);
 									e.getMessage().delete();
@@ -228,6 +230,7 @@ public class Punishments extends ListenerAdapter{
 							for(int i = 2; i < args.length; i++) {
 								sb.append(args[i]).append(" ");
 							}
+							e.getMessage().delete().queue();
 							String text = sb.toString();
 							m.getUser().openPrivateChannel().queue(pm -> {
 								pm.sendMessage("You were warned in " + g.getName() + ".\nAdmin: " + operator.getUser().getName() + "#" + operator.getUser().getDiscriminator() + "\nReason: " + text).queue();
@@ -235,6 +238,7 @@ public class Punishments extends ListenerAdapter{
 							insertDB(m.getUser(), operator, g, 0, "WARN", sdf.format(new Date()), text);
 							sendModlog(modlogchan, m, operator, g, 0, "Warn", sdf.format(new Date()), text);
 							e.getMessage().delete();
+							putCaseID(g.getIdLong(), m.getIdLong(), sdf.format(new Date()));
 							EmbedBuilder eb = new EmbedBuilder();
 							eb.setColor(Color.decode(successColor));
 							eb.setDescription("<:allow:671772876461834251> ***" + m.getUser().getName() + "#" + m.getUser().getDiscriminator() + "*** was warned with the reason " + text);
@@ -274,6 +278,7 @@ public class Punishments extends ListenerAdapter{
 							m.getUser().openPrivateChannel().queue(pm -> {
 								pm.sendMessage("You were banned permanently in " + g.getName() + ".\nAdmin: " + operator.getUser().getName() + "#" + operator.getUser().getDiscriminator() + "\nReason: " + text).queue();
 							});
+							e.getMessage().delete().queue();
 							insertDB(m.getUser(), operator, g, 0, "WARN", sdf.format(new Date()), text);
 							sendModlog(modlogchan, m, operator, g, 0, "Permanent Ban", sdf.format(new Date()), text);
 							g.ban(m, 0, text).queue();
@@ -379,6 +384,20 @@ public class Punishments extends ListenerAdapter{
 		return l;	
 	}
 	
+	private void putCaseID(long guildid, long memberid, String dateTime) {
+		int cases = returnCases(guildid);
+		try {
+			PreparedStatement ps = MySQL.getConnection().prepareStatement("UPDATE redibot_bkwm SET caseID = ? WHERE guildID = ? AND userID = ? AND dateTime = ?");
+			ps.setInt(1, cases);
+			ps.setLong(2, guildid);
+			ps.setLong(3, memberid);
+			ps.setString(4, dateTime);
+			ps.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	private boolean hasPermission(Member m) {
 		boolean bool = false;
 		if(m.hasPermission(Permission.ADMINISTRATOR) || m.hasPermission(Permission.BAN_MEMBERS) || m.hasPermission(Permission.KICK_MEMBERS) || m.hasPermission(Permission.MANAGE_SERVER) || m.isOwner()) {
@@ -436,6 +455,22 @@ public class Punishments extends ListenerAdapter{
 		try {
 			PreparedStatement ps = MySQL.getConnection().prepareStatement("SELECT id FROM redibot_bkwm WHERE guildID = ?");
 			ps.setLong(1, g.getIdLong());
+			ResultSet rs = ps.executeQuery();
+			if(rs.last()) {
+				i = rs.getRow();
+			}
+			rs.close();
+			ps.close();
+		} catch (SQLException e) {
+		}
+		return i;
+	}
+	
+	private int returnCases(long guildId) {
+		int i = 0;
+		try {
+			PreparedStatement ps = MySQL.getConnection().prepareStatement("SELECT id FROM redibot_bkwm WHERE guildID = ?");
+			ps.setLong(1, guildId);
 			ResultSet rs = ps.executeQuery();
 			if(rs.last()) {
 				i = rs.getRow();
