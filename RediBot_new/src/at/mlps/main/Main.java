@@ -1,26 +1,18 @@
 package at.mlps.main;
 
 import java.io.IOException;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import javax.crypto.Cipher;
-import javax.crypto.KeyGenerator;
-import javax.crypto.NoSuchPaddingException;
-import javax.crypto.SecretKey;
 import javax.security.auth.login.LoginException;
 
 import org.simpleyaml.configuration.file.YamlFile;
 import org.simpleyaml.exceptions.InvalidConfigurationException;
 
-import com.sun.xml.internal.messaging.saaj.packaging.mime.util.BASE64DecoderStream;
-import com.sun.xml.internal.messaging.saaj.packaging.mime.util.BASE64EncoderStream;
-
 import at.mlps.botclasses.commands.AnnounceCMD;
 import at.mlps.botclasses.commands.AragonLoyalCommand;
+import at.mlps.botclasses.commands.BotModlogAnnounce;
 import at.mlps.botclasses.commands.ChatLevelCMD;
 import at.mlps.botclasses.commands.ChatLeveling;
 import at.mlps.botclasses.commands.CreateInvite;
@@ -50,6 +42,7 @@ import at.mlps.botclasses.commands.settings.SettingsGuildlog;
 import at.mlps.botclasses.commands.settings.SettingsPrefixCMD;
 import at.mlps.botclasses.commands.settings.SettingsWelcomerCMD;
 import at.mlps.botclasses.commands.settings.SettingsXPLevel;
+import at.mlps.botclasses.commands.settings.SuggestionVoterAddCMD;
 import at.mlps.botclasses.guildlogging.emote.EmoteAdd;
 import at.mlps.botclasses.guildlogging.emote.EmoteRemove;
 import at.mlps.botclasses.guildlogging.emote.EmoteUpdateName;
@@ -107,8 +100,6 @@ import at.mlps.rc.mysql.lpb.MySQL;
 import at.mlps.reactionroles.RR_Command;
 import at.mlps.reactionroles.RR_Listener;
 import net.dv8tion.jda.api.JDABuilder;
-import net.dv8tion.jda.api.OnlineStatus;
-import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.events.GenericEvent;
 import net.dv8tion.jda.api.hooks.EventListener;
 import net.dv8tion.jda.api.requests.GatewayIntent;
@@ -123,10 +114,6 @@ public class Main implements EventListener{
 	public static String pw = "MauriceB2400";
 	public static Main instance;
 	public static MySQL mysql;
-	
-	public static Cipher ecipher;
-	public static Cipher dcipher;
-	public static SecretKey key;
 	
 	public static String botprefix = "rb!";
 
@@ -148,21 +135,8 @@ public class Main implements EventListener{
 				e.printStackTrace();
 			}
 		}
-		try {
-			key = KeyGenerator.getInstance("DES").generateKey();
-			
-			ecipher = Cipher.getInstance("DES");
-			dcipher = Cipher.getInstance("DES");
-			
-			ecipher.init(Cipher.ENCRYPT_MODE, key);
-			dcipher.init(Cipher.DECRYPT_MODE, key);
-		} catch (NoSuchAlgorithmException e) {
-			e.printStackTrace();
-		} catch (NoSuchPaddingException e) {
-			e.printStackTrace();
-		} catch (InvalidKeyException e) {
-			e.printStackTrace();
-		}
+		
+		
 		setCFG();
 		String host = file.getString("MySQL.Host");
 		int port = file.getInt("MySQL.Port");
@@ -208,6 +182,7 @@ public class Main implements EventListener{
 		file.addDefault("MySQL.Username", "username");
 		file.addDefault("MySQL.Password", "password");
 		file.addDefault("BotConfig.Bottoken", "the bottoken goes here");
+		file.addDefault("BotConfig.Bootlogo", 0);
 		file.set("BotInfo.online.ts", System.currentTimeMillis());
 		file.set("BotInfo.online.string", stime);
 		file.options().copyDefaults(true);
@@ -222,29 +197,6 @@ public class Main implements EventListener{
 		YamlFile file = new YamlFile("configs/configuration.yml");
 		file.load();
 		JDABuilder builder = JDABuilder.createDefault(file.getString("BotConfig.Bottoken"));
-		if(at.mlps.rc.mysql.lb.MySQL.isConnected()) {
-			/*if(file.getString("BotConfig.Activity.Type").equalsIgnoreCase("PLAYING")) {
-				builder.setActivity(Activity.playing(file.getString("BotConfig.Activity.Text")));
-			}else if(file.getString("BotConfig.Activity.Type").equalsIgnoreCase("WATCHING")) {
-				builder.setActivity(Activity.watching(file.getString("BotConfig.Activity.Text")));
-			}else if(file.getString("BotConfig.Activity.Type").equalsIgnoreCase("LISTENING")) {
-				builder.setActivity(Activity.listening(file.getString("BotConfig.Activity.Text")));
-			}else if(file.getString("BotConfig.Activity.Type").equalsIgnoreCase("STREAMING")) {
-				builder.setActivity(Activity.streaming(file.getString("BotConfig.Activity.Text"), file.getString("BotConfig.Activity.StreamURL")));
-			}
-			if(file.getString("BotConfig.Activity.Onlinestatus").equalsIgnoreCase("ONLINE")) {
-				builder.setStatus(OnlineStatus.ONLINE);
-			}else if(file.getString("BotConfig.Activity.Onlinestatus").equalsIgnoreCase("IDLE")) {
-				builder.setStatus(OnlineStatus.IDLE);
-			}else if(file.getString("BotConfig.Activity.Onlinestatus").equalsIgnoreCase("DONOTDISTURB")) {
-				builder.setStatus(OnlineStatus.DO_NOT_DISTURB);
-			}else if(file.getString("BotConfig.Activity.Onlinestatus").equalsIgnoreCase("OFFLINE")) {
-				builder.setStatus(OnlineStatus.OFFLINE);
-			}*/
-		}else {
-			builder.setStatus(OnlineStatus.DO_NOT_DISTURB);
-			builder.setActivity(Activity.watching("the DB connection"));
-		}
 		builder.enableIntents(GatewayIntent.GUILD_MEMBERS);
 		builder.enableIntents(GatewayIntent.GUILD_BANS);
 		builder.enableIntents(GatewayIntent.GUILD_EMOJIS);
@@ -326,7 +278,7 @@ public class Main implements EventListener{
 		builder.addEventListeners(new SettingsCommand());
 		builder.addEventListeners(new ChatLeveling());
 		builder.addEventListeners(new ChatLevelCMD());
-		builder.addEventListeners(new MessageLogging());
+		builder.addEventListeners(new MessageLogging()); //enabled with hashmaps as temporary solution
 		builder.addEventListeners(new GuildMemberJoinWelcomer());
 		builder.addEventListeners(new AragonLoyalCommand());
 		builder.addEventListeners(new EmojiList());
@@ -341,6 +293,9 @@ public class Main implements EventListener{
 		builder.addEventListeners(new RR_Command());
 		builder.addEventListeners(new RR_Listener());
 		builder.addEventListeners(new SettingsXPLevel());
+		builder.addEventListeners(new SuggestionVoterAddCMD());
+		builder.addEventListeners(new BotModlogAnnounce());
+		builder.setLargeThreshold(256);
 		builder.build();
 	}
 	
@@ -359,29 +314,5 @@ public class Main implements EventListener{
 		}else {
 			System.out.println(sdf.format(new Date()) + " | " + msg);
 		}
-	}
-	
-	public static String encrypt(String s) {
-		try {
-			byte[] utf8 = s.getBytes("UTF8");
-			byte[] enc = ecipher.doFinal(utf8);
-			enc = BASE64EncoderStream.encode(enc);
-			return new String(enc);
-		}catch (Exception e) {
-			e.printStackTrace();
-			return "ERROR";
-		}
-	}
-	
-	public static String decrypt(String s) {
-		try {
-			byte[] dec = BASE64DecoderStream.decode(s.getBytes());
-			byte[] utf8 = dcipher.doFinal(dec);
-			return new String(utf8, "UTF8");
-		} catch (Exception e) {
-			e.printStackTrace();
-			return "ERROR";
-		}
-		
 	}
 }
