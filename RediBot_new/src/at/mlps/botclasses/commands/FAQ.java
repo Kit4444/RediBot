@@ -2,11 +2,15 @@ package at.mlps.botclasses.commands;
 
 import java.awt.Color;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import at.mlps.main.Main;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.TextChannel;
@@ -26,13 +30,13 @@ public class FAQ extends ListenerAdapter{
 					setEmbed_serverinfo(faqchannel);
 					setEmbed_invite(faqchannel);
 					setEmbed_platform(faqchannel);
-					setEmbed_hierarchy(faqchannel);
 					setEmbed_partnerships(faqchannel);
 					setEmbed_beta(faqchannel);
 					setEmbed_report(faqchannel);
 					setEmbed_apply(faqchannel);
 					setEmbed_serverlock(faqchannel);
-					setEmbed_team(faqchannel);
+					setEmbed_hierarchy(faqchannel);
+					setEmbed_team(faqchannel, e.getGuild());
 				}
 			}else {
 				chan.sendMessage("Error! This guild is not registered for a FAQ for RediCraft!").queue(msg1 -> {
@@ -84,24 +88,126 @@ public class FAQ extends ListenerAdapter{
 	
 	private void setEmbed_report(TextChannel chan) {
 		EmbedBuilder eb = Embed();
-		eb.setDescription("Question: I want to report someone. How can I do this?\nAnswer: You can report Users through ModMail or pinging a Moderator.");
+		eb.setDescription("Question: I want to report someone. How can I do this?\nAnswer: You can report Users through ModMail or pinging a Community Moderator.");
 		chan.sendMessage(eb.build()).queue();
 	}
 	
-	private void setEmbed_team(TextChannel chan) {
+	private void setEmbed_team(TextChannel chan, Guild g) {
+		Role pm = g.getRoleById(548175887179186191L); //project manager
+		List<Member> pmm = g.getMembersWithRoles(pm);
+		Role hr = g.getRoleById(779322052175462400L); //human resources
+		List<Member> hrm = g.getMembersWithRoles(hr);
+		Role cm = g.getRoleById(659692965110743040L); //community manager
+		List<Member> cmm = g.getMembersWithRoles(cm);
+		Role gmm = g.getRoleById(548175892153630722L); //game mod manager
+		List<Member> gmmm = g.getMembersWithRoles(gmm);
+		Role dev = g.getRoleById(548175884734169088L); //developer
+		List<Member> devm = g.getMembersWithRoles(dev);
+		Role gm = g.getRoleById(548175906833956875L); //game mod
+		List<Member> gmm_ = g.getMembersWithRoles(gm);
+		Role aot = g.getRoleById(818571943518666822L); //addon team
+		List<Member> aotm = g.getMembersWithRoles(aot);
+		Role cmt = g.getRoleById(548175915054792704L); //community mod
+		List<Member> cmtm = g.getMembersWithRoles(cmt);
+		Role cont = g.getRoleById(697902191733768192L); //content team
+		List<Member> contm = g.getMembersWithRoles(cont);
+		Role sup = g.getRoleById(548175909291819008L); //support
+		List<Member> supm = g.getMembersWithRoles(sup);
+		Role build = g.getRoleById(548175912454324224L); //builder
+		List<Member> builder = g.getMembersWithRoles(build);
 		EmbedBuilder eb = Embed();
-		//eb.addField("<Team>", "<Name in Listformat>", false);
-		eb.addField("Project Manager", "BlackSoul_\nMarvinAch", false);
-		eb.addField("Human Resources", "Inferno", false);
-		eb.addField("Community Manager", "Marius", false);
-		eb.addField("Game Moderation Manager", "Sabbi", false);
-		eb.addField("Developer", "BlackSoul_", false);
-		eb.addField("Game Moderator", "Just\\_AHD\nKrisi\nxKingBax\\_", false);
-		eb.addField("Moderator", "Maxi", false);
-		eb.addField("Content Team", "none", false);
-		eb.addField("Support", "none", false);
-		eb.addField("Builder", "Andariel", false);
+		if(pmm.size() != 0) {
+			eb.addField("Project Manager (" + pmm.size() + ")", getFromList(pmm), false);
+		}
+		if(hrm.size() != 0) {
+			eb.addField("Human Resources (" + hrm.size() + ")", getFromList(hrm), false);
+		}
+		if(cmm.size() != 0) {
+			eb.addField("Community Manager (" + cmm.size() + ")", getFromList(cmm), false);
+		}
+		if(gmmm.size() != 0) {
+			eb.addField("Game Moderation Manager (" + gmmm.size() + ")", getFromList(gmmm), false);
+		}
+		if(devm.size() != 0) {
+			eb.addField("Developer (" + devm.size() + ")", getFromListDEV(devm, g), false);
+		}
+		if(gmm_.size() != 0) {
+			eb.addField("Game Moderator (" + gmm_.size() + ")", getFromList(gmm_), false);
+		}
+		if(aotm.size() != 0) {
+			eb.addField("Add-On Team (" + aotm.size() + ")", getFromList(aotm), false);
+		}
+		if(cmtm.size() != 0) {
+			eb.addField("Community Moderator (" + getFromListExclUSINT(cmtm, g) + ")", getFromListExclUS(cmtm, g), false);
+		}
+		if(contm.size() != 0) {
+			eb.addField("Content Team (" + contm.size() + ")", getFromList(contm), false);
+		}
+		if(supm.size() != 0) {
+			eb.addField("Support (" + supm.size() + ")", getFromList(supm), false);
+		}
+		if(builder.size() != 0) {
+			eb.addField("Builder (" + builder.size() + ")", getFromList(builder), false);
+		}
 		chan.sendMessage(eb.build()).queue();
+	}
+	
+	private String getFromList(List<Member> list) {
+		StringBuilder sb = new StringBuilder();
+		for(Member m : list) {
+			sb.append(m.getAsMention());
+			sb.append("\n");
+		}
+		return sb.toString();
+	}
+	
+	private String getFromListExclUS(List<Member> list, Guild g) {
+		Role upperstaff = g.getRoleById(836565563333148712L);
+		StringBuilder sb = new StringBuilder();
+		for(Member m : list) {
+			if(!m.getRoles().contains(upperstaff)) {
+				sb.append(m.getAsMention());
+				sb.append("\n");
+			}
+		}
+		return sb.toString();
+	}
+	
+	private int getFromListExclUSINT(List<Member> list, Guild g) {
+		Role upperstaff = g.getRoleById(836565563333148712L);
+		int tmp = 0;
+		for(Member m : list) {
+			if(!m.getRoles().contains(upperstaff)) {
+				tmp++;
+			}
+		}
+		return tmp;
+	}
+	
+	private String getFromListDEV(List<Member> list, Guild g) {
+		Role webdev = g.getRoleById(836545764720246824L);
+		Role gamedev = g.getRoleById(836545813500264450L);
+		List<Member> wd = new ArrayList<>();
+		List<Member> gd = new ArrayList<>();
+		for(Member m : list) {
+			if(m.getRoles().contains(gamedev)) {
+				gd.add(m);
+			}else if(m.getRoles().contains(webdev)) {
+				wd.add(m);
+			}
+		}
+		StringBuilder sb1 = new StringBuilder();
+		StringBuilder sb2 = new StringBuilder();
+		for(Member m : wd) {
+			sb1.append("- " + m.getAsMention());
+			sb1.append("\n");
+		}
+		for(Member m : gd) {
+			sb2.append("- " + m.getAsMention());
+			sb2.append("\n");
+		}
+		String format = "Game Developer (" + gd.size() + "): \n" + sb2.toString() + " \nWeb Developer (" + wd.size() + "): \n" + sb1.toString();
+		return format;
 	}
 	
 	private void setEmbed_platform(TextChannel chan) {
@@ -118,7 +224,7 @@ public class FAQ extends ListenerAdapter{
 	
 	private void setEmbed_serverlock(TextChannel chan) {
 		EmbedBuilder eb = Embed();
-		eb.setDescription("Question: The Server is released, but I can't play on it! Why? \nAnswer: As some people already though about destroying and grief the Server, we will whitelist our server. \nYou want to play with us? Then fill this Google Forms out truthfully in order to play again on it.\n URL: https://forms.gle/AaQfmEHMo4fGR1VX8");
+		eb.setDescription("Question: The Server is released, but I can't play on it! Why? \nAnswer: As some people already thought about destroying and grief the Server, we enabled the whitelist with no ETA on turning it off. \nYou want to play with us? Then fill this Google Forms out truthfully in order to play on it.\n URL: https://forms.gle/AaQfmEHMo4fGR1VX8");
 		chan.sendMessage(eb.build()).queue();
 	}
 	
@@ -130,33 +236,33 @@ public class FAQ extends ListenerAdapter{
 	
 	private void setEmbed_invite(TextChannel chan) {
 		EmbedBuilder eb = Embed();
-		eb.setDescription("Question: How can I invite my friends? \nAnswer: Just create one by yourself with ``rb!createinvite`` - The bot will DM you.");
+		eb.setDescription("Question: How can I invite my friends? \nAnswer: Just create one by yourself with ``rb!createinvite`` - The bot will DM you. \nOr you also can use this invite link: https://discord.gg/sHDF9WR");
 		chan.sendMessage(eb.build()).queue();
 	}
 	
 	private void setEmbed_hierarchy(TextChannel chan) {
 		EmbedBuilder eb = Embed();
 		eb.setDescription("Question: How does the team hierarchy looks like? \nAnswer: It's very simple. You can see it from the following graphic:");
-		eb.setImage("https://i.imgur.com/qnuSMd3.png");
+		eb.setImage("https://i.imgur.com/nluHO7Y.png");
 		chan.sendMessage(eb.build()).queue();
 	}
 	
 	private void setEmbed_partnerships(TextChannel chan) {
 		EmbedBuilder eb = Embed();
-		eb.setDescription("Question: Does RediCraft also accept partnerships? \nAnswer: Yes, we do! We accept partnerships. Link: https://docs.google.com/forms/d/e/1FAIpQLSdtjPsI2LWSzRB67txJT9CzBxacNVhp_kZ4UIqHhBez8x_kvw/viewform");
+		eb.setDescription("Question: Does RediCraft also accept partnerships? \nAnswer: Yes, we do! We accept partnerships. Link: https://forms.gle/HKZgBi6E2L84yUSJ8");
 		chan.sendMessage(eb.build()).queue();
 	}
 	
 	private void setEmbed_beta(TextChannel chan) {
 		EmbedBuilder eb = Embed();
-		//eb.setDescription("Question: Does RediCraft also accepts beta applications? \nAnswer: Yes, we do! We accept beta applicants. At the moment only via Google Forms.\nLink: https://docs.google.com/forms/d/e/1FAIpQLSdY5xw0SROB947-0CIi_7ElbPGm4aR6-3mhtcl0zHP0kqoM0A/viewform");
+		//eb.setDescription("Question: Does RediCraft also accepts beta applications? \nAnswer: Yes, we do! We accept beta applicants. Apply here: https://forms.gle/xLBiZqPShb6sYqK47");
 		eb.setDescription("Question: Does RediCraft also accepts beta application? \nAnswer: We currently don't. We will announce it, when we are searching beta testers again.");
 		chan.sendMessage(eb.build()).queue();
 	}
 
 	private void setEmbed_apply(TextChannel chan) {
 		EmbedBuilder eb = Embed();
-		eb.setDescription("Question: How can I apply for the staff team? \nAnswer: Use the following Google Forms: https://forms.gle/tsemeZadQhNrp1Lx6");
+		eb.setDescription("Question: How can I apply for the staff team? \nAnswer: Use the following Google Forms: https://forms.gle/MjVWATgubHVRUhS1A");
 		chan.sendMessage(eb.build()).queue();
 	}
 	
