@@ -220,23 +220,40 @@ public class GuildLogEvents extends ListenerAdapter{
 	}
 	
 	public void welcCon() {
-		System.out.println("####################################");
-		System.out.println("#                                  #");
-		System.out.println("# ###  #### ###  # ###   ##  ##### #");
-		System.out.println("# #  # #    #  # # #  # #  #   #   #");
-		System.out.println("# #  # #    #  # # #  # #  #   #   #");
-		System.out.println("# ###  ###  #  # # ###  #  #   #   #");
-		System.out.println("# # #  #    #  # # #  # #  #   #   #");
-		System.out.println("# #  # #    #  # # #  # #  #   #   #");
-		System.out.println("# #  # #### ###  # ###   ##    #   #");
-		System.out.println("#                                  #");
-		System.out.println("####################################");
+		SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy - HH:mm:ss a z");
 		YamlFile file = new YamlFile("configs/configuration.yml");
 		try {
 			file.load();
 		} catch (InvalidConfigurationException | IOException e1) {
 			e1.printStackTrace();
 		}
-		System.out.print("RediBot has been loaded.\nVersion: " + file.getString("BotInfo.version") + "\nJavaversion: " + System.getProperty("java.version") + "\nJDA-Version: " + JDAInfo.VERSION + "\n");
+		int bootscreen = file.getInt("BotConfig.Bootlogo");
+		if(bootscreen == 0) {
+			System.out.println("####################################");
+			System.out.println("#                                  #");
+			System.out.println("# ###  #### ###  # ###   ##  ##### #");
+			System.out.println("# #  # #    #  # # #  # #  #   #   #");
+			System.out.println("# #  # #    #  # # #  # #  #   #   #");
+			System.out.println("# ###  ###  #  # # ###  #  #   #   #");
+			System.out.println("# # #  #    #  # # #  # #  #   #   #");
+			System.out.println("# #  # #    #  # # #  # #  #   #   #");
+			System.out.println("# #  # #### ###  # ###   ##    #   #");
+			System.out.println("#                                  #");
+			System.out.println("####################################");
+		}else if(bootscreen == 1) {
+			System.out.println("###################################");
+			System.out.println("#                                 #");
+			System.out.println("# ###          #   ###         #  #");
+			System.out.println("# #  #         # # #  #        #  #");
+			System.out.println("# #  #         #   #  #        #  #");
+			System.out.println("# ###   ##   ### # ###   ###  ### #");
+			System.out.println("# #  # #  # #  # # #  # #   #  #  #");
+			System.out.println("# #  # ###  #  # # #  # #   #  #  #");
+			System.out.println("# #  # #    #  # # #  # #   #  #  #");
+			System.out.println("# #  #  ###  ### # ###   ###    # #");
+			System.out.println("#                                 #");
+			System.out.println("###################################");
+		}
+		System.out.print("RediBot has been loaded.\nVersion: " + file.getString("BotInfo.version") + "\nJavaversion: " + System.getProperty("java.version") + "\nJDA-Version: " + JDAInfo.VERSION + "\nSystemtime: " + sdf.format(new Date()) + "\n");
 	}
 }
