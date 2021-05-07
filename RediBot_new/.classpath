@@ -2,11 +2,14 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="C:/Users/Maurice/Documents/Workspace/APIS/JDA-4.2.0_227-withDependencies-min.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Maurice/Documents/Workspace/APIS/mysql-connector.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Maurice/Documents/Workspace/APIS/Simple-YAML-1.3.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Maurice/Documents/Workspace/APIS/gson-2.8.0.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Maurice/Documents/Workspace/APIS/emoji-java-5.1.1.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Maurice/Documents/Workspace/APIS/json-20201115.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Newt/Documents/Workspace/API/General_Deps/emoji-java-5.1.1.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Newt/Documents/Workspace/API/General_Deps/gson-2.8.0.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Newt/Documents/Workspace/API/General_Deps/json-20201115.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Newt/Documents/Workspace/API/General_Deps/mysql-connector.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Newt/Documents/Workspace/API/General_Deps/Simple-YAML-1.3.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Newt/Documents/Workspace/API/General_Deps/commons-io-2.8.0.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Newt/Documents/Workspace/API/General_Deps/commons-io-2.8.0-javadoc.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Newt/Documents/Workspace/API/General_Deps/JDA-4.2.1_259-javadoc.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Newt/Documents/Workspace/API/General_Deps/JDA-4.2.1_259-withDependencies.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

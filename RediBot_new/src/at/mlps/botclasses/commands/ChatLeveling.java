@@ -39,6 +39,8 @@ public class ChatLeveling extends ListenerAdapter{
 		Guild g = e.getGuild();
 		Member m = e.getMember();
 		TextChannel chan = e.getChannel();
+		SimpleDateFormat sdf_time = new SimpleDateFormat("HH:mm:ss");
+		SimpleDateFormat sdf_date = new SimpleDateFormat("dd/MM/yyyy");
 		if(isRegistered(g.getIdLong())) {
 			if(hasEnabled(g)) {
 				if(!MemberExists(g.getIdLong(), m.getIdLong())) {
@@ -100,7 +102,7 @@ public class ChatLeveling extends ListenerAdapter{
 						case 30000: sendEmbed(chan, m, g, 48, nXP, 32500); break;
 						case 32500: sendEmbed(chan, m, g, 49, nXP, 37500); break;
 						case 37500: sendEmbed(chan, m, g, 50, nXP, 37500); changeRole(g, 548136727697555496L, m, 766645175735943169L, 766645177972424724L); break;
-						default: System.out.println(m.getUser().getName() + " achieved XP " + nXP + " Points on Guild " + g.getName()); break;
+						default: System.out.println("[" + sdf_time.format(new Date()) + " - " + sdf_date.format(new Date()) + "] " + m.getUser().getName() + " gained " + nXP + " Points on Guild " + g.getName() + " in " + e.getChannel().getName()); break;
 						}
 					}
 				}
