@@ -24,6 +24,7 @@ import at.mlps.botclasses.commands.ImgManClassCMD;
 import at.mlps.botclasses.commands.LOA;
 import at.mlps.botclasses.commands.MCServerinfo;
 import at.mlps.botclasses.commands.NewYearClass;
+import at.mlps.botclasses.commands.PridePFP;
 import at.mlps.botclasses.commands.Punishments;
 import at.mlps.botclasses.commands.PurgeCommand;
 import at.mlps.botclasses.commands.RegisterGuilds;
@@ -295,7 +296,7 @@ public class Main implements EventListener{
 		builder.addEventListeners(new SettingsXPLevel());
 		builder.addEventListeners(new SuggestionVoterAddCMD());
 		builder.addEventListeners(new BotModlogAnnounce());
-		builder.setLargeThreshold(256);
+		builder.addEventListeners(new PridePFP());
 		builder.build();
 	}
 	
