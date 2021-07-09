@@ -28,12 +28,13 @@ public class SettingsCommand extends ListenerAdapter{
 				cmdex.add("[p]reactionroles - Let your users claim roles by reacting to a message.");
 				cmdex.add("[p]invitechannel - ***Under work***");
 				cmdex.add("[p]automod - ***This feature does NOT exists yet***");
+				cmdex.add("[p]autoembed help - Set a channel, the bot deletes it and it will be auto-embeded.");
 				
 				EmbedBuilder eb = new EmbedBuilder();
 				eb.setColor(m.getColor());
 				eb.setDescription("You can configure some modules individually for this guild.\nThis Command just shows you the other commands.\n \nPermission needed: Owner / Server Admin / Manage Server");
 				eb.addField("Commands:", getFromList(cmdex), false);
-				chan.sendMessage(eb.build()).queue();
+				chan.sendMessageEmbeds(eb.build()).queue(); 
 			}
 		}
 	}
