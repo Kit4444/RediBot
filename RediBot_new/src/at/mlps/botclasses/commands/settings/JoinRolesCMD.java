@@ -45,7 +45,7 @@ public class JoinRolesCMD extends ListenerAdapter{
 						eb.addField("[p]joinroles show", "Returns a list of the Joinroles", false);
 						eb.addField("[p]joinroles add <Role@Mention|SnowflakeID>", "Adds a role to Joinroles.", false);
 						eb.addField("[p]joinroles remove <Role@Mention|SnowflakeID>", "Removes a role from Joinroles.", false);
-						chan.sendMessage(eb.build()).queue();
+						chan.sendMessageEmbeds(eb.build()).queue();
 				}else if(args[1].equalsIgnoreCase("show")) {
 					if(hasSettingPerms(m)) {
 						if(isRegistered(g.getIdLong())) {
@@ -80,7 +80,7 @@ public class JoinRolesCMD extends ListenerAdapter{
 									eb.setColor(m.getColor());
 									eb.setTitle("Joinroles");
 									eb.setDescription(sb.toString());
-									chan.sendMessage(eb.build()).queue();
+									chan.sendMessageEmbeds(eb.build()).queue();
 								}
 							}
 						}else {
