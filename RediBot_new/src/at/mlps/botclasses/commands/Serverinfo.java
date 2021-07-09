@@ -22,13 +22,14 @@ public class Serverinfo extends ListenerAdapter{
 		String cont = e.getMessage().getContentRaw();
 		if(cont.equalsIgnoreCase(Main.botprefix + "serverinfo")) {
 			Member owner = e.getGuild().getMemberById(e.getGuild().getOwnerIdLong());
-			int cats, text, audio, member, online = 0, human = 0, bot = 0, idle = 0, dnd = 0, offline = 0, staff = 0, booster, mbooster = 0;
+			int cats, text, audio, member, stage, online = 0, human = 0, bot = 0, idle = 0, dnd = 0, offline = 0, staff = 0, booster, mbooster = 0;
 			cats = e.getGuild().getCategories().size();
 			text = e.getGuild().getTextChannels().size();
 			audio = e.getGuild().getVoiceChannels().size();
 			booster = e.getGuild().getBoostCount();
 			member = e.getGuild().getMemberCount();
 			mbooster = e.getGuild().getBoosters().size();
+			stage = e.getGuild().getStageChannels().size();
 			Role staffrole = null;
 			if(e.getGuild().getIdLong() == 548136727697555496L) { // redimain
 				staffrole = e.getGuild().getRoleById(552161168412639235L);
@@ -47,17 +48,17 @@ public class Serverinfo extends ListenerAdapter{
 			}
 			
 			for(Member m : e.getGuild().getMembers()) {
-				String status = m.getOnlineStatus().toString();
-				if(status.equals(OnlineStatus.ONLINE.toString())) {
+				OnlineStatus status = m.getOnlineStatus();
+				if(status.equals(OnlineStatus.ONLINE)) {
 					online++;
 				}
-				if(status.equals(OnlineStatus.IDLE.toString())) {
+				if(status.equals(OnlineStatus.IDLE)) {
 					idle++;
 				}
-				if(status.equals(OnlineStatus.DO_NOT_DISTURB.toString())) {
+				if(status.equals(OnlineStatus.DO_NOT_DISTURB)) {
 					dnd++;
 				}
-				if(status.equals(OnlineStatus.OFFLINE.toString())) {
+				if(status.equals(OnlineStatus.OFFLINE)) {
 					offline++;
 				}
 				if(m.getUser().isBot()) {
@@ -89,14 +90,18 @@ public class Serverinfo extends ListenerAdapter{
 			eb.addField("Categories:", String.valueOf(cats), true);
 			eb.addField("Text Channels:", String.valueOf(text), true);
 			eb.addField("Voice Channels:", String.valueOf(audio), true);
+			eb.addField("Stage Channels:", String.valueOf(stage), true);
 			eb.addField("Nitro Boosters:", booster + " Boosts from " + mbooster + " Members", true);
+			if(e.getGuild().getBannerUrl() != null) {
+				eb.setImage(e.getGuild().getBannerUrl());
+			}
 			if(role <= 32) {
 				eb.addField("Roles (**" + role + "**):", sb.toString(), false);
 			}else {
 				eb.addField("Roles (**" + role + "**):", "Too many roles to list.", false);
 			}
 			eb.setFooter("ID: " + guildid + " | Server created: " + guildCreate, e.getGuild().getIconUrl());
-			chan.sendMessage(eb.build()).queue();
+			chan.sendMessageEmbeds(eb.build()).queue();
 		}
 		if(cont.equalsIgnoreCase(Main.botprefix + "guilds")) {
 			SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yy - HH:mm:ss");
@@ -112,7 +117,7 @@ public class Serverinfo extends ListenerAdapter{
 			eb.setColor(e.getMember().getColor());
 			eb.addField("Guilds (**" + guilds.size() + "**):", sb.toString(), false);
 			eb.setFooter("Requested from: " + e.getAuthor().getName() + "#" + e.getAuthor().getDiscriminator() + " at " + time, e.getAuthor().getAvatarUrl());
-			chan.sendMessage(eb.build()).queue();
+			chan.sendMessageEmbeds(eb.build()).queue();
 		}
 	}
 }
