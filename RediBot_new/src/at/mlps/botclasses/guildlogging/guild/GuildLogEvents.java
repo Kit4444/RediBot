@@ -147,7 +147,7 @@ public class GuildLogEvents extends ListenerAdapter{
 			while(rs.next()) {
 				if(guildid == rs.getLong("guildid")) {
 					long channelid = rs.getLong("welcomechannel");
-					g.getTextChannelById(channelid).sendMessage(eb.build()).queue();
+					g.getTextChannelById(channelid).sendMessageEmbeds(eb.build()).queue();
 				}
 			}
 		}catch (SQLException e) {
@@ -165,7 +165,7 @@ public class GuildLogEvents extends ListenerAdapter{
 				long savetxtchan = rs.getLong("channelid");
 				if(guildid == saveguildid) {
 					TextChannel chan = g.getTextChannelById(savetxtchan);
-					chan.sendMessage(eb.build()).queue();
+					chan.sendMessageEmbeds(eb.build()).queue();
 				}
 			}
 		}catch (SQLException e) {

@@ -80,7 +80,7 @@ public class GuildMemberJoinWelcomer extends ListenerAdapter{
 					for(Long l : joinroles) {
 						Role role = g.getRoleById(l);
 						if(role != null) {
-							g.addRoleToMember(m.getUser().getIdLong(), role).queue();
+							g.addRoleToMember(m.getUser().getIdLong(), role).reason("Setted Joinroles").queue();
 						}
 					}
 				}
@@ -104,11 +104,11 @@ public class GuildMemberJoinWelcomer extends ListenerAdapter{
 				}else if(color.equalsIgnoreCase("random")) {
 					eb.setColor(new Color(getRGB(), getRGB(), getRGB()));
 				}else if(color.startsWith("#")) {
-					eb.setColor(Color.getColor(color.substring(1)));
+					eb.setColor(Color.getColor(color));
 				}else if(color.matches("^[0-9]+$")) {
 					eb.setColor(new Color(Integer.valueOf(color)));
 				}
-				chan.sendMessage(eb.build()).queue();
+				chan.sendMessageEmbeds(eb.build()).queue();
 			}
 		}	
 	}
