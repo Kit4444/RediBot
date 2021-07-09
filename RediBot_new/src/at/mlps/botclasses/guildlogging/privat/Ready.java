@@ -13,6 +13,7 @@ import org.simpleyaml.exceptions.InvalidConfigurationException;
 
 import at.mlps.botclasses.guildlogging.guild.GuildLogEvents;
 import at.mlps.main.RebootClass;
+import at.mlps.main.RediFMGetter;
 import at.mlps.main.Runner;
 import at.mlps.rc.mysql.lb.MySQL;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -65,9 +66,13 @@ public class Ready extends ListenerAdapter{
 		}catch (SQLException e1) {
 			e1.printStackTrace();
 		}
+		RediFMGetter rfm = new RediFMGetter();
+		Timer timer = new Timer();
+		timer.scheduleAtFixedRate(rfm, 0, 10000);
+		
 		Runner runner = new Runner(e.getJDA());
 		Timer t = new Timer();
-		t.scheduleAtFixedRate(runner, 0, 60000);
+		t.scheduleAtFixedRate(runner, 1000, 60000);
 		//NewYearScheduler nys = new NewYearScheduler(e.getJDA());
 		//t.scheduleAtFixedRate(nys, 0, 1000);
 		RebootClass rc = new RebootClass();
