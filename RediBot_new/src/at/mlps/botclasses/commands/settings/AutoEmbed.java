@@ -94,9 +94,95 @@ public class AutoEmbed extends ListenerAdapter{
 		}else if(args.length == 3) {
 			if(args[0].equalsIgnoreCase(Main.botprefix + "autoembed")) {
 				if(args[1].equalsIgnoreCase("addchannel")) {
-					
+					long id = 0l;
+					TextChannel channel;
+					if(args[2].matches("^[0-9]+$")) {
+						id = Long.parseLong(args[2]);
+						channel = g.getTextChannelById(id);
+					}else {
+						if(args[2].startsWith("!")) {
+							channel = g.getTextChannelsByName(args[2].substring(1), true).get(0);
+						}else {
+							channel = e.getMessage().getMentionedChannels().get(0);
+						}
+					}
+					if(channel != null) {
+						long channelId = channel.getIdLong();
+						YamlFile cfg = new YamlFile("configs/guildsettings.yml");
+						try {
+							cfg.load();
+						} catch (InvalidConfigurationException | IOException e1) {
+							e1.printStackTrace();
+						}
+						if(!cfg.contains("AutoEmbedChannels." + g.getIdLong())) {
+							List<Long> channelList = new ArrayList<>();
+							channelList.add(channelId);
+							cfg.set("AutoEmbedChannels." + g.getIdLong(), channelList);
+							try {
+								cfg.save();
+								chan.sendMessage("The Channel " + channel.getAsMention() + " is now an Auto-Embed Channel.").queue();
+							} catch (IOException e1) {
+								e1.printStackTrace();
+							}
+						}else {
+							List<Long> channelList = cfg.getLongList("AutoEmbedChannels." + g.getIdLong());
+							if(channelList.contains(channelId)) {
+								chan.sendMessage("This channel is already an Auto-Embed Channel!").queue();
+							}else {
+								channelList.add(channelId);
+								cfg.set("AutoEmbedChannels." + g.getIdLong(), channelList);
+								try {
+									cfg.save();
+									chan.sendMessage("The Channel " + channel.getAsMention() + " is now an Auto-Embed Channel.").queue();
+								} catch (IOException e1) {
+									e1.printStackTrace();
+								}
+							}
+						}
+					}else {
+						chan.sendMessage("This channel seems to be a deleted one or I don't have access to it.").queue();
+					}
 				}else if(args[1].equalsIgnoreCase("removechannel")) {
-					
+					long id = 0l;
+					TextChannel channel;
+					if(args[2].matches("^[0-9]+$")) {
+						id = Long.parseLong(args[2]);
+						channel = g.getTextChannelById(id);
+					}else {
+						if(args[2].startsWith("!")) {
+							channel = g.getTextChannelsByName(args[2].substring(1), true).get(0);
+						}else {
+							channel = e.getMessage().getMentionedChannels().get(0);
+						}
+					}
+					if(channel != null) {
+						long channelId = channel.getIdLong();
+						YamlFile cfg = new YamlFile("configs/guildsettings.yml");
+						try {
+							cfg.load();
+						} catch (InvalidConfigurationException | IOException e1) {
+							e1.printStackTrace();
+						}
+						if(!cfg.contains("AutoEmbedChannels." + g.getIdLong())) {
+							chan.sendMessage("This guild has not any Auto-Embed Channels yet.").queue();
+						}else {
+							List<Long> channelList = cfg.getLongList("AutoEmbedChannels." + g.getIdLong());
+							if(channelList.contains(channelId)) {
+								channelList.remove(channelId);
+								cfg.set("AutoEmbedChannels." + g.getIdLong(), channelList);
+								try {
+									cfg.save();
+									chan.sendMessage("The Channel has been removed for the Auto-Embed Function.").queue();
+								} catch (IOException e1) {
+									e1.printStackTrace();
+								}
+							}else {
+								chan.sendMessage("The Channel is not an Auto-Embed Channel.").queue();
+							}
+						}
+					}else {
+						chan.sendMessage("This channel seems to be a deleted one or I don't have access to it.").queue();
+					}
 				}else if(args[1].equalsIgnoreCase("setthumbnail")) {
 					
 				}else if(args[1].equalsIgnoreCase("setcolor")) {
@@ -105,5 +191,4 @@ public class AutoEmbed extends ListenerAdapter{
 			}
 		}
 	}
-
 }

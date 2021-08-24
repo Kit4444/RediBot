@@ -48,7 +48,7 @@ public class RR_Command extends ListenerAdapter{
 					eb.addField("[p]rr removerole <Channel#Mention|ID> <MessageID> <Emote>", "Removes a Reaction Role from the Message.", false);
 					eb.addField("[p]rr togglerole <Channel#Mention|ID> <MessageID> <Emote>", "Switch between Single use (Verification Mode) and default use (removeable)", false);
 					eb.addField("[p]rr listroles <Channel#Mention|ID> <MessageID>", "Displays a List, which Emote gives/removes the Role and if Single use Default use.", false);
-					chan.sendMessage(eb.build()).queue();
+					chan.sendMessageEmbeds(eb.build()).queue();
 				}
 			}
 		}else if(args.length == 4) {
@@ -99,7 +99,7 @@ public class RR_Command extends ListenerAdapter{
 								EmbedBuilder eb = new EmbedBuilder();
 								eb.setDescription("Current Reaction Roles for channel " + channel.getAsMention() + " and MessageID " + messageid + ": \n " + result);
 								eb.setColor(m.getColor());
-								chan.sendMessage(eb.build()).queue();
+								chan.sendMessageEmbeds(eb.build()).queue();
 							} catch (SQLException e1) {
 								e1.printStackTrace();
 							}

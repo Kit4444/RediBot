@@ -7,7 +7,6 @@ import org.simpleyaml.exceptions.InvalidConfigurationException;
 
 import at.mlps.main.Main;
 import net.dv8tion.jda.api.OnlineStatus;
-import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
@@ -102,7 +101,6 @@ public class SetStatesCMD extends ListenerAdapter{
 					if(state.equalsIgnoreCase("playing")) {
 						file.set("BotConfig.Activity.Type", "PLAYING");
 						file.set("BotConfig.Activity.Text", reason);
-						e.getJDA().getPresence().setActivity(Activity.playing(reason));
 						try {
 							file.save();
 							e.getMessage().addReaction("approved:678036504391581730").queue();
@@ -113,7 +111,6 @@ public class SetStatesCMD extends ListenerAdapter{
 					}else if(state.equalsIgnoreCase("watching")) {
 						file.set("BotConfig.Activity.Text", reason);
 						file.set("BotConfig.Activity.Type", "WATCHING");
-						e.getJDA().getPresence().setActivity(Activity.watching(reason));
 						try {
 							file.save();
 							e.getMessage().addReaction("approved:678036504391581730").queue();
@@ -124,7 +121,6 @@ public class SetStatesCMD extends ListenerAdapter{
 					}else if(state.equalsIgnoreCase("listening")) {
 						file.set("BotConfig.Activity.Text", reason);
 						file.set("BotConfig.Activity.Type", "LISTENING");
-						e.getJDA().getPresence().setActivity(Activity.listening(reason));
 						try {
 							file.save();
 							e.getMessage().addReaction("approved:678036504391581730").queue();
@@ -135,7 +131,6 @@ public class SetStatesCMD extends ListenerAdapter{
 					}else if(state.equalsIgnoreCase("streaming")) {
 						file.set("BotConfig.Activity.Text", reason);
 						file.set("BotConfig.Activity.Type", "STREAMING");
-						e.getJDA().getPresence().setActivity(Activity.streaming(reason, file.getString("BotConfig.Activity.StreamURL")));
 						try {
 							file.save();
 							e.getMessage().addReaction("approved:678036504391581730").queue();

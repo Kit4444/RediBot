@@ -17,6 +17,7 @@ import at.mlps.botclasses.commands.NewYearClass;
 import at.mlps.botclasses.commands.PridePFP;
 import at.mlps.botclasses.commands.Punishments;
 import at.mlps.botclasses.commands.PurgeCommand;
+import at.mlps.botclasses.commands.RediFM_CMD;
 import at.mlps.botclasses.commands.RegisterGuilds;
 import at.mlps.botclasses.commands.Serverinfo;
 import at.mlps.botclasses.commands.SetStatesCMD;
@@ -209,6 +210,7 @@ public class Manager {
 		builder.addEventListeners(new BotModlogAnnounce());
 		builder.addEventListeners(new PridePFP());
 		builder.addEventListeners(new StaffChangeSCINT());
+		builder.addEventListeners(new RediFM_CMD());
 	}
 
 }

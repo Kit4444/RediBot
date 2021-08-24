@@ -15,6 +15,7 @@ import at.mlps.botclasses.guildlogging.guild.GuildLogEvents;
 import at.mlps.main.RebootClass;
 import at.mlps.main.RediFMGetter;
 import at.mlps.main.Runner;
+import at.mlps.main.StatisticsClass;
 import at.mlps.rc.mysql.lb.MySQL;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDAInfo;
@@ -76,6 +77,9 @@ public class Ready extends ListenerAdapter{
 		//NewYearScheduler nys = new NewYearScheduler(e.getJDA());
 		//t.scheduleAtFixedRate(nys, 0, 1000);
 		RebootClass rc = new RebootClass();
+		StatisticsClass sc = new StatisticsClass(e.getJDA());
+		//300000 equals to 300 seconds or 5 mins
+		t.schedule(sc, 0, 300000);
 		t.scheduleAtFixedRate(rc, 0, 1000);
 	}
 	

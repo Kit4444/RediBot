@@ -62,7 +62,6 @@ public class Runner extends TimerTask{
 			api.getPresence().setActivity(Activity.watching("over " + guilds + " Guilds and " + members + " Members"));
 		}else if(timer == 3) {
 			//defaultstate (cfg)
-			timer = 0;
 			YamlFile file = new YamlFile("configs/configuration.yml");
 			try {
 				file.load();
@@ -87,6 +86,10 @@ public class Runner extends TimerTask{
 			}else if(file.getString("BotConfig.Activity.Onlinestatus").equalsIgnoreCase("OFFLINE")) {
 				api.getPresence().setStatus(OnlineStatus.OFFLINE);
 			}
+		}else if(timer == 4) {
+			//ad for SCINT
+			timer = 0;
+			api.getPresence().setActivity(Activity.watching("over Synergy Carriers International! Join today our VTC!"));
 		}
 	}
 	

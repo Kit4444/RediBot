@@ -109,7 +109,7 @@ public class Serverinfo extends ListenerAdapter{
 			List<Guild> guilds = e.getJDA().getGuilds();
 			StringBuilder sb = new StringBuilder();
 			for(Guild g : guilds) {
-				sb.append("``" + g.getIdLong() + "`` -> " + g.getName() + " -> Members: " + g.getMembers().size());
+				sb.append("``" + g.getIdLong() + "`` -> " + g.getName());
 				sb.append("\n ");
 			}
 			EmbedBuilder eb = new EmbedBuilder();

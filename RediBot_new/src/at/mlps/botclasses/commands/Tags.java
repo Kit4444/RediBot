@@ -1,6 +1,7 @@
 package at.mlps.botclasses.commands;
 
 import at.mlps.main.Main;
+import at.mlps.main.StatisticsClass;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
@@ -9,6 +10,7 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 public class Tags extends ListenerAdapter{
 	
 	public void onGuildMessageReceived(GuildMessageReceivedEvent e) {
+		StatisticsClass.messages = StatisticsClass.messages + 1;
 		String[] args = e.getMessage().getContentRaw().split(" ");
 		MessageChannel chan = e.getChannel();
 		if(args.length == 1) {
