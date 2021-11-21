@@ -88,6 +88,7 @@ public class Main implements EventListener{
 		file.addDefault("MySQL.Password", "password");
 		file.addDefault("BotConfig.Bottoken", "the bottoken goes here");
 		file.addDefault("BotConfig.Bootlogo", 0);
+		file.addDefault("BotConfig.DEncryptPass", "password");
 		file.set("BotInfo.online.ts", System.currentTimeMillis());
 		file.set("BotInfo.online.string", stime);
 		file.options().copyDefaults(true);

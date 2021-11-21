@@ -1,108 +1,67 @@
 package at.mlps.botclasses.commands;
 
-import java.io.IOException;
-
-import org.simpleyaml.configuration.file.YamlFile;
-import org.simpleyaml.exceptions.InvalidConfigurationException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 import at.mlps.main.Main;
 import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.Role;
+import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
 public class LOA extends ListenerAdapter{
 	
-	String loa = "[LOA] ";
+	static long approvalId = 887770018815827998l;
 	
 	public void onGuildMessageReceived(GuildMessageReceivedEvent e) {
-		Message msg = e.getMessage();
-		String cont = msg.getContentRaw();
+		String[] args = e.getMessage().getContentRaw().split(" ");
 		Guild g = e.getGuild();
-		if(cont.equalsIgnoreCase(Main.botprefix + "loa")) {
-			YamlFile cfg = new YamlFile("configs/nicks.yml");
-			try {
-				cfg.load();
-			} catch (InvalidConfigurationException | IOException e1) {
-				e1.printStackTrace();
+		Guild rcmain = e.getJDA().getGuildById(548136727697555496l);
+		Role rcm_loa = rcmain.getRoleById(574642929289789440l);
+		Role rcs_loa = g.getRoleById(784900192175783977l);
+		TextChannel chan = e.getChannel();
+		if(args.length == 1) {
+			if(args[0].equalsIgnoreCase(Main.botprefix + "loa")) {
+				chan.sendMessage("Please use this command only, if you are staff on RediCraft. If you are RC-Staff, use it on the Staffserver!\n**Command Usage:** rb!loa <Date from> <Date to> <Reason> | Date use dd.MM.yyyy or dd/MM/yyyy - example: 27.03.2022").queue();
 			}
-			String nick = e.getMember().getNickname();
-			String realname = e.getMember().getUser().getName();
-			String newNickLOA = "";
-			String newNick = "";
-			if(nick == null) {
-				newNickLOA = loa + realname;
-				newNick = realname;
+		}else {
+			if(g.getIdLong() == 612372586386423824l) {
+				String dateFrom = args[1];
+				String dateTo = args[2];
+				if(dateFrom.length() == 0 && dateTo.length() == 0) {
+					chan.sendMessage("").queue();
+				}else {
+					
+				}
 			}else {
-				newNickLOA = loa + nick;
-				newNick = nick;
+				chan.sendMessage("Use this command only on the RediCraft Staffserver, otherwise this command wont work.").queue();
 			}
-			try {
-				cfg.save();
-			} catch (IOException e1) {
-				e1.printStackTrace();
-			}
-			if(g.getIdLong() == 612372586386423824L) {
-				//Staff Guild
-				Role loa_staff = g.getRoleById(784900192175783977L);
-				Guild mainserver = e.getJDA().getGuildById(548136727697555496L);
-				Role loa_main = mainserver.getRoleById(574642929289789440L);
-				if(e.getMember().getRoles().contains(loa_staff)) {
-					g.removeRoleFromMember(e.getMember(), loa_staff).queue();
-					Member m = mainserver.getMember(e.getMember().getUser());
-					mainserver.removeRoleFromMember(e.getMember().getIdLong(), loa_main).complete();
-					mainserver.modifyNickname(m, cfg.getString("Users." + e.getMember().getId())).queue();
-					g.modifyNickname(e.getMember(), cfg.getString("Users." + e.getMember().getId())).queue();
-					e.getMessage().addReaction("approved:678036504391581730").queue();
-				}else {
-					g.addRoleToMember(e.getMember(), loa_staff).queue();
-					mainserver.addRoleToMember(e.getMember().getIdLong(), loa_main).complete();
-					cfg.set("Users." + e.getMember().getId(), newNick);
-					try {
-						cfg.save();
-						Member m = mainserver.getMember(e.getMember().getUser());
-						mainserver.modifyNickname(m, newNickLOA).queue();
-						g.modifyNickname(e.getMember(), newNickLOA).queue();
-						e.getMessage().addReaction("approved:678036504391581730").queue();
-					} catch (IOException e1) {
-						e1.printStackTrace();
-					}
-				}
-			}else if(g.getIdLong() == 548136727697555496L) {
-				//Main Guild
-				Role loa_main = e.getGuild().getRoleById(574642929289789440L);
-				Role staff = e.getGuild().getRoleById(552161168412639235L);
-				Guild staffserver = e.getJDA().getGuildById(612372586386423824L);
-				Role loa_staff = staffserver.getRoleById(784900192175783977L);
-				if(e.getMember().getRoles().contains(staff)) {
-					if(e.getMember().getRoles().contains(loa_main)) {
-						g.removeRoleFromMember(e.getMember(), loa_main).complete();
-						Member m = staffserver.getMember(e.getMember().getUser());
-						staffserver.removeRoleFromMember(e.getMember().getIdLong(), loa_staff).queue();
-						staffserver.modifyNickname(m, cfg.getString("Users." + e.getMember().getId())).queue();
-						g.modifyNickname(e.getMember(), cfg.getString("Users." + e.getMember().getId())).queue();
-						e.getMessage().addReaction("approved:678036504391581730").queue();
-					}else {
-						g.addRoleToMember(e.getMember(), loa_main).complete();
-						staffserver.addRoleToMember(e.getMember().getIdLong(), loa_staff).queue();
-						e.getMessage().addReaction("approved:678036504391581730").queue();
-						cfg.set("Users." + e.getMember().getId(), newNick);
-						try {
-							cfg.save();
-							Member m = staffserver.getMember(e.getMember().getUser());
-							staffserver.modifyNickname(m, newNickLOA).queue();
-							g.modifyNickname(e.getMember(), newNickLOA).queue();
-							e.getMessage().addReaction("approved:678036504391581730").queue();
-						} catch (IOException e1) {
-							e1.printStackTrace();
-						}
-					}
-				}else {
-					e.getMessage().addReaction("deny:678036504702091278").queue();
-				}
-			}
+			
 		}
+		/*if(cont.equalsIgnoreCase(Main.botprefix + "loa")) {
+			if(g.getIdLong() == 612372586386423824l) {
+				
+			}else {
+				chan.sendMessage("Please execute this command in the RediCraft Staffserver. ``You don't know which server? Then you are not part of the RediCraft Team!``").queue(ra -> {
+					ra.delete().queueAfter(10, TimeUnit.SECONDS);
+				});
+			}
+		}*/
+	}
+	
+	String parseDate(String input, String inputPattern, String newPattern) {
+		String output = "";
+		SimpleDateFormat sdf = new SimpleDateFormat(newPattern);
+		try {
+			Date date = new SimpleDateFormat(inputPattern).parse(input);
+			output = sdf.format(date);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		return output;
 	}
 }

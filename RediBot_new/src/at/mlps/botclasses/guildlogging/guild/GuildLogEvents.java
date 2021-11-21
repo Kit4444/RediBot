@@ -155,6 +155,9 @@ public class GuildLogEvents extends ListenerAdapter{
 		}
 	}
 	
+	static int sentLogs = 0;
+	static int totalLogs = 0;
+	
 	public void sendMsg(EmbedBuilder eb, Guild g) {
 		try {
 			PreparedStatement ps = MySQL.getConnection().prepareStatement("SELECT * FROM redibot_guildlog");

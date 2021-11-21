@@ -19,7 +19,7 @@ import net.dv8tion.jda.api.entities.Member;
 
 public class Runner extends TimerTask{
 	
-	static int timer = 0;
+	static int timer = 4;
 	
 	public JDA api;
 	public Runner(JDA api) {
@@ -87,9 +87,35 @@ public class Runner extends TimerTask{
 				api.getPresence().setStatus(OnlineStatus.OFFLINE);
 			}
 		}else if(timer == 4) {
-			//ad for SCINT
 			timer = 0;
-			api.getPresence().setActivity(Activity.watching("over Synergy Carriers International! Join today our VTC!"));
+			//christmas timer
+			//Date set to 24th Dec 2021
+			//Autoforward to 31th Dec 2021
+			//times are always set to 00:00:00 in CET
+			//1d = 86.400 s
+			long dec24 = 1640300400;
+			long dec24e = 1640386799;
+			long dec31 = 1640905200;
+			long dec31e = 1640991599;
+			long current = System.currentTimeMillis() / 1000;
+			String watch1 = "the days to";
+			String watch2 = "";
+			if(current <= dec24) {
+				//before 24th dec
+				watch2 = watch1 + " Christmas: " + getDays((dec24 - current));
+			}else if(current >= dec24 && current <= dec24e) {
+				//while 24th dec
+				watch2 = "how players are enjoying christmas.";
+			}else if(current <= dec31) {
+				//before 31th dec
+				watch2 = watch1 + " Christmas: " + getDays((dec31 - current));
+			}else if(current >= dec31 && current <= dec31e) {
+				//while 31th dec
+				watch2 = "how players are enjoying new year. Happy 2022!";
+			}else {
+				watch2 = "ERROR #119";
+			}
+			api.getPresence().setActivity(Activity.watching(watch2));
 		}
 	}
 	
@@ -114,5 +140,43 @@ public class Runner extends TimerTask{
 			e.printStackTrace();
 		}
 		return data;
+	}
+	
+	String getDays(long input) {
+		long seconds = input;
+		long minutes = 0;
+		long hours = 0;
+		long days = 0;
+		while(seconds > 60) {
+			seconds -= 60;
+			minutes++;
+		}
+		while(minutes > 60) {
+			minutes -= 60;
+			hours++;
+		}
+		while(hours > 24) {
+			hours -= 24;
+			days++;
+		}
+		String day = "";
+		String hour = "";
+		String minute = "";
+		if(days < 10) {
+			day = "0" + days;
+		}else {
+			day = "" + days;
+		}
+		if(hours < 10) {
+			hour = "0" + hours;
+		}else {
+			hour = "" + hours;
+		}
+		if(minutes < 10) {
+			minute = "0" + minutes;
+		}else {
+			minute = "" + minutes;
+		}
+		return day + " Days, " + hour + ":" + minute + "h remaining";
 	}
 }
