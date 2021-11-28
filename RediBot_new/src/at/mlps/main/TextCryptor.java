@@ -1,55 +1,64 @@
 package at.mlps.main;
 
+import javax.crypto.BadPaddingException;
+
 //Class is made by Grubsic, this is not my property.
 
 import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
-import javax.crypto.SecretKey;
-import javax.crypto.SecretKeyFactory;
-import javax.crypto.spec.IvParameterSpec;
-import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
-import java.security.AlgorithmParameters;
+import java.security.InvalidKeyException;
+import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
-import java.security.spec.InvalidKeySpecException;
-import java.security.spec.KeySpec;
 import java.util.Base64;
+import java.util.Arrays;
 
 
 public class TextCryptor{
 
-	private final Cipher cipher;
-	private byte[] salt;
-	private int iterationCount = 1024;
-	private int keyStrength = 256;
-	private SecretKey key;
-	private byte[] iv;
+	private static SecretKeySpec secretKey;
+	private static byte[] key;
 
-	public TextCryptor(char[] password) throws InvalidKeySpecException, NoSuchPaddingException, NoSuchAlgorithmException{
-		salt = new byte[100];
-		new SecureRandom().nextBytes(salt);
+	public static void setKey(char[] myKey){
+        try{
+            MessageDigest sha;
+            key = new String(myKey).getBytes(StandardCharsets.UTF_8);
+            sha = MessageDigest.getInstance("SHA-1");
+            key = sha.digest(key);
+            key = Arrays.copyOf(key, 16);
+            secretKey = new SecretKeySpec(key, "AES");
+        }
+        catch(NoSuchAlgorithmException e){
+            e.printStackTrace();
+        }
+}
 
-		SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
-		KeySpec spec = new PBEKeySpec(password, salt, iterationCount, keyStrength);
-		SecretKey tmp = factory.generateSecret(spec);
-		key = new SecretKeySpec(tmp.getEncoded(), "AES");
-		cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+	public static String encrypt(String strToEncrypt, char[] secret){
+		try{
+			setKey(secret);
+			Cipher cipher = null;
+			cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
+			cipher.init(Cipher.ENCRYPT_MODE, secretKey);
+			return Base64.getEncoder().encodeToString(cipher.doFinal(strToEncrypt.getBytes(StandardCharsets.UTF_8)));
+		}
+		catch(NoSuchAlgorithmException | BadPaddingException | IllegalBlockSizeException | NoSuchPaddingException | InvalidKeyException e){
+			e.printStackTrace();
+		}
+		return null;
 	}
 
-	public String encrypt(String data) throws Exception{
-		cipher.init(Cipher.ENCRYPT_MODE, key);
-		AlgorithmParameters params = cipher.getParameters();
-		iv = params.getParameterSpec(IvParameterSpec.class).getIV();
-		byte[] utf8EncryptedData = cipher.doFinal(data.getBytes());
-		return Base64.getEncoder().encodeToString(utf8EncryptedData);
-	}
-
-	public String decrypt(String base64EncryptedData) throws Exception {
-		cipher.init(Cipher.DECRYPT_MODE, key, new IvParameterSpec(iv));
-		byte[] decryptedData = Base64.getDecoder().decode(base64EncryptedData);
-		byte[] utf8 = cipher.doFinal(decryptedData);
-		return new String(utf8, StandardCharsets.UTF_8);
+	public static String decrypt(String strToDecrypt, char[] secret){
+		try{
+			setKey(secret);
+			Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5PADDING");
+			cipher.init(Cipher.DECRYPT_MODE, secretKey);
+			return new String(cipher.doFinal(Base64.getDecoder().decode(strToDecrypt)));
+		}
+		catch(Exception e){
+			System.out.println("Error while decrypting: " + e);
+		}
+		return null;
 	}
 }

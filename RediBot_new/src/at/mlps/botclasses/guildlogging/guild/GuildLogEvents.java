@@ -11,6 +11,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.HashMap;
 
+import javax.annotation.Nullable;
+
 import org.simpleyaml.configuration.file.YamlFile;
 import org.simpleyaml.exceptions.InvalidConfigurationException;
 
@@ -35,19 +37,14 @@ public class GuildLogEvents extends ListenerAdapter{
 	public long rediassetg = 671772592390144061L;
 	public long rediassetlog = 709379395428679681L;
 	
-	public void insertMsg(long guildid, long msgid, String msgtxt, long memberid, boolean botmsg, String attachURI) {
-		SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy - HH:mm:ss a z");
-		
+	public void insertMsg(long guildid, long msgid, String msgtxt, long memberid, boolean botmsg) {
 		try {
-			PreparedStatement ps = MySQL.getConnection().prepareStatement("INSERT INTO redibot_msglog (guildid, msgid, msgtxt, memberid, botmsg, datetime, umsgtxt, attachURI) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+			PreparedStatement ps = MySQL.getConnection().prepareStatement("INSERT INTO redibot_msglog (guildid, msgid, msgtxt, memberid, botmsg) VALUES (?, ?, ?, ?, ?)");
 			ps.setLong(1, guildid);
 			ps.setLong(2, msgid);
 			ps.setString(3, msgtxt);
 			ps.setLong(4, memberid);
 			ps.setBoolean(5, botmsg);
-			ps.setString(6, sdf.format(new Date()));
-			ps.setString(7, msgtxt);
-			ps.setString(8, attachURI);
 			ps.executeUpdate();
 			ps.close();
 		}catch (SQLException e) {
@@ -75,63 +72,37 @@ public class GuildLogEvents extends ListenerAdapter{
 		return boo;
 	}
 	
+	@Nullable
 	public String retMsg(long guildid, long msgid) {
 		String msg = "";
-		HashMap<String, Object> hm = new HashMap<>();
-		hm.put("guildid", guildid);
-		hm.put("msgid", msgid);
+		PreparedStatement ps;
 		try {
-			if(Main.mysql.isInDatabase("redibot_msglog", hm)) {
-				PreparedStatement ps = MySQL.getConnection().prepareStatement("SELECT * FROM redibot_msglog WHERE guildid = ? AND msgid = ?");
-				ps.setLong(1, guildid);
-				ps.setLong(2, msgid);
-				ResultSet rs = ps.executeQuery();
-				rs.next();
+			ps = MySQL.getConnection().prepareStatement("SELECT * FROM redibot_msglog WHERE guildid = ? AND msgid = ?");
+			ps.setLong(1, guildid);
+			ps.setLong(2, msgid);
+			ResultSet rs = ps.executeQuery();
+			if(rs.next()) {
 				msg = rs.getString("msgtxt");
 			}else {
-				msg = "This message doesn't exists in the Database!";
+				msg = null;
 			}
-		}catch (SQLException e) {
+		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return msg;
 	}
 	
-	public String getAttach(long guildid, long msgid) {
-		String s = "";
-		HashMap<String, Object> hm = new HashMap<>();
-		hm.put("guildid", guildid);
-		hm.put("msgid", msgid);
-		try {
-			if(Main.mysql.isInDatabase("redibot_msglog", hm)) {
-				PreparedStatement ps = MySQL.getConnection().prepareStatement("SELECT attachURI FROM redibot_msglog WHERE guildid = ? AND msgid = ?");
-				ps.setLong(1, guildid);
-				ps.setLong(2, msgid);
-				ResultSet rs = ps.executeQuery();
-				rs.next();
-				s = rs.getString("attachURI");
-			}
-		}catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return s;
-	}
-	
 	public long retMID(long guildid, long msgid) {
 		long id = 0L;
-		HashMap<String, Object> hm = new HashMap<>();
-		hm.put("guildid", guildid);
-		hm.put("msgid", msgid);
 		try {
-			if(Main.mysql.isInDatabase("redibot_msglog", hm)) {
-				PreparedStatement ps = MySQL.getConnection().prepareStatement("SELECT * FROM redibot_msglog WHERE guildid = ? AND msgid = ?");
-				ps.setLong(1, guildid);
-				ps.setLong(2, msgid);
-				ResultSet rs = ps.executeQuery();
-				rs.next();
+			PreparedStatement ps = MySQL.getConnection().prepareStatement("SELECT * FROM redibot_msglog WHERE guildid = ? AND msgid = ?");
+			ps.setLong(1, guildid);
+			ps.setLong(2, msgid);
+			ResultSet rs = ps.executeQuery();
+			if(rs.next()) {
 				id = rs.getLong("memberid");
 			}else {
-				id = 0L;
+				id = 0;
 			}
 		}catch (SQLException e) {
 			e.printStackTrace();

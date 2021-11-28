@@ -37,8 +37,6 @@ public class LOA extends ListenerAdapter{
 				}else {
 					
 				}
-			}else {
-				chan.sendMessage("Use this command only on the RediCraft Staffserver, otherwise this command wont work.").queue();
 			}
 			
 		}

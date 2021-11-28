@@ -1,12 +1,14 @@
 package at.mlps.botclasses.guildlogging.guild;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 
 import org.simpleyaml.configuration.file.YamlFile;
+import org.simpleyaml.exceptions.InvalidConfigurationException;
 
+import at.mlps.main.TextCryptor;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
@@ -17,7 +19,7 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
 public class MessageLogging extends ListenerAdapter{
 	
-	public static HashMap<Long, String> msgcachetmp = new HashMap<>();
+	/*public static HashMap<Long, String> msgcachetmp = new HashMap<>();
 	public static HashMap<Long, String> msgcachename = new HashMap<>();
 	public static HashMap<Long, String> msgcacheavatar = new HashMap<>();
 	
@@ -113,36 +115,30 @@ public class MessageLogging extends ListenerAdapter{
     			}
     		}
         }
-	}
+	}*/
 	
-	/*public void onGuildMessageReceived(GuildMessageReceivedEvent e) {
+	public void onGuildMessageReceived(GuildMessageReceivedEvent e) {
 		Guild g = e.getGuild();
-		Main m = new Main();
 		if(!e.getAuthor().isBot() || !e.isWebhookMessage()) {
 			String messageold = e.getMessage().getContentRaw();
-			String messagenew = m.encrypt(messageold);
+			String messagenew = TextCryptor.encrypt(messageold, getPassword());
 			GuildLogEvents gl = new GuildLogEvents();
-			if(e.getMessage().getAttachments().size() == 0) {
-				gl.insertMsg(g.getIdLong(), e.getMessageIdLong(), messagenew, e.getAuthor().getIdLong(), e.getAuthor().isBot(), "noAttach");
-			}else {
-				gl.insertMsg(g.getIdLong(), e.getMessageIdLong(), messagenew, e.getAuthor().getIdLong(), e.getAuthor().isBot(), e.getMessage().getAttachments().get(0).getUrl());
-			}
+			gl.insertMsg(g.getIdLong(), e.getMessageIdLong(), messagenew, e.getAuthor().getIdLong(), e.getAuthor().isBot());
 		}
 	}
 	
 	public void onGuildMessageUpdate(GuildMessageUpdateEvent e) {
 		Guild g = e.getGuild();
 		Member m = e.getMember();
-		Main main = new Main();
 		SimpleDateFormat time = new SimpleDateFormat("dd/MM/yy - HH:mm:ss");
         String stime = time.format(new Date());
         EmbedBuilder eb = new EmbedBuilder();
         GuildLogEvents gl = new GuildLogEvents();
         String messageold = gl.retMsg(g.getIdLong(), e.getMessageIdLong());
-        String messagenew = main.decrypt(messageold);
-        String attachUri = gl.getAttach(g.getIdLong(), e.getMessageIdLong());
+        String messagenew = TextCryptor.decrypt(messageold, getPassword());
         eb.setTitle("Message has been updated.");
-        eb.setDescription("Member: " + m.getAsMention() + "\nChannel: " + e.getChannel().getAsMention() + "\nJump to Message: " + e.getMessage().getJumpUrl());
+        eb.setAuthor(m.getUser().getName(), null, m.getUser().getAvatarUrl());
+        eb.setDescription("Channel: " + e.getChannel().getAsMention() + " \nJump to Message: " + e.getMessage().getJumpUrl());
         if(messagenew.length() >= 512) {
        	 	eb.addField("Message:", messagenew.substring(0, 512) + " ", false);
         }else {
@@ -152,9 +148,6 @@ public class MessageLogging extends ListenerAdapter{
         	eb.addField("New Message:", e.getMessage().getContentDisplay().substring(0, 512), false);
         }else {
         	eb.addField("New Message:", e.getMessage().getContentDisplay(), false);
-        }
-        if(!attachUri.equalsIgnoreCase("nouri") || !attachUri.equalsIgnoreCase("noAttach")) {
-        	eb.addField("Attachment:", attachUri, false);
         }
         eb.setFooter(stime);
 		eb.setColor(gl.orange);
@@ -180,7 +173,6 @@ public class MessageLogging extends ListenerAdapter{
 	
 	public void onGuildMessageDelete(GuildMessageDeleteEvent e) {
 		Guild g = e.getGuild();
-		Main main = new Main();
 		SimpleDateFormat time = new SimpleDateFormat("dd/MM/yy - HH:mm:ss");
         String stime = time.format(new Date());
         EmbedBuilder eb = new EmbedBuilder();
@@ -192,12 +184,12 @@ public class MessageLogging extends ListenerAdapter{
 			e1.printStackTrace();
 		}
         String messageold = gl.retMsg(g.getIdLong(), e.getMessageIdLong());
-        String messagenew = main.decrypt(messageold);
-        String attachUri = gl.getAttach(g.getIdLong(), e.getMessageIdLong());
+        String messagenew = TextCryptor.decrypt(messageold, getPassword());
         eb.setTitle("Message has been deleted.");
         if(gl.retMID(g.getIdLong(), e.getMessageIdLong()) != 0L) {
         	Member m = g.getMemberById(gl.retMID(g.getIdLong(), e.getMessageIdLong()));
-        	eb.setDescription("Member: " + m.getUser().getName() + "#" + m.getUser().getDiscriminator() + "\nChannel: " + e.getChannel().getAsMention());
+        	eb.setDescription("Channel: " + e.getChannel().getAsMention());
+        	eb.setAuthor(m.getUser().getName(), null, m.getUser().getAvatarUrl());
         }else {
         	eb.setDescription("Member: not cached." + "\nChannel: " + e.getChannel().getAsMention());
         }
@@ -205,9 +197,6 @@ public class MessageLogging extends ListenerAdapter{
         	 eb.addField("Message:", messagenew.substring(0, 512) + " ", false);
         }else {
         	 eb.addField("Message:", messagenew + " ", false);
-        }
-        if(!attachUri.equalsIgnoreCase("nouri") || !attachUri.equalsIgnoreCase("noAttach")) {
-        	eb.addField("Attachment:", attachUri, false);
         }
         eb.setFooter(stime);
 		eb.setColor(gl.orange);
@@ -223,5 +212,15 @@ public class MessageLogging extends ListenerAdapter{
 				}
 			}
 		}
-	}*/
+	}
+	
+	private char[] getPassword() {
+		YamlFile file = new YamlFile("configs/configuration.yml");
+		try {
+			file.load();
+		} catch (InvalidConfigurationException | IOException e) {
+			e.printStackTrace();
+		}
+		return file.getString("BotConfig.DEncryptPass").toCharArray();
+	}
 }

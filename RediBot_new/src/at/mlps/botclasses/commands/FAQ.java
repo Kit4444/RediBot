@@ -341,7 +341,7 @@ public class FAQ extends ListenerAdapter{
 	
 	private void setEmbed_serverinfo(TextChannel chan) {
 		EmbedBuilder eb = Embed();
-		eb.setDescription("Question: What's about the Minecraft-Server? \nAnswer: RediCraft is a Minecraft Network with preference in building.\nOur server is Java-Based and runs on the latest version. Current version: ***1.16.5***.");
+		eb.setDescription("Question: What's about the Minecraft-Server? \nAnswer: RediCraft is a Minecraft Network with preference in building.\nBut we also are working on Minigames-Server as well.\nOur server is Java-Based and runs on the latest version. Current version: ***1.17.1***.");
 		chan.sendMessageEmbeds(eb.build()).queue();
 	}
 	
