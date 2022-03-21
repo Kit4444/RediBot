@@ -8,8 +8,9 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.TimerTask;
 
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+import org.json.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 import at.mlps.rc.mysql.lb.MySQL;
 
@@ -76,12 +77,18 @@ public class RediFMGetter extends TimerTask{
 			e.printStackTrace();
 		}
 		String lortu = content.toString();
-		JsonParser parser = new JsonParser();
-		JsonObject jo = (JsonObject)parser.parse(lortu);
-		if(jo.get(node) == null) {
+		JSONParser parser = new JSONParser();
+		JSONObject jo;
+		try {
+			jo = (JSONObject)parser.parse(lortu);
+			if(jo.get(node) == null) {
+				s = "None";
+			}else {
+				s = (String) jo.get(node).toString();
+			}
+		} catch (ParseException e) {
 			s = "None";
-		}else {
-			s = (String) jo.get(node).toString();
+			e.printStackTrace();
 		}
 		return s.replace("\"", "");
 	}
@@ -102,13 +109,18 @@ public class RediFMGetter extends TimerTask{
 			e.printStackTrace();
 		}
 		String lortu = content.toString();
-		JsonParser parser = new JsonParser();
-		JsonObject jo = (JsonObject)parser.parse(lortu);
-		if(jo.get(node) == null) {
+		JSONParser parser = new JSONParser();
+		try {
+			JSONObject jo = (JSONObject)parser.parse(lortu);
+			if(jo.get(node) == null) {
+				s = "None";
+			}else {
+				JSONObject sub = (JSONObject) jo.get(node);
+				s = (String) sub.get(subnode).toString();
+			}
+		}catch(ParseException e) {
 			s = "None";
-		}else {
-			JsonObject sub = (JsonObject) jo.get(node);
-			s = (String) sub.get(subnode).toString();
+			e.printStackTrace();
 		}
 		return s.replace("\"", "");
 	}

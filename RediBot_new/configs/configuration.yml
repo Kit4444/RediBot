@@ -1,0 +1,20 @@
+BotConfig:
+  Activity:
+    Type: PLAYING
+    Text: Being a baby.
+    StreamURL: https://www.youtube.com/channel/UCBJhuPBSaucwk_TthujYrBw
+    Onlinestatus: ONLINE
+  Bottoken: the bottoken goes here
+  Bootlogo: 0
+  DEncryptPass: password
+BotInfo:
+  version: 19700101_v0.0.0abs
+  online:
+    ts: 1646520500443
+    string: 05/03/2022 - 23:48:20 PM MEZ
+MySQL:
+  Host: localhost
+  Port: 3306
+  Database: database
+  Username: username
+  Password: password

@@ -9,6 +9,7 @@ import at.mlps.botclasses.commands.CreateInvite;
 import at.mlps.botclasses.commands.DiscordSugg_Voter;
 import at.mlps.botclasses.commands.EmojiList;
 import at.mlps.botclasses.commands.FAQ;
+import at.mlps.botclasses.commands.GiftAllIngame;
 import at.mlps.botclasses.commands.HelpCMD;
 import at.mlps.botclasses.commands.ImgManClassCMD;
 import at.mlps.botclasses.commands.LOA;
@@ -211,6 +212,11 @@ public class Manager {
 		builder.addEventListeners(new PridePFP());
 		builder.addEventListeners(new StaffChangeSCINT());
 		builder.addEventListeners(new RediFM_CMD());
+		builder.addEventListeners(new GiftAllIngame());
+	}
+	
+	public String getVIPLevel(long guildid) {
+		return null;
 	}
 
 }

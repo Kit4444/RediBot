@@ -117,10 +117,12 @@ public class FAQ extends ListenerAdapter{
 		chan.retrieveMessageById(msgid).queue(msg -> {
 			Role pm = g.getRoleById(548175887179186191L); //project manager
 			List<Member> pmm = g.getMembersWithRoles(pm);
-			Role hr = g.getRoleById(779322052175462400L); //human resources
-			List<Member> hrm = g.getMembersWithRoles(hr);
-			Role cm = g.getRoleById(659692965110743040L); //community manager
-			List<Member> cmm = g.getMembersWithRoles(cm);
+			Role sm = g.getRoleById(779322052175462400L); //staff manager
+			List<Member> smm = g.getMembersWithRoles(sm);
+			Role gm1 = g.getRoleById(659692965110743040L); //general manager
+			List<Member> gmm1 = g.getMembersWithRoles(gm1);
+			Role sda = g.getRoleById(947983559161950258L); //service data analyst
+			List<Member> sdam = g.getMembersWithRoles(sda);
 			Role gmm = g.getRoleById(548175892153630722L); //game mod manager
 			List<Member> gmmm = g.getMembersWithRoles(gmm);
 			Role dev = g.getRoleById(548175884734169088L); //developer
@@ -143,17 +145,20 @@ public class FAQ extends ListenerAdapter{
 			if(pmm.size() != 0) {
 				eb.addField("Project Manager (" + pmm.size() + ")", getFromList(pmm), false);
 			}
-			if(hrm.size() != 0) {
-				eb.addField("Human Resources (" + hrm.size() + ")", getFromList(hrm), false);
+			if(smm.size() != 0) {
+				eb.addField("Staff Manager (" + smm.size() + ")", getFromList(smm), false);
 			}
-			if(cmm.size() != 0) {
-				eb.addField("Community Manager (" + cmm.size() + ")", getFromList(cmm), false);
+			if(devm.size() != 0) {
+				eb.addField("Developer (" + devm.size() + ")", getFromListDEV(devm, g), false);
+			}
+			if(gmm1.size() != 0) {
+				eb.addField("General Manager (" + gmm1.size() + ")", getFromList(gmm1), false);
 			}
 			if(gmmm.size() != 0) {
 				eb.addField("Game Moderation Manager (" + gmmm.size() + ")", getFromList(gmmm), false);
 			}
-			if(devm.size() != 0) {
-				eb.addField("Developer (" + devm.size() + ")", getFromListDEV(devm, g), false);
+			if(sdam.size() != 0) {
+				eb.addField("Service & Data Analyst (" + sdam.size() + ")", getFromList(sdam), false);
 			}
 			if(gmm_.size() != 0) {
 				eb.addField("Game Moderator (" + gmm_.size() + ")", getFromList(gmm_), false);
@@ -291,7 +296,7 @@ public class FAQ extends ListenerAdapter{
 			sb2.append("- " + m.getAsMention());
 			sb2.append("\n");
 		}
-		String format = "**Game Developer (" + gd.size() + ")**: \n" + sb2.toString() + " \n**Web Developer (" + wd.size() + ")**: \n" + sb1.toString();
+		String format = "Game Developer (" + gd.size() + ") \n" + sb2.toString() + " \nWeb Developer (" + wd.size() + ") \n" + sb1.toString();
 		return format;
 	}
 	

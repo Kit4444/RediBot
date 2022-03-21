@@ -21,11 +21,35 @@ public class NewYearScheduler extends TimerTask{
 		TextChannel chan = g.getTextChannelById(552163655366475786L);
 		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
 		String date = sdf.format(new Date());
-		SimpleDateFormat sdf1 = new SimpleDateFormat("dd.MM.yy");
+		SimpleDateFormat sdf1 = new SimpleDateFormat("dd.MM.yyyy");
 		String date1 = sdf1.format(new Date());
 		if(date1.matches("24.12.2021")) {
 			if(date.matches("18:00:00")) {
 				chan.sendMessage("We, the Team RediCraft, wishes you a merry christmas!\nEnjoy your time with your family. \n \nInfo for the Users: Due to Christmas time, our Team has got more time to work on eventual tickets.\nIf it's urgent, just ping a Moderator who is online.").queue();
+			}
+		}else if(date1.matches("25.12.2021")) {
+			if(date.matches("23:58:00")) {
+				chan.sendMessage("6 Days remaining until new year!").queue();
+			}
+		}else if(date1.matches("26.12.2021")) {
+			if(date.matches("23:58:00")) {
+				chan.sendMessage("5 Days remaining until new year!").queue();
+			}
+		}else if(date1.matches("27.12.2021")) {
+			if(date.matches("23:58:00")) {
+				chan.sendMessage("4 Days remaining until new year!").queue();
+			}
+		}else if(date1.matches("28.12.2021")) {
+			if(date.matches("23:58:00")) {
+				chan.sendMessage("3 Days remaining until new year!").queue();
+			}
+		}else if(date1.matches("29.12.2021")) {
+			if(date.matches("23:58:00")) {
+				chan.sendMessage("2 Days remaining until new year!").queue();
+			}
+		}else if(date1.matches("30.12.2021")) {
+			if(date.matches("23:58:00")) {
+				chan.sendMessage("1 Day remaining until new year!").queue();
 			}
 		}else if(date1.matches("31.12.2021")) {
 			if(date.matches("01:00:00")) {

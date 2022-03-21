@@ -12,6 +12,7 @@ import org.simpleyaml.configuration.file.YamlFile;
 import org.simpleyaml.exceptions.InvalidConfigurationException;
 
 import at.mlps.botclasses.guildlogging.guild.GuildLogEvents;
+import at.mlps.main.NewYearScheduler;
 import at.mlps.main.RebootClass;
 import at.mlps.main.RediFMGetter;
 import at.mlps.main.Runner;
@@ -74,8 +75,6 @@ public class Ready extends ListenerAdapter{
 		Runner runner = new Runner(e.getJDA());
 		Timer t = new Timer();
 		t.scheduleAtFixedRate(runner, 1000, 60000);
-		//NewYearScheduler nys = new NewYearScheduler(e.getJDA());
-		//t.scheduleAtFixedRate(nys, 0, 1000);
 		RebootClass rc = new RebootClass();
 		StatisticsClass sc = new StatisticsClass(e.getJDA());
 		//300000 equals to 300 seconds or 5 mins

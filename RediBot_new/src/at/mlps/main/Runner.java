@@ -19,7 +19,7 @@ import net.dv8tion.jda.api.entities.Member;
 
 public class Runner extends TimerTask{
 	
-	static int timer = 4;
+	static int timer = 3;
 	
 	public JDA api;
 	public Runner(JDA api) {
@@ -108,7 +108,7 @@ public class Runner extends TimerTask{
 				watch2 = "how players are enjoying christmas.";
 			}else if(current <= dec31) {
 				//before 31th dec
-				watch2 = watch1 + " Christmas: " + getDays((dec31 - current));
+				watch2 = watch1 + " New Year: " + getDays((dec31 - current));
 			}else if(current >= dec31 && current <= dec31e) {
 				//while 31th dec
 				watch2 = "how players are enjoying new year. Happy 2022!";
@@ -177,6 +177,10 @@ public class Runner extends TimerTask{
 		}else {
 			minute = "" + minutes;
 		}
-		return day + " Days, " + hour + ":" + minute + "h remaining";
+		if(day.equalsIgnoreCase("00")) {
+			return hour + ":" + minute + "h remaining";
+		}else {
+			return day + " Days, " + hour + ":" + minute + "h remaining";
+		}
 	}
 }
