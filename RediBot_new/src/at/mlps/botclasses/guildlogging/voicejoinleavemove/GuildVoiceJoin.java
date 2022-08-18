@@ -18,9 +18,10 @@ public class GuildVoiceJoin extends ListenerAdapter{
         String stime = time.format(new Date());
         EmbedBuilder eb = new EmbedBuilder();
     	eb.setTitle("Member has joined a voicechannel.");
-    	eb.setDescription("Member: " + e.getMember().getAsMention() + "\nChannel: " + e.getChannelJoined().getName());
+    	eb.setDescription("Member: " + e.getMember().getAsMention() + "\nChannel: " + e.getChannelJoined().getAsMention());
     	eb.setFooter(stime);
 		eb.setColor(gl.green);
+		DurCalc.addMember(g.getIdLong(), e.getChannelJoined().getIdLong(), e.getMember().getIdLong());
 		if(gl.enabledLog(g, "guildvoicejoin")) {
 			gl.sendMsg(eb, g);
 		}
