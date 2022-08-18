@@ -8,7 +8,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.TimerTask;
 
-import org.json.JSONObject;
+import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
@@ -111,12 +111,16 @@ public class RediFMGetter extends TimerTask{
 		String lortu = content.toString();
 		JSONParser parser = new JSONParser();
 		try {
-			JSONObject jo = (JSONObject)parser.parse(lortu);
+			JSONObject jo = (JSONObject) parser.parse(lortu);
 			if(jo.get(node) == null) {
 				s = "None";
 			}else {
 				JSONObject sub = (JSONObject) jo.get(node);
-				s = (String) sub.get(subnode).toString();
+				if(sub.get(subnode) != null) {
+					s = (String) sub.get(subnode).toString();
+				}else {
+					s = "none";
+				}
 			}
 		}catch(ParseException e) {
 			s = "None";

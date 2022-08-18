@@ -17,6 +17,7 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
@@ -26,6 +27,7 @@ public class GuildMemberJoinWelcomer extends ListenerAdapter{
 	String text;
 	String footer;
 	Guild g;
+	User u;
 	Member m;
 	String guildname;
 	int members;
@@ -42,15 +44,16 @@ public class GuildMemberJoinWelcomer extends ListenerAdapter{
 	
 	public void onGuildMemberJoin(GuildMemberJoinEvent e) {
 		g = e.getGuild();
+		u = e.getUser();
 		m = e.getMember();
 		gl = new GuildLogEvents();
 		if(gl.isRegistered(g.getIdLong())) {
 			EmbedBuilder eb = new EmbedBuilder();
 			guildname = g.getName();
 			members = g.getMemberCount();
-			membernamewodisc = m.getUser().getName();
-			membernamewdisc = m.getUser().getName() + "#" + m.getUser().getDiscriminator();
-			membermention = m.getAsMention();
+			membernamewodisc = u.getName();
+			membernamewdisc = u.getName() + "#" + u.getDiscriminator();
+			membermention = u.getAsMention();
 			date = gl.getFormattedDate("dd/MM/yyyy - HH:mm:ss");
 			try {
 				PreparedStatement ps = MySQL.getConnection().prepareStatement("SELECT * FROM redibot_guildlog WHERE guildid = ?");
@@ -80,7 +83,7 @@ public class GuildMemberJoinWelcomer extends ListenerAdapter{
 					for(Long l : joinroles) {
 						Role role = g.getRoleById(l);
 						if(role != null) {
-							g.addRoleToMember(m.getUser().getIdLong(), role).reason("Setted Joinroles").queue();
+							g.addRoleToMember(u.getIdLong(), role).reason("Setted Joinroles").queue();
 						}
 					}
 				}
@@ -93,7 +96,7 @@ public class GuildMemberJoinWelcomer extends ListenerAdapter{
 				eb.setDescription(formattedReplace(text));
 				eb.setFooter(formattedReplace(footer), g.getIconUrl());
 				if(thumbnail.equalsIgnoreCase("useravatar")) {
-					eb.setThumbnail(m.getUser().getAvatarUrl());
+					eb.setThumbnail(u.getAvatarUrl());
 				}else if(thumbnail.equalsIgnoreCase("guildicon")) {
 					eb.setThumbnail(g.getIconUrl());
 				}else {

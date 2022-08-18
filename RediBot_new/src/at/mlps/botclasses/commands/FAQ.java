@@ -38,7 +38,7 @@ public class FAQ extends ListenerAdapter{
 						setEmbed_beta(faqchannel);
 						setEmbed_report(faqchannel);
 						setEmbed_apply(faqchannel);
-						setEmbed_serverlock(faqchannel);
+						setEmbed_dynmap(faqchannel);
 						setEmbed_hierarchy(faqchannel);
 						setEmbed_team(faqchannel, e.getGuild());
 					}
@@ -96,7 +96,7 @@ public class FAQ extends ListenerAdapter{
 	private EmbedBuilder Embed() {
 		EmbedBuilder eb = new EmbedBuilder();
 		eb.setColor(Color.decode("#5555ff"));
-		eb.setFooter("", "https://i.imgur.com/8Ol1sjr.png");
+		eb.setFooter("RediCraft FAQ", "https://i.imgur.com/8Ol1sjr.png");
 		return eb;
 	}
 	
@@ -117,6 +117,10 @@ public class FAQ extends ListenerAdapter{
 		chan.retrieveMessageById(msgid).queue(msg -> {
 			Role pm = g.getRoleById(548175887179186191L); //project manager
 			List<Member> pmm = g.getMembersWithRoles(pm);
+			Role apm = g.getRoleById(962408062302433360l); //assistant project manager
+			List<Member> apmm = g.getMembersWithRoles(apm);
+			Role adprm = g.getRoleById(962408179835232337l); //ad & pr manager
+			List<Member> adprmm = g.getMembersWithRoles(adprm);
 			Role sm = g.getRoleById(779322052175462400L); //staff manager
 			List<Member> smm = g.getMembersWithRoles(sm);
 			Role gm1 = g.getRoleById(659692965110743040L); //general manager
@@ -145,6 +149,9 @@ public class FAQ extends ListenerAdapter{
 			if(pmm.size() != 0) {
 				eb.addField("Project Manager (" + pmm.size() + ")", getFromList(pmm), false);
 			}
+			if(apmm.size() != 0) {
+				eb.addField("Assistant Project Manager (" + apmm.size() + ")", getFromList(apmm), false);
+			}
 			if(smm.size() != 0) {
 				eb.addField("Staff Manager (" + smm.size() + ")", getFromList(smm), false);
 			}
@@ -159,6 +166,9 @@ public class FAQ extends ListenerAdapter{
 			}
 			if(sdam.size() != 0) {
 				eb.addField("Service & Data Analyst (" + sdam.size() + ")", getFromList(sdam), false);
+			}
+			if(adprmm.size() != 0) {
+				eb.addField("Ads & PR Manager (" + adprmm.size() + ")", getFromList(adprmm), false);
 			}
 			if(gmm_.size() != 0) {
 				eb.addField("Game Moderator (" + gmm_.size() + ")", getFromList(gmm_), false);
@@ -185,10 +195,16 @@ public class FAQ extends ListenerAdapter{
 	private void setEmbed_team(TextChannel chan, Guild g) {
 		Role pm = g.getRoleById(548175887179186191L); //project manager
 		List<Member> pmm = g.getMembersWithRoles(pm);
-		Role hr = g.getRoleById(779322052175462400L); //human resources
-		List<Member> hrm = g.getMembersWithRoles(hr);
-		Role cm = g.getRoleById(659692965110743040L); //community manager
-		List<Member> cmm = g.getMembersWithRoles(cm);
+		Role apm = g.getRoleById(962408062302433360l); //assistant project manager
+		List<Member> apmm = g.getMembersWithRoles(apm);
+		Role adprm = g.getRoleById(962408179835232337l); //ad & pr manager
+		List<Member> adprmm = g.getMembersWithRoles(adprm);
+		Role sm = g.getRoleById(779322052175462400L); //staff manager
+		List<Member> smm = g.getMembersWithRoles(sm);
+		Role gm1 = g.getRoleById(659692965110743040L); //general manager
+		List<Member> gmm1 = g.getMembersWithRoles(gm1);
+		Role sda = g.getRoleById(947983559161950258L); //service data analyst
+		List<Member> sdam = g.getMembersWithRoles(sda);
 		Role gmm = g.getRoleById(548175892153630722L); //game mod manager
 		List<Member> gmmm = g.getMembersWithRoles(gmm);
 		Role dev = g.getRoleById(548175884734169088L); //developer
@@ -209,17 +225,26 @@ public class FAQ extends ListenerAdapter{
 		if(pmm.size() != 0) {
 			eb.addField("Project Manager (" + pmm.size() + ")", getFromList(pmm), false);
 		}
-		if(hrm.size() != 0) {
-			eb.addField("Human Resources (" + hrm.size() + ")", getFromList(hrm), false);
+		if(apmm.size() != 0) {
+			eb.addField("Assistant Project Manager (" + apmm.size() + ")", getFromList(apmm), false);
 		}
-		if(cmm.size() != 0) {
-			eb.addField("Community Manager (" + cmm.size() + ")", getFromList(cmm), false);
+		if(smm.size() != 0) {
+			eb.addField("Staff Manager (" + smm.size() + ")", getFromList(smm), false);
+		}
+		if(devm.size() != 0) {
+			eb.addField("Developer (" + devm.size() + ")", getFromListDEV(devm, g), false);
+		}
+		if(gmm1.size() != 0) {
+			eb.addField("General Manager (" + gmm1.size() + ")", getFromList(gmm1), false);
 		}
 		if(gmmm.size() != 0) {
 			eb.addField("Game Moderation Manager (" + gmmm.size() + ")", getFromList(gmmm), false);
 		}
-		if(devm.size() != 0) {
-			eb.addField("Developer (" + devm.size() + ")", getFromListDEV(devm, g), false);
+		if(sdam.size() != 0) {
+			eb.addField("Service & Data Analyst (" + sdam.size() + ")", getFromList(sdam), false);
+		}
+		if(adprmm.size() != 0) {
+			eb.addField("Ads & PR Manager (" + adprmm.size() + ")", getFromList(adprmm), false);
 		}
 		if(gmm_.size() != 0) {
 			eb.addField("Game Moderator (" + gmm_.size() + ")", getFromList(gmm_), false);
@@ -338,28 +363,28 @@ public class FAQ extends ListenerAdapter{
 		chan.sendMessageEmbeds(eb.build()).queue();
 	}
 	
-	private void setEmbed_serverlock(TextChannel chan) {
+	private void setEmbed_dynmap(TextChannel chan) {
 		EmbedBuilder eb = Embed();
-		eb.setDescription("Question: The Server is released, but I can't play on it! Why? \nAnswer: As some people already thought about destroying and grief the Server, we enabled the whitelist with no ETA on turning it off. \nYou want to play with us? Then fill this Google Forms out truthfully in order to play on it.\n URL: https://forms.gle/AaQfmEHMo4fGR1VX8");
+		eb.setDescription("Question: Do you have online maps from the game servers?\nAnswer: Yes, certain servers do have online maps! \n \nSurvival: http://map.redicraft.eu:21203 \nCreative: http://map.redicraft.eu:21201 \nSkyBlock: http://map.redicraft.eu:21204 \nFarmserver: http://map.redicraft.eu:21205");
 		chan.sendMessageEmbeds(eb.build()).queue();
 	}
 	
 	private void setEmbed_serverinfo(TextChannel chan) {
 		EmbedBuilder eb = Embed();
-		eb.setDescription("Question: What's about the Minecraft-Server? \nAnswer: RediCraft is a Minecraft Network with preference in building.\nBut we also are working on Minigames-Server as well.\nOur server is Java-Based and runs on the latest version. Current version: ***1.17.1***.");
+		eb.setDescription("Question: What's about the Minecraft-Server? \nAnswer: RediCraft is a Minecraft Network with preference in building.\nBut we also are working on Minigames-Server as well.\nOur server is Java-Based and runs on the latest version. Current version: ***1.19.2***.");
 		chan.sendMessageEmbeds(eb.build()).queue();
 	}
 	
 	private void setEmbed_invite(TextChannel chan) {
 		EmbedBuilder eb = Embed();
-		eb.setDescription("Question: How can I invite my friends? \nAnswer: Just create one by yourself with ``rb!createinvite`` - The bot will DM you. \nOr you also can use this invite link: https://discord.gg/sHDF9WR");
+		eb.setDescription("Question: How can I invite my friends? \nAnswer: Use the following invite link to invite your friends: https://discord.gg/sHDF9WR");
 		chan.sendMessageEmbeds(eb.build()).queue();
 	}
 	
 	private void setEmbed_hierarchy(TextChannel chan) {
 		EmbedBuilder eb = Embed();
 		eb.setDescription("Question: How does the team hierarchy looks like? \nAnswer: It's very simple. You can see it from the following graphic:");
-		eb.setImage("https://i.imgur.com/nluHO7Y.png");
+		eb.setImage("https://i.imgur.com/rnkQVdk.png");
 		chan.sendMessageEmbeds(eb.build()).queue();
 	}
 	

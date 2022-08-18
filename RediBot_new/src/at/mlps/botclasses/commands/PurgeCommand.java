@@ -32,6 +32,7 @@ public class PurgeCommand extends ListenerAdapter{
 				int msgs = Integer.valueOf(args[1]);
 				if(e.getMember().hasPermission(Permission.MESSAGE_MANAGE)) {
 					TextChannel chann = (TextChannel) chan;
+					e.getMessage().delete().queue();
 					clear(chann, msgs, e.getMember());
 				}
 			}
@@ -43,14 +44,14 @@ public class PurgeCommand extends ListenerAdapter{
 			channel.sendMessage("You can't delete more than 100 messages in one command!").queue();
 		}else {
 			OffsetDateTime twoWeeksAgo = OffsetDateTime.now().minus(2, ChronoUnit.WEEKS);
-			List<Message> messages = channel.getHistory().retrievePast((msgtodel + 1)).complete();
+			List<Message> messages = channel.getHistory().retrievePast(msgtodel).complete();
 			messages.removeIf(m -> m.getTimeCreated().isBefore(twoWeeksAgo));
 			if(messages.isEmpty()) {
 				System.out.println("Done deleting: " + channel.getName());
 				return;
 			}else {
 				List<String> msgs = new ArrayList<>();
-				messages.forEach(m -> msgs.add(m.getAuthor().getName() + ": " + m.getContentDisplay()));
+				messages.forEach(m -> msgs.add(m.getAuthor().getAsMention() + ": " + m.getContentDisplay()));
 				channel.deleteMessages(messages).complete();
 				EmbedBuilder eb = new EmbedBuilder();
 				eb.setTitle((msgtodel + 1) + " Messages has been deleted.");
@@ -60,9 +61,14 @@ public class PurgeCommand extends ListenerAdapter{
 					sb.append(s);
 					sb.append("\n");
 				}
-				eb.addField("Messages deleted:", sb.toString(), false);
+				if(sb.toString().length() >= 512) {
+					eb.addField("Messages deleted:", sb.toString().substring(0, 512), false);
+				}else {
+					eb.addField("Messages deleted:", sb.toString(), false);
+				}
+				
 				eb.setColor(member.getColor());
-				channel.sendMessage(eb.build()).queue(msg -> {
+				channel.sendMessageEmbeds(eb.build()).queue(msg -> {
 					msg.delete().queueAfter(5, TimeUnit.SECONDS);
 				});
 				

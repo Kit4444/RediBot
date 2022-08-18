@@ -10,7 +10,7 @@ public class MySQL {
 	
 	public static void connect(String host, int port, String db, String user, String pw) throws SQLException, ClassNotFoundException {
 		if(!isConnected()) {
-			Class.forName("com.mysql.jdbc.Driver");
+			Class.forName("com.mysql.cj.jdbc.Driver");
 			con = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + db + "?autoReconnect=true", user, pw);
 			System.out.println("MYSQL | Connected successfully.");
 		}
