@@ -50,6 +50,7 @@ import at.mlps.botclasses.guildlogging.guild.GuildMemberRoleAdd;
 import at.mlps.botclasses.guildlogging.guild.GuildMemberRoleRemove;
 import at.mlps.botclasses.guildlogging.guild.GuildMemberUpdateBoostTime;
 import at.mlps.botclasses.guildlogging.guild.GuildMemberUpdateNickname;
+import at.mlps.botclasses.guildlogging.guild.GuildUnban;
 import at.mlps.botclasses.guildlogging.guild.GuildUpdateBoostCount;
 import at.mlps.botclasses.guildlogging.guild.GuildUpdateBoostTier;
 import at.mlps.botclasses.guildlogging.guild.GuildUpdateExplicitContent;
@@ -166,6 +167,7 @@ public class Manager {
 		builder.addEventListeners(new GuildInviteDelete());
 		builder.addEventListeners(new GuildMemberJoin());
 		builder.addEventListeners(new GuildMemberRemove());
+		builder.addEventListeners(new GuildUnban());
 		builder.addEventListeners(new GuildMemberRoleAdd());
 		builder.addEventListeners(new GuildMemberRoleRemove());
 		builder.addEventListeners(new GuildMemberUpdateNickname());

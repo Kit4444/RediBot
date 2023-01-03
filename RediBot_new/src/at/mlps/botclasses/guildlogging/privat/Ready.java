@@ -12,7 +12,7 @@ import org.simpleyaml.configuration.file.YamlFile;
 import org.simpleyaml.exceptions.InvalidConfigurationException;
 
 import at.mlps.botclasses.guildlogging.guild.GuildLogEvents;
-import at.mlps.main.NewYearScheduler;
+import at.mlps.main.MagmaVerCheck;
 import at.mlps.main.RebootClass;
 import at.mlps.main.RediFMGetter;
 import at.mlps.main.Runner;
@@ -71,6 +71,10 @@ public class Ready extends ListenerAdapter{
 		RediFMGetter rfm = new RediFMGetter();
 		Timer timer = new Timer();
 		timer.scheduleAtFixedRate(rfm, 0, 10000);
+		
+		MagmaVerCheck magma = new MagmaVerCheck(e.getJDA());
+		Timer t1 = new Timer();
+		t1.scheduleAtFixedRate(magma, 0, 60000);
 		
 		Runner runner = new Runner(e.getJDA());
 		Timer t = new Timer();

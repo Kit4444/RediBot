@@ -28,7 +28,7 @@ public class SuggestionVoterAddCMD extends ListenerAdapter{
 		String[] args = e.getMessage().getContentRaw().split(" ");
 		YamlFile cfg = new YamlFile("configs/guildsettings.yml");
 		TextChannel chan = e.getChannel();
-		//command syntax: [p]suggestionchannel add|remove|list #channel
+		//command syntax: [p]suggestionchannel add|remove|list|enableThreading|disableThreading #channel
 		if(args.length == 2) {
 			//list
 			if(args[0].equalsIgnoreCase(Main.botprefix + "suggestionchannel")) {
@@ -63,7 +63,7 @@ public class SuggestionVoterAddCMD extends ListenerAdapter{
 							eb.setColor(m.getColor());
 							eb.setTitle("Suggestion Channels (" + suggStrings.size() + ")");
 							eb.setDescription(sb.toString());
-							chan.sendMessage(eb.build()).queue();
+							chan.sendMessageEmbeds(eb.build()).queue();
 						}
 					}
 				}
@@ -221,6 +221,64 @@ public class SuggestionVoterAddCMD extends ListenerAdapter{
 					}
 				}
 			}
+		}else if(args.length == 4) {
+			if(args[0].equalsIgnoreCase(Main.botprefix + "suggestionchannel")) {
+				if(args[1].equalsIgnoreCase("allowThreading")) {
+					if(hasSettingPerms(m)) {
+						if(args[2].equalsIgnoreCase("true") || args[2].equalsIgnoreCase("1")) {
+							long uid = 0;
+							TextChannel tchan = null;
+							if(args[3].matches("^[0-9]+$")) {
+								uid = Long.parseLong(args[3]);
+								tchan = g.getTextChannelById(uid);
+							}else {
+								if(args[3].startsWith("!")) {
+									tchan = g.getTextChannelsByName(args[3].substring(1), true).get(0);
+								}else {
+									tchan = e.getMessage().getMentionedChannels().get(0);
+								}
+							}
+							if(tchan != null) {
+								try {
+									cfg.load();
+									cfg.set("SuggestionVoter.threading." + g.getIdLong() + "." + tchan.getIdLong(), true);
+									cfg.save();
+									chan.sendMessage(success + "The bot will now create threads for every new discord suggestion in the specified channel.").queue();
+								} catch (InvalidConfigurationException | IOException e1) {
+									e1.printStackTrace();
+								}
+							}else {
+								chan.sendMessage(failed + "The channel you specified does not exist or the bot can't see it.").queue();
+							}
+						}else {
+							long uid = 0;
+							TextChannel tchan = null;
+							if(args[3].matches("^[0-9]+$")) {
+								uid = Long.parseLong(args[3]);
+								tchan = g.getTextChannelById(uid);
+							}else {
+								if(args[3].startsWith("!")) {
+									tchan = g.getTextChannelsByName(args[3].substring(1), true).get(0);
+								}else {
+									tchan = e.getMessage().getMentionedChannels().get(0);
+								}
+							}
+							if(tchan != null) {
+								try {
+									cfg.load();
+									cfg.set("SuggestionVoter.threading." + g.getIdLong() + "." + tchan.getIdLong(), false);
+									cfg.save();
+									chan.sendMessage(success + "The bot will not anymore create threads for every new discord suggestion in the specified channel.").queue();
+								} catch (InvalidConfigurationException | IOException e1) {
+									e1.printStackTrace();
+								}
+							}else {
+								chan.sendMessage(failed + "The channel you specified does not exist or the bot can't see it.").queue();
+							}
+						}
+					}
+				}
+			}
 		}else {
 			if(args[0].equalsIgnoreCase(Main.botprefix + "suggestionchannel")) {
 				EmbedBuilder eb = new EmbedBuilder();
@@ -229,9 +287,10 @@ public class SuggestionVoterAddCMD extends ListenerAdapter{
 				eb.setTitle("Guide for the [p]suggestionchannel Command");
 				eb.addField("[p]suggestionchannel add <Mention#Channel|SnowflakeID>", "Adds the Channel and the bot will react with <:upvote:671772876474679326> <:neutralvote:671772876453707776> <:downvote:671772876432605204> when a message is sent in this channel", false);
 				eb.addField("[p]suggestionchannel remove <Mention#Channel|SnowflakeID>", "Removes the channel and the bot will stop reacting.", false);
+				eb.addField("[p]suggestionchannel allowThreading <true|false> <Mention#Channel|SnowflakeID>", "The bot will create Threads in the set voting channel. (Does not work yet!)", false);
 				eb.addField("[p]suggestionchannel list", "List all channels in this guild", false);
 				eb.addField("[p]suggestionchannel setreactions <ReactionType>", "Set a reaction-type. Default and ``0`` is <:upvote:671772876474679326> <:neutralvote:671772876453707776> <:downvote:671772876432605204>, ``1`` is <:upvote:671772876474679326> <:downvote:671772876432605204> and ``2`` is <:plus:836638630109118474> <:minus:836638629978701894>", false);
-				chan.sendMessage(eb.build()).queue();
+				chan.sendMessageEmbeds(eb.build()).queue();
 			}
 		}
 	}

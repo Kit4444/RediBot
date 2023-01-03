@@ -10,8 +10,8 @@ BotConfig:
 BotInfo:
   version: 19700101_v0.0.0abs
   online:
-    ts: 1646520500443
-    string: 05/03/2022 - 23:48:20 PM MEZ
+    ts: 1662232226714
+    string: 03/09/2022 - 21:10:26 pm CEST
 MySQL:
   Host: localhost
   Port: 3306

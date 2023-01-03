@@ -27,6 +27,10 @@ public class DiscordSugg_Voter extends ListenerAdapter {
 			if(channels.contains(chan.getIdLong())) {
 				if(cfg.contains("SuggestionVoter.reaction." + g.getIdLong())) {
 					int reactmode = cfg.getInt("SuggestionVoter.reaction." + g.getIdLong());
+					boolean threading = false;
+					if(cfg.contains("SuggestionVoter.threading." + g.getIdLong() + "." + chan.getIdLong())) {
+						threading = cfg.getBoolean("SuggestionVoter.threading." + g.getIdLong() + "." + chan.getIdLong());
+					}// if threading = true, a thread should be created with the origin message.
 					switch(reactmode) {
 					case 0: e.getMessage().addReaction("upvote:671772876474679326").queue();
 					e.getMessage().addReaction("neutralvote:671772876453707776").queue();

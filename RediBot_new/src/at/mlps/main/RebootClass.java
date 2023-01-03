@@ -10,7 +10,7 @@ public class RebootClass extends TimerTask{
 	public void run() {
 		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
 		String time = sdf.format(new Date());
-		if(time.matches("23:59:59")) {
+		if(time.matches("03:35:45")) {
 			System.exit(0);
 		}
 	}

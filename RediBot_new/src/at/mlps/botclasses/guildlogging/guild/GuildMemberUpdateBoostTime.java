@@ -19,13 +19,13 @@ public class GuildMemberUpdateBoostTime extends ListenerAdapter{
         String stime = time.format(new Date());
         EmbedBuilder eb = new EmbedBuilder();
         GuildLogEvents gl = new GuildLogEvents();
-    	eb.setTitle("RediCraft » Boost");
+    	eb.setTitle("RediCraft Â» Boost");
     	eb.setDescription(m.getAsMention() + " has boosted this server! Thank you for your kindness. <a:love:745237526368747682>");
     	eb.setFooter("Today at " + stime);
 		eb.setColor(gl.green);
 		if(g.getIdLong() == 548136727697555496L) {
 			TextChannel general = g.getTextChannelById(552163655366475786L);
-			general.sendMessage(eb.build()).queue();
+			general.sendMessageEmbeds(eb.build()).queue();
 		}
 	}
 

@@ -61,6 +61,7 @@ public class Runner extends TimerTask{
 			}
 			api.getPresence().setActivity(Activity.watching("over " + guilds + " Guilds and " + members + " Members"));
 		}else if(timer == 3) {
+			timer = 0;
 			//defaultstate (cfg)
 			YamlFile file = new YamlFile("configs/configuration.yml");
 			try {
@@ -86,36 +87,6 @@ public class Runner extends TimerTask{
 			}else if(file.getString("BotConfig.Activity.Onlinestatus").equalsIgnoreCase("OFFLINE")) {
 				api.getPresence().setStatus(OnlineStatus.OFFLINE);
 			}
-		}else if(timer == 4) {
-			timer = 0;
-			//christmas timer
-			//Date set to 24th Dec 2021
-			//Autoforward to 31th Dec 2021
-			//times are always set to 00:00:00 in CET
-			//1d = 86.400 s
-			long dec24 = 1640300400;
-			long dec24e = 1640386799;
-			long dec31 = 1640905200;
-			long dec31e = 1640991599;
-			long current = System.currentTimeMillis() / 1000;
-			String watch1 = "the days to";
-			String watch2 = "";
-			if(current <= dec24) {
-				//before 24th dec
-				watch2 = watch1 + " Christmas: " + getDays((dec24 - current));
-			}else if(current >= dec24 && current <= dec24e) {
-				//while 24th dec
-				watch2 = "how players are enjoying christmas.";
-			}else if(current <= dec31) {
-				//before 31th dec
-				watch2 = watch1 + " New Year: " + getDays((dec31 - current));
-			}else if(current >= dec31 && current <= dec31e) {
-				//while 31th dec
-				watch2 = "how players are enjoying new year. Happy 2022!";
-			}else {
-				watch2 = "ERROR #119";
-			}
-			api.getPresence().setActivity(Activity.watching(watch2));
 		}
 	}
 	
