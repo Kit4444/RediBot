@@ -28,7 +28,7 @@ public class PrivateMessageReceived extends ListenerAdapter{
         eb.setImage(e.getAuthor().getAvatarUrl());
         eb.setFooter(stime);
         if(e.getAuthor().getIdLong() != 588547204063428637L) {
-        	e.getJDA().getGuildById(gl.rediassetg).getTextChannelById(gl.rediassetlog).sendMessage(eb.build()).queue();
+        	e.getJDA().getGuildById(gl.rediassetg).getTextChannelById(gl.rediassetlog).sendMessageEmbeds(eb.build()).queue();
         }
 	}
 

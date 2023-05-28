@@ -24,7 +24,7 @@ public class GuildVoiceMove extends ListenerAdapter{
     	PrettyTime pt = new PrettyTime();
     	SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yy - HH:mm:ss");
     	eb.setDescription("Member: " + e.getMember().getAsMention() + "\nOld Channel: " + e.getChannelLeft().getAsMention() + "\nNew Channel: " + e.getChannelJoined().getAsMention() + "\nInitial Voice Join: " + sdf.format(new Date(joinTime)) + ", " + pt.format(new Date(joinTime)));
-    	eb.setFooter(stime);
+    	eb.setFooter(g.getName() + " - " + stime, g.getIconUrl());
 		eb.setColor(gl.green);
 		if(gl.enabledLog(g, "guildvoicemove")) {
 			gl.sendMsg(eb, g);

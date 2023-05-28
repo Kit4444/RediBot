@@ -23,7 +23,7 @@ public class CategoryDelete {
         eb.addField("Parent:", e.getCategory().getParent().getName(), false);
         eb.addField("Creation Date:", gl.retDate(e.getCategory().getTimeCreated()), false);
         eb.addField("Channels:", "Textchannels: " + e.getCategory().getTextChannels().size() + "\nVoicechannels: " + e.getCategory().getVoiceChannels().size(), false);
-        eb.setFooter(stime);
+        eb.setFooter(g.getName() + " - " + stime, g.getIconUrl());
 		eb.setColor(gl.orange);
 		if(gl.enabledLog(g, "categorydelete")) {
 			gl.sendMsg(eb, g);

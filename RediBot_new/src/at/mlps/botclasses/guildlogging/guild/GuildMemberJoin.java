@@ -33,6 +33,8 @@ public class GuildMemberJoin extends ListenerAdapter{
 		long currentDate = (System.currentTimeMillis() / 1000);
 		boolean oneWeek = false;
 		boolean oneMonth = false;
+		boolean isBot = m.getUser().isBot();
+		String botInfo = "";
 		if(oneWeekDate >= currentDate) {
 			oneWeek = true;
 		}
@@ -40,12 +42,17 @@ public class GuildMemberJoin extends ListenerAdapter{
 			oneMonth = true;
 		}
 		PrettyTime pt = new PrettyTime();
-		if(oneWeek) {
-			eb.setDescription( m.getAsMention() + " has joined the guild. \n \nAccount Creation: " + gl.retDate(m.getTimeCreated()) + "\nAccount Age is less than one week! Age: " + pt.format(new Date(creationDate * 1000)));
-		}else if(!oneWeek && oneMonth) {
-			eb.setDescription( m.getAsMention() + " has joined the guild. \n \nAccount Creation: " + gl.retDate(m.getTimeCreated()) + "\nAccount Age is less than one month! Age: " + pt.format(new Date(creationDate * 1000)));
+		if(isBot) {
+			botInfo = m.getAsMention() + " is a bot account.";
 		}else {
-			eb.setDescription( m.getAsMention() + " has joined the guild. \n \nAccount Creation: " + gl.retDate(m.getTimeCreated()) + "\nAccount Age: " + pt.format(new Date(creationDate * 1000)));
+			botInfo = m.getAsMention() + " is a user account.";
+		}
+		if(oneWeek) {
+			eb.setDescription( m.getAsMention() + " has joined the guild. \n \nAccount Creation: " + gl.retDate(m.getTimeCreated()) + "\nAccount Age is less than one week! Age: " + pt.format(new Date(creationDate * 1000)) + "\n" + botInfo);
+		}else if(!oneWeek && oneMonth) {
+			eb.setDescription( m.getAsMention() + " has joined the guild. \n \nAccount Creation: " + gl.retDate(m.getTimeCreated()) + "\nAccount Age is less than one month! Age: " + pt.format(new Date(creationDate * 1000)) + "\n" + botInfo);
+		}else {
+			eb.setDescription( m.getAsMention() + " has joined the guild. \n \nAccount Creation: " + gl.retDate(m.getTimeCreated()) + "\nAccount Age: " + pt.format(new Date(creationDate * 1000)) + "\n" + botInfo);
 		}
 		
 		eb.setFooter(g.getName() + " - " + stime, g.getIconUrl());

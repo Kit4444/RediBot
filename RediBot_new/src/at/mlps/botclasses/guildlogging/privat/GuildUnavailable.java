@@ -22,7 +22,7 @@ public class GuildUnavailable extends ListenerAdapter{
         	eb.setColor(gl.darkred);
         	eb.setTitle("Guild is unavailable!");
         	eb.setDescription("Guildname: " + e.getGuild().getName() + "\nGuildid: " + e.getGuild().getIdLong());
-        	g.getTextChannelById(gl.rediassetlog).sendMessage(eb.build()).queue();
+        	g.getTextChannelById(gl.rediassetlog).sendMessageEmbeds(eb.build()).queue();
         }
 	}
 

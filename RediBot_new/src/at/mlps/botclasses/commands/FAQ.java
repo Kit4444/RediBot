@@ -2,7 +2,6 @@ package at.mlps.botclasses.commands;
 
 import java.awt.Color;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -31,15 +30,12 @@ public class FAQ extends ListenerAdapter{
 					Role pm = e.getGuild().getRoleById(548175887179186191L);
 					TextChannel faqchannel = e.getGuild().getTextChannelById(chanId);
 					if(e.getMember().getRoles().contains(pm)) {
-						setEmbed_serverinfo(faqchannel);
 						setEmbed_invite(faqchannel);
 						setEmbed_platform(faqchannel);
 						setEmbed_partnerships(faqchannel);
 						setEmbed_beta(faqchannel);
 						setEmbed_report(faqchannel);
 						setEmbed_apply(faqchannel);
-						setEmbed_dynmap(faqchannel);
-						setEmbed_hierarchy(faqchannel);
 						setEmbed_team(faqchannel, e.getGuild());
 					}
 				}else {
@@ -115,154 +111,64 @@ public class FAQ extends ListenerAdapter{
 	private void updateEmbed_team(Guild g, long msgid) {
 		TextChannel chan = g.getTextChannelById(chanId);
 		chan.retrieveMessageById(msgid).queue(msg -> {
-			Role pm = g.getRoleById(548175887179186191L); //project manager
-			List<Member> pmm = g.getMembersWithRoles(pm);
-			Role apm = g.getRoleById(962408062302433360l); //assistant project manager
-			List<Member> apmm = g.getMembersWithRoles(apm);
-			Role adprm = g.getRoleById(962408179835232337l); //ad & pr manager
-			List<Member> adprmm = g.getMembersWithRoles(adprm);
-			Role sm = g.getRoleById(779322052175462400L); //staff manager
-			List<Member> smm = g.getMembersWithRoles(sm);
-			Role gm1 = g.getRoleById(659692965110743040L); //general manager
-			List<Member> gmm1 = g.getMembersWithRoles(gm1);
-			Role sda = g.getRoleById(947983559161950258L); //service data analyst
-			List<Member> sdam = g.getMembersWithRoles(sda);
-			Role gmm = g.getRoleById(548175892153630722L); //game mod manager
-			List<Member> gmmm = g.getMembersWithRoles(gmm);
-			Role dev = g.getRoleById(548175884734169088L); //developer
-			List<Member> devm = g.getMembersWithRoles(dev);
-			Role gm = g.getRoleById(548175906833956875L); //game mod
-			List<Member> gmm_ = g.getMembersWithRoles(gm);
-			Role aot = g.getRoleById(818571943518666822L); //addon team
-			List<Member> aotm = g.getMembersWithRoles(aot);
-			Role cmt = g.getRoleById(548175915054792704L); //community mod
-			List<Member> cmtm = g.getMembersWithRoles(cmt);
-			Role cont = g.getRoleById(697902191733768192L); //content team
-			List<Member> contm = g.getMembersWithRoles(cont);
+			Role owner = g.getRoleById(548175887179186191L); //owner
+			List<Member> owner1 = g.getMembersWithRoles(owner);
+			Role coowner = g.getRoleById(962408062302433360l); //co-owner
+			List<Member> coowner1 = g.getMembersWithRoles(coowner);
+			Role supervisor = g.getRoleById(779322052175462400l); //supervisor
+			List<Member> supervisor1 = g.getMembersWithRoles(supervisor);
+			Role mod = g.getRoleById(548175915054792704L); //moderator
+			List<Member> mod1 = g.getMembersWithRoles(mod);
 			Role sup = g.getRoleById(548175909291819008L); //support
-			List<Member> supm = g.getMembersWithRoles(sup);
-			Role build = g.getRoleById(548175912454324224L); //builder
-			List<Member> builder = g.getMembersWithRoles(build);
+			List<Member> sup1 = g.getMembersWithRoles(sup);
 			MessageEmbed me = msg.getEmbeds().get(0);
 			EmbedBuilder eb = new EmbedBuilder(me);
 			eb.clearFields();
-			if(pmm.size() != 0) {
-				eb.addField("Project Manager (" + pmm.size() + ")", getFromList(pmm), false);
+			if(owner1.size() != 0) {
+				eb.addField("Owner (" + owner1.size() + ")", getFromList(owner1), false);
 			}
-			if(apmm.size() != 0) {
-				eb.addField("Assistant Project Manager (" + apmm.size() + ")", getFromList(apmm), false);
+			if(coowner1.size() != 0) {
+				eb.addField("Co-Owner (" + coowner1.size() + ")", getFromList(coowner1), false);
 			}
-			if(smm.size() != 0) {
-				eb.addField("Staff Manager (" + smm.size() + ")", getFromList(smm), false);
+			if(supervisor1.size() != 0) {
+				eb.addField("Supervisor (" + supervisor1.size() + ")", getFromList(supervisor1), false);
 			}
-			if(devm.size() != 0) {
-				eb.addField("Developer (" + devm.size() + ")", getFromListDEV(devm, g), false);
+			if(mod1.size() != 0) {
+				eb.addField("Moderator (" + mod1.size() + ")", getFromList(mod1), false);
 			}
-			if(gmm1.size() != 0) {
-				eb.addField("General Manager (" + gmm1.size() + ")", getFromList(gmm1), false);
-			}
-			if(gmmm.size() != 0) {
-				eb.addField("Game Moderation Manager (" + gmmm.size() + ")", getFromList(gmmm), false);
-			}
-			if(sdam.size() != 0) {
-				eb.addField("Service & Data Analyst (" + sdam.size() + ")", getFromList(sdam), false);
-			}
-			if(adprmm.size() != 0) {
-				eb.addField("Ads & PR Manager (" + adprmm.size() + ")", getFromList(adprmm), false);
-			}
-			if(gmm_.size() != 0) {
-				eb.addField("Game Moderator (" + gmm_.size() + ")", getFromList(gmm_), false);
-			}
-			if(aotm.size() != 0) {
-				eb.addField("Add-On Team (" + aotm.size() + ")", getFromList(aotm), false);
-			}
-			if(cmtm.size() != 0) {
-				eb.addField("Community Moderator (" + getFromListExclUSINT(cmtm, g) + ")", getFromListExclUS(cmtm, g), false);
-			}
-			if(contm.size() != 0) {
-				eb.addField("Content Team (" + contm.size() + ")", getFromListCont(contm, g), false);
-			}
-			if(supm.size() != 0) {
-				eb.addField("Support (" + supm.size() + ")", getFromList(supm), false);
-			}
-			if(builder.size() != 0) {
-				eb.addField("Builder (" + builder.size() + ")", getFromList(builder), false);
+			if(sup1.size() != 0) {
+				eb.addField("Supporter (" + sup1.size() + ")", getFromList(sup1), false);
 			}
 			msg.editMessageEmbeds(eb.build()).queue();
 		});
 	}
 	
 	private void setEmbed_team(TextChannel chan, Guild g) {
-		Role pm = g.getRoleById(548175887179186191L); //project manager
-		List<Member> pmm = g.getMembersWithRoles(pm);
-		Role apm = g.getRoleById(962408062302433360l); //assistant project manager
-		List<Member> apmm = g.getMembersWithRoles(apm);
-		Role adprm = g.getRoleById(962408179835232337l); //ad & pr manager
-		List<Member> adprmm = g.getMembersWithRoles(adprm);
-		Role sm = g.getRoleById(779322052175462400L); //staff manager
-		List<Member> smm = g.getMembersWithRoles(sm);
-		Role gm1 = g.getRoleById(659692965110743040L); //general manager
-		List<Member> gmm1 = g.getMembersWithRoles(gm1);
-		Role sda = g.getRoleById(947983559161950258L); //service data analyst
-		List<Member> sdam = g.getMembersWithRoles(sda);
-		Role gmm = g.getRoleById(548175892153630722L); //game mod manager
-		List<Member> gmmm = g.getMembersWithRoles(gmm);
-		Role dev = g.getRoleById(548175884734169088L); //developer
-		List<Member> devm = g.getMembersWithRoles(dev);
-		Role gm = g.getRoleById(548175906833956875L); //game mod
-		List<Member> gmm_ = g.getMembersWithRoles(gm);
-		Role aot = g.getRoleById(818571943518666822L); //addon team
-		List<Member> aotm = g.getMembersWithRoles(aot);
-		Role cmt = g.getRoleById(548175915054792704L); //community mod
-		List<Member> cmtm = g.getMembersWithRoles(cmt);
-		Role cont = g.getRoleById(697902191733768192L); //content team
-		List<Member> contm = g.getMembersWithRoles(cont);
+		Role owner = g.getRoleById(548175887179186191L); //owner
+		List<Member> owner1 = g.getMembersWithRoles(owner);
+		Role coowner = g.getRoleById(962408062302433360l); //co-owner
+		List<Member> coowner1 = g.getMembersWithRoles(coowner);
+		Role supervisor = g.getRoleById(779322052175462400l); //supervisor
+		List<Member> supervisor1 = g.getMembersWithRoles(supervisor);
+		Role mod = g.getRoleById(548175915054792704L); //moderator
+		List<Member> mod1 = g.getMembersWithRoles(mod);
 		Role sup = g.getRoleById(548175909291819008L); //support
-		List<Member> supm = g.getMembersWithRoles(sup);
-		Role build = g.getRoleById(548175912454324224L); //builder
-		List<Member> builder = g.getMembersWithRoles(build);
+		List<Member> sup1 = g.getMembersWithRoles(sup);
 		EmbedBuilder eb = Embed();
-		if(pmm.size() != 0) {
-			eb.addField("Project Manager (" + pmm.size() + ")", getFromList(pmm), false);
+		if(owner1.size() != 0) {
+			eb.addField("Owner (" + owner1.size() + ")", getFromList(owner1), false);
 		}
-		if(apmm.size() != 0) {
-			eb.addField("Assistant Project Manager (" + apmm.size() + ")", getFromList(apmm), false);
+		if(coowner1.size() != 0) {
+			eb.addField("Co-Owner (" + coowner1.size() + ")", getFromList(coowner1), false);
 		}
-		if(smm.size() != 0) {
-			eb.addField("Staff Manager (" + smm.size() + ")", getFromList(smm), false);
+		if(supervisor1.size() != 0) {
+			eb.addField("Supervisor (" + supervisor1.size() + ")", getFromList(supervisor1), false);
 		}
-		if(devm.size() != 0) {
-			eb.addField("Developer (" + devm.size() + ")", getFromListDEV(devm, g), false);
+		if(mod1.size() != 0) {
+			eb.addField("Moderator (" + mod1.size() + ")", getFromList(mod1), false);
 		}
-		if(gmm1.size() != 0) {
-			eb.addField("General Manager (" + gmm1.size() + ")", getFromList(gmm1), false);
-		}
-		if(gmmm.size() != 0) {
-			eb.addField("Game Moderation Manager (" + gmmm.size() + ")", getFromList(gmmm), false);
-		}
-		if(sdam.size() != 0) {
-			eb.addField("Service & Data Analyst (" + sdam.size() + ")", getFromList(sdam), false);
-		}
-		if(adprmm.size() != 0) {
-			eb.addField("Ads & PR Manager (" + adprmm.size() + ")", getFromList(adprmm), false);
-		}
-		if(gmm_.size() != 0) {
-			eb.addField("Game Moderator (" + gmm_.size() + ")", getFromList(gmm_), false);
-		}
-		if(aotm.size() != 0) {
-			eb.addField("Add-On Team (" + aotm.size() + ")", getFromList(aotm), false);
-		}
-		if(cmtm.size() != 0) {
-			eb.addField("Community Moderator (" + getFromListExclUSINT(cmtm, g) + ")", getFromListExclUS(cmtm, g), false);
-		}
-		if(contm.size() != 0) {
-			eb.addField("Content Team (" + contm.size() + ")", getFromListCont(contm, g), false);
-		}
-		if(supm.size() != 0) {
-			eb.addField("Support (" + supm.size() + ")", getFromList(supm), false);
-		}
-		if(builder.size() != 0) {
-			eb.addField("Builder (" + builder.size() + ")", getFromList(builder), false);
+		if(sup1.size() != 0) {
+			eb.addField("Supporter (" + sup1.size() + ")", getFromList(sup1), false);
 		}
 		chan.sendMessageEmbeds(eb.build()).queue();
 	}
@@ -276,102 +182,13 @@ public class FAQ extends ListenerAdapter{
 		return sb.toString();
 	}
 	
-	private String getFromListExclUS(List<Member> list, Guild g) {
-		Role upperstaff = g.getRoleById(836565563333148712L);
-		StringBuilder sb = new StringBuilder();
-		for(Member m : list) {
-			if(!m.getRoles().contains(upperstaff)) {
-				sb.append(m.getAsMention());
-				sb.append("\n");
-			}
-		}
-		return sb.toString();
-	}
-	
-	private int getFromListExclUSINT(List<Member> list, Guild g) {
-		Role upperstaff = g.getRoleById(836565563333148712L);
-		int tmp = 0;
-		for(Member m : list) {
-			if(!m.getRoles().contains(upperstaff)) {
-				tmp++;
-			}
-		}
-		return tmp;
-	}
-	
-	private String getFromListDEV(List<Member> list, Guild g) {
-		Role webdev = g.getRoleById(836545764720246824L);
-		Role gamedev = g.getRoleById(836545813500264450L);
-		List<Member> wd = new ArrayList<>();
-		List<Member> gd = new ArrayList<>();
-		for(Member m : list) {
-			if(m.getRoles().contains(gamedev)) {
-				gd.add(m);
-			}else if(m.getRoles().contains(webdev)) {
-				wd.add(m);
-			}
-		}
-		StringBuilder sb1 = new StringBuilder();
-		StringBuilder sb2 = new StringBuilder();
-		for(Member m : wd) {
-			sb1.append("- " + m.getAsMention());
-			sb1.append("\n");
-		}
-		for(Member m : gd) {
-			sb2.append("- " + m.getAsMention());
-			sb2.append("\n");
-		}
-		String format = "Game Developer (" + gd.size() + ") \n" + sb2.toString() + " \nWeb Developer (" + wd.size() + ") \n" + sb1.toString();
-		return format;
-	}
-	
-	private String getFromListCont(List<Member> list, Guild g) {
-		Role media = g.getRoleById(861653565662560298L);
-		Role translator = g.getRoleById(861653574077513798L);
-		List<Member> md = new ArrayList<>();
-		List<Member> td = new ArrayList<>();
-		for(Member m : list) {
-			if(m.getRoles().contains(media)) {
-				md.add(m);
-			}else if(m.getRoles().contains(translator)) {
-				td.add(m);
-			}
-		}
-		StringBuilder sb1 = new StringBuilder();
-		StringBuilder sb2 = new StringBuilder();
-		for(Member m : md) {
-			sb1.append("- " + m.getAsMention());
-			sb1.append("\n");
-		}
-		for(Member m : td) {
-			sb2.append("- " + m.getAsMention());
-			sb2.append("\n");
-		}
-		String format = "**Media Team (" + md.size() + ")**: \n" + sb1.toString() + " \n**Translation Team (" + td.size() + ")**: \n" + sb2.toString();
-		return format;
-	}
-	
 	private void setEmbed_platform(TextChannel chan) {
 		EmbedBuilder eb = Embed();
 		eb.setDescription("Question: Do we have another social media platforms?\nAnswer: For sure we have another social media platforms.");
-		eb.addField("Website:", "https://www.redicraft.eu/", false);
-		eb.addField("Forum:", "https://forum.redicraft.eu/", false);
 		eb.addField("Instagram:", "https://www.instagram.com/redicrafteu/", false);
 		eb.addField("Facebook:", "Site: https://www.facebook.com/redicrafteu/ \nGroup: https://www.facebook.com/groups/370322470364195/", false);
 		eb.addField("YouTube:", "https://www.youtube.com/channel/UCBJhuPBSaucwk_TthujYrBw", false);
 		eb.addField("Twitch:", "https://www.twitch.tv/redicrafteu", false);
-		chan.sendMessageEmbeds(eb.build()).queue();
-	}
-	
-	private void setEmbed_dynmap(TextChannel chan) {
-		EmbedBuilder eb = Embed();
-		eb.setDescription("Question: Do you have online maps from the game servers?\nAnswer: Yes, certain servers do have online maps! \n \nSurvival: http://map.redicraft.eu:21203 \nCreative: http://map.redicraft.eu:21201 \nSkyBlock: http://map.redicraft.eu:21204 \nFarmserver: http://map.redicraft.eu:21205");
-		chan.sendMessageEmbeds(eb.build()).queue();
-	}
-	
-	private void setEmbed_serverinfo(TextChannel chan) {
-		EmbedBuilder eb = Embed();
-		eb.setDescription("Question: What's about the Minecraft-Server? \nAnswer: RediCraft is a Minecraft Network with preference in building.\nBut we also are working on Minigames-Server as well.\nOur server is Java-Based and runs on the latest version. Current version: ***1.19.2***.");
 		chan.sendMessageEmbeds(eb.build()).queue();
 	}
 	
@@ -381,16 +198,10 @@ public class FAQ extends ListenerAdapter{
 		chan.sendMessageEmbeds(eb.build()).queue();
 	}
 	
-	private void setEmbed_hierarchy(TextChannel chan) {
-		EmbedBuilder eb = Embed();
-		eb.setDescription("Question: How does the team hierarchy looks like? \nAnswer: It's very simple. You can see it from the following graphic:");
-		eb.setImage("https://i.imgur.com/rnkQVdk.png");
-		chan.sendMessageEmbeds(eb.build()).queue();
-	}
-	
 	private void setEmbed_partnerships(TextChannel chan) {
 		EmbedBuilder eb = Embed();
-		eb.setDescription("Question: Does RediCraft also accept partnerships? \nAnswer: Yes, we do! We accept partnerships. Link: https://forms.gle/HKZgBi6E2L84yUSJ8");
+		//eb.setDescription("Question: Does RediCraft also accept partnerships? \nAnswer: Yes, we do! We accept partnerships. Link: https://forms.gle/HKZgBi6E2L84yUSJ8");
+		eb.setDescription("Question: Does RediCraft also accept partnerships? \nAnswer: Unfortunately, we don't. Since the Minecraft Server has been closed, this guild is only here to communicate.");
 		chan.sendMessageEmbeds(eb.build()).queue();
 	}
 	
@@ -403,7 +214,8 @@ public class FAQ extends ListenerAdapter{
 
 	private void setEmbed_apply(TextChannel chan) {
 		EmbedBuilder eb = Embed();
-		eb.setDescription("Question: How can I apply for the staff team? \nAnswer: Use the following Google Forms: https://forms.gle/MjVWATgubHVRUhS1A");
+		//eb.setDescription("Question: How can I apply for the staff team? \nAnswer: Use the following Google Forms: https://forms.gle/MjVWATgubHVRUhS1A");
+		eb.setDescription("Question: How can I apply for the staff team?\nAnswer: You can't. If you'd like to join our team, just ask a supervisor of your choice. However, we don't look for new staff members.");
 		chan.sendMessageEmbeds(eb.build()).queue();
 	}
 	

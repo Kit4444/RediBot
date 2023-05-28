@@ -20,7 +20,7 @@ public class CategoryUpdateName {
         eb.setDescription("Category: " + e.getCategory().getName());
         eb.addField("Old Position:", e.getCategory().getParent().getName() + " / " + e.getOldPosition(), false);
         eb.addField("New Position:", e.getCategory().getParent().getName() + " / " + e.getNewPosition(), false);
-        eb.setFooter(stime);
+        eb.setFooter(g.getName() + " - " + stime, g.getIconUrl());
 		eb.setColor(gl.orange);
 		if(gl.enabledLog(g, "categoryupdatename")) {
 			gl.sendMsg(eb, g);

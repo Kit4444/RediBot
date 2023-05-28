@@ -11,6 +11,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.HashMap;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import org.simpleyaml.configuration.file.YamlFile;
@@ -39,12 +40,13 @@ public class GuildLogEvents extends ListenerAdapter{
 	
 	public void insertMsg(long guildid, long msgid, String msgtxt, long memberid, boolean botmsg) {
 		try {
-			PreparedStatement ps = MySQL.getConnection().prepareStatement("INSERT INTO redibot_msglog (guildid, msgid, msgtxt, memberid, botmsg) VALUES (?, ?, ?, ?, ?)");
+			PreparedStatement ps = MySQL.getConnection().prepareStatement("INSERT INTO redibot_msglog (guildid, msgid, originalText, lastUpdatedText, memberid, botmsg) VALUES (?, ?, ?, ?, ?, ?)");
 			ps.setLong(1, guildid);
 			ps.setLong(2, msgid);
 			ps.setString(3, msgtxt);
-			ps.setLong(4, memberid);
-			ps.setBoolean(5, botmsg);
+			ps.setString(4, msgtxt);
+			ps.setLong(5, memberid);
+			ps.setBoolean(6, botmsg);
 			ps.executeUpdate();
 			ps.close();
 		}catch (SQLException e) {
@@ -73,7 +75,7 @@ public class GuildLogEvents extends ListenerAdapter{
 	}
 	
 	@Nullable
-	public String retMsg(long guildid, long msgid) {
+	public String returnOriginalMessage(long guildid, long msgid) {
 		String msg = "";
 		PreparedStatement ps;
 		try {
@@ -82,7 +84,7 @@ public class GuildLogEvents extends ListenerAdapter{
 			ps.setLong(2, msgid);
 			ResultSet rs = ps.executeQuery();
 			if(rs.next()) {
-				msg = rs.getString("msgtxt");
+				msg = rs.getString("originalText");
 			}else {
 				msg = null;
 			}
@@ -90,6 +92,39 @@ public class GuildLogEvents extends ListenerAdapter{
 			e.printStackTrace();
 		}
 		return msg;
+	}
+	
+	@Nullable
+	public String returnLastUpdatedMessage(long guildid, long msgid) {
+		String msg = "";
+		PreparedStatement ps;
+		try {
+			ps = MySQL.getConnection().prepareStatement("SELECT * FROM redibot_msglog WHERE guildid = ? AND msgid = ?");
+			ps.setLong(1, guildid);
+			ps.setLong(2, msgid);
+			ResultSet rs = ps.executeQuery();
+			if(rs.next()) {
+				msg = rs.getString("lastUpdatedText");
+			}else {
+				msg = null;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return msg;
+	}
+	
+	@Nonnull
+	public void updateLastUpdatedMessage(long guildid, long msgid, String obfuscatedText) {
+		try {
+			PreparedStatement ps = MySQL.getConnection().prepareStatement("UPDATE redibot_msglog SET lastUpdatedText = ? WHERE guildid = ? AND msgid = ?");
+			ps.setString(1, obfuscatedText);
+			ps.setLong(2, guildid);
+			ps.setLong(3, msgid);
+			ps.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public long retMID(long guildid, long msgid) {

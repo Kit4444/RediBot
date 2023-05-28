@@ -57,7 +57,6 @@ import at.mlps.botclasses.guildlogging.guild.GuildUpdateExplicitContent;
 import at.mlps.botclasses.guildlogging.guild.GuildUpdateIcon;
 import at.mlps.botclasses.guildlogging.guild.GuildUpdateName;
 import at.mlps.botclasses.guildlogging.guild.GuildUpdateOwner;
-import at.mlps.botclasses.guildlogging.guild.GuildUpdateRegion;
 import at.mlps.botclasses.guildlogging.guild.GuildUpdateVerificationLevel;
 import at.mlps.botclasses.guildlogging.guild.MessageLogging;
 import at.mlps.botclasses.guildlogging.member.UserUpdateAvatar;
@@ -177,7 +176,6 @@ public class Manager {
 		builder.addEventListeners(new GuildUpdateIcon());
 		builder.addEventListeners(new GuildUpdateName());
 		builder.addEventListeners(new GuildUpdateOwner());
-		builder.addEventListeners(new GuildUpdateRegion());
 		builder.addEventListeners(new GuildUpdateVerificationLevel());
 		builder.addEventListeners(new GuildVoiceJoin());
 		builder.addEventListeners(new GuildVoiceLeave());

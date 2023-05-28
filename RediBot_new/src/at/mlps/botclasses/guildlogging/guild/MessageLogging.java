@@ -19,104 +19,6 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
 public class MessageLogging extends ListenerAdapter{
 	
-	/*public static HashMap<Long, String> msgcachetmp = new HashMap<>();
-	public static HashMap<Long, String> msgcachename = new HashMap<>();
-	public static HashMap<Long, String> msgcacheavatar = new HashMap<>();
-	
-	public void onGuildMessageReceived(GuildMessageReceivedEvent e) {
-		if(!e.getAuthor().isBot() || !e.isWebhookMessage() || e.getAuthor().getIdLong() == 588547204063428637L) {
-			String message = e.getMessage().getContentDisplay();
-			long messageid = e.getMessageIdLong();
-			msgcachetmp.put(messageid, message);
-			msgcachename.put(messageid, e.getAuthor().getName() + "#" + e.getAuthor().getDiscriminator());
-			if(e.getAuthor().getAvatarUrl() != null) {
-				msgcacheavatar.put(messageid, e.getAuthor().getAvatarUrl());
-			}else {
-				msgcacheavatar.put(messageid, e.getAuthor().getDefaultAvatarUrl());
-			}
-		}
-	}
-	
-	public void onGuildMessageUpdate(GuildMessageUpdateEvent e) {
-		Guild g = e.getGuild();
-		Member m = e.getMember();
-		SimpleDateFormat time = new SimpleDateFormat("dd/MM/yy - HH:mm:ss");
-        String stime = time.format(new Date());
-        EmbedBuilder eb = new EmbedBuilder();
-        GuildLogEvents gl = new GuildLogEvents();
-        if(msgcachetmp.containsKey(e.getMessageIdLong())) {
-        	String message = msgcachetmp.get(e.getMessageIdLong());
-        	eb.setTitle("Message has been updated.");
-        	eb.setAuthor(m.getUser().getName() + "#" + m.getUser().getDiscriminator(), null, m.getUser().getAvatarUrl());
-        	eb.setDescription("Channel: " + e.getChannel().getAsMention() + "\nJump to Message: " + e.getMessage().getJumpUrl());
-        	if(message.length() >= 512) {
-        		eb.addField("Old Message:", message.substring(0, 512) + " [...]", false);
-        	}else {
-        		eb.addField("Old Message:", message, false);
-        	}
-        	if(e.getMessage().getContentDisplay().length() >= 512) {
-        		eb.addField("New Message:", e.getMessage().getContentDisplay().substring(0, 512), false);
-        	}else {
-        		eb.addField("New Message:", e.getMessage().getContentDisplay(), false);
-        	}
-        	eb.setFooter(g.getName() + " - " + stime, g.getIconUrl());
-    		eb.setColor(gl.orange);
-    		if(gl.enabledLog(g, "guildmessageupdate")) {
-    			YamlFile cfg = new YamlFile("configs/guildsettings.yml");
-    			try {
-    				cfg.load();
-    			} catch (Exception e1) {
-    				e1.printStackTrace();
-    			}
-    			if(cfg.contains("Exempts." + g.getIdLong())) {
-    				List<Long> exempts = cfg.getLongList("Exempts." + g.getIdLong());
-    				if(!exempts.contains(e.getChannel().getIdLong())) {
-    					gl.sendMsg(eb, g);
-    				}
-    			}else {
-    				gl.sendMsg(eb, g);
-    			}
-    		}
-        }
-	}
-	
-	public void onGuildMessageDelete(GuildMessageDeleteEvent e) {
-		Guild g = e.getGuild();
-		SimpleDateFormat time = new SimpleDateFormat("dd/MM/yy - HH:mm:ss");
-        String stime = time.format(new Date());
-        EmbedBuilder eb = new EmbedBuilder();
-        GuildLogEvents gl = new GuildLogEvents();
-        if(msgcachetmp.containsKey(e.getMessageIdLong())) {
-        	String message = msgcachetmp.get(e.getMessageIdLong());
-        	eb.setTitle("Message has been deleted.");
-        	eb.setAuthor(msgcachename.get(e.getMessageIdLong()), null, msgcacheavatar.get(e.getMessageIdLong()));
-        	eb.setDescription("Channel: " + e.getChannel().getAsMention());
-        	if(message.length() >= 512) {
-        		eb.addField("Old Message:", message.substring(0, 512) + " [...]", false);
-        	}else {
-        		eb.addField("Old Message:", message, false);
-        	}
-        	eb.setFooter(g.getName() + " - " + stime, g.getIconUrl());
-    		eb.setColor(gl.orange);
-    		if(gl.enabledLog(g, "guildmessagedelete")) {
-    			YamlFile cfg = new YamlFile("configs/guildsettings.yml");
-    			try {
-    				cfg.load();
-    			} catch (Exception e1) {
-    				e1.printStackTrace();
-    			}
-    			if(cfg.contains("Exempts." + g.getIdLong())) {
-    				List<Long> exempts = cfg.getLongList("Exempts." + g.getIdLong());
-    				if(!exempts.contains(e.getChannel().getIdLong())) {
-    					gl.sendMsg(eb, g);
-    				}
-    			}else {
-    				gl.sendMsg(eb, g);
-    			}
-    		}
-        }
-	}*/
-	
 	public void onGuildMessageReceived(GuildMessageReceivedEvent e) {
 		Guild g = e.getGuild();
 		if(!e.getAuthor().isBot() || !e.isWebhookMessage()) {
@@ -134,22 +36,32 @@ public class MessageLogging extends ListenerAdapter{
         String stime = time.format(new Date());
         EmbedBuilder eb = new EmbedBuilder();
         GuildLogEvents gl = new GuildLogEvents();
-        String messageold = gl.retMsg(g.getIdLong(), e.getMessageIdLong());
-        String messagenew = TextCryptor.decrypt(messageold, getPassword());
+        String originalTextOld = gl.returnOriginalMessage(g.getIdLong(), e.getMessageIdLong());
+        String originalTextNew = TextCryptor.decrypt(originalTextOld, getPassword());
+        String updatedTextOld = gl.returnLastUpdatedMessage(g.getIdLong(), e.getMessageIdLong());
+        String updatedTextNew = TextCryptor.decrypt(updatedTextOld, getPassword());
         eb.setTitle("Message has been updated.");
         eb.setAuthor(m.getUser().getName(), null, m.getUser().getAvatarUrl());
         eb.setDescription("Channel: " + e.getChannel().getAsMention() + " \nJump to Message: " + e.getMessage().getJumpUrl());
-        if(messagenew.length() >= 512) {
-       	 	eb.addField("Message:", messagenew.substring(0, 512) + " ", false);
+        if(originalTextNew.length() >= 512) {
+       	 	eb.addField("Original Message:", originalTextNew.substring(0, 512) + " ", false);
         }else {
-       	 	eb.addField("Message:", messagenew + " ", false);
+       	 	eb.addField("Original Message:", originalTextNew + " ", false);
+        }
+        gl.updateLastUpdatedMessage(g.getIdLong(), e.getMessageIdLong(), TextCryptor.encrypt(e.getMessage().getContentRaw(), getPassword()));
+        if(!updatedTextNew.equalsIgnoreCase(originalTextNew)) {
+        	if(updatedTextNew.length() >= 512) {
+           	 	eb.addField("Previously Edited Message:", updatedTextNew.substring(0, 512) + " ", false);
+            }else {
+           	 	eb.addField("Previously Edited Message:", updatedTextNew + " ", false);
+            }
         }
         if(e.getMessage().getContentStripped().length() >= 512) {
-        	eb.addField("New Message:", e.getMessage().getContentDisplay().substring(0, 512), false);
+        	eb.addField("New Message:", e.getMessage().getContentRaw().substring(0, 512), false);
         }else {
-        	eb.addField("New Message:", e.getMessage().getContentDisplay(), false);
+        	eb.addField("New Message:", e.getMessage().getContentRaw(), false);
         }
-        eb.setFooter(stime);
+        eb.setFooter(g.getName() + " - " + stime, g.getIconUrl());
 		eb.setColor(gl.orange);
 		if(!gl.isBotMessage(g.getIdLong(), e.getMessageIdLong())) {
 			if(gl.enabledLog(g, "guildmessageupdate")) {
@@ -183,7 +95,7 @@ public class MessageLogging extends ListenerAdapter{
 		} catch (InvalidConfigurationException | IOException e1) {
 			e1.printStackTrace();
 		}
-        String messageold = gl.retMsg(g.getIdLong(), e.getMessageIdLong());
+        String messageold = gl.returnLastUpdatedMessage(g.getIdLong(), e.getMessageIdLong());
         String messagenew = TextCryptor.decrypt(messageold, getPassword());
         eb.setTitle("Message has been deleted.");
         if(gl.retMID(g.getIdLong(), e.getMessageIdLong()) != 0L) {
@@ -198,7 +110,7 @@ public class MessageLogging extends ListenerAdapter{
         }else {
         	 eb.addField("Message:", messagenew + " ", false);
         }
-        eb.setFooter(stime);
+        eb.setFooter(g.getName() + " - " + stime, g.getIconUrl());
 		eb.setColor(gl.orange);
 		if(!gl.isBotMessage(g.getIdLong(), e.getMessageIdLong())) {
 			if(gl.enabledLog(g, "guildmessagedelete")) {

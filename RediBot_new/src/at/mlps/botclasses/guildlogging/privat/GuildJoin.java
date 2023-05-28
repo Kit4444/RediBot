@@ -27,7 +27,7 @@ public class GuildJoin extends ListenerAdapter{
     	eb.addField("Roles:", e.getGuild().getRoles().size() + "", false);
     	eb.setFooter(stime);
         if(g.getIdLong() == gl.rediassetg) {
-        	g.getTextChannelById(gl.rediassetlog).sendMessage(eb.build()).queue();
+        	g.getTextChannelById(gl.rediassetlog).sendMessageEmbeds(eb.build()).queue();
         }
 	}
 

@@ -28,7 +28,7 @@ public class GuildVoiceLeave extends ListenerAdapter{
     	PrettyTime pt = new PrettyTime();
     	SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yy - HH:mm:ss");
     	eb.setDescription("Member: " + e.getMember().getAsMention() + "\nChannel: " + e.getChannelLeft().getAsMention() + "\n \nInitially Joined Channel: " + initChannel.getAsMention() + "\nInitially Joined Date/Time: " + sdf.format(new Date(initTime)) + ", " + pt.format(new Date(initTime)));
-    	eb.setFooter(stime);
+    	eb.setFooter(g.getName() + " - " + stime, g.getIconUrl());
 		eb.setColor(gl.green);
 		if(gl.enabledLog(g, "guildvoiceleave")) {
 			gl.sendMsg(eb, g);
