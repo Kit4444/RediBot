@@ -31,7 +31,17 @@ public class RR_Listener extends ListenerAdapter{
 				}
 			}else if(e.getReactionEmote().isEmoji()) {
 				emoteKey = EmojiParser.parseToAliases(e.getReactionEmote().getEmoji());
-				
+				System.out.println("Before: " + emoteKey);
+				if(emoteKey.equalsIgnoreCase(":tools:")) {
+					emoteKey = ":hammer_and_wrench:";
+				}else if(emoteKey.equalsIgnoreCase(":speaking_head:")) {
+					emoteKey = ":speaking_head_in_silhouette:";
+				}else if(emoteKey.equalsIgnoreCase(":hammer_and_wrench:")) {
+					emoteKey = ":tools:";
+				}else if(emoteKey.equalsIgnoreCase(":speaking_head_in_silhouette:")) {
+					emoteKey = ":speaking_head:";
+				}
+				System.out.println("After: " + emoteKey);
 			}
 			try {
 				PreparedStatement ps = MySQL.getConnection().prepareStatement("SELECT roleid FROM redibot_reactionroles WHERE guildid = ? AND channelid = ? AND messageid = ? AND emote = ?");
@@ -72,7 +82,15 @@ public class RR_Listener extends ListenerAdapter{
 				}
 			}else if(e.getReactionEmote().isEmoji()) {
 				emoteKey = EmojiParser.parseToAliases(e.getReactionEmote().getEmoji());
-				
+				if(emoteKey.equalsIgnoreCase(":tools:")) {
+					emoteKey = ":hammer_and_wrench:";
+				}else if(emoteKey.equalsIgnoreCase(":speaking_head:")) {
+					emoteKey = ":speaking_head_in_silhouette:";
+				}else if(emoteKey.equalsIgnoreCase(":hammer_and_wrench:")) {
+					emoteKey = ":tools:";
+				}else if(emoteKey.equalsIgnoreCase(":speaking_head_in_silhouette:")) {
+					emoteKey = ":speaking_head:";
+				}
 			}
 			boolean singleuse = isSingleUse(guildid, channelid, messageid, emoteKey);
 			if(!singleuse) {

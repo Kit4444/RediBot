@@ -30,8 +30,14 @@ public class NewYearScheduler extends TimerTask{
 	int width = 384;
 	int height = 192;
 	
+	static boolean inited = false;
+	
 	@Override
 	public void run() {
+		if(!inited) {
+			inited = true;
+			System.out.println("New Year Scheduler initialised.");
+		}
 		Guild g = jda.getGuildById(548136727697555496L);
 		TextChannel chan = g.getTextChannelById(552163655366475786L);
 		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
@@ -80,6 +86,7 @@ public class NewYearScheduler extends TimerTask{
 		}
 		if(date1.matches("31.12")) {
 			switch(date) {
+			case "00:01:00": chan.sendMessage("24 Hours until new year!").queue(); break;
 			case "01:00:00": chan.sendMessage("23 Hours until new year!").queue(); break;
 			case "02:00:00": chan.sendMessage("22 Hours until new year!").queue(); break;
 			case "03:00:00": chan.sendMessage("21 Hours until new year!").queue(); break;
@@ -125,9 +132,9 @@ public class NewYearScheduler extends TimerTask{
 			case "23:59:57": chan.sendMessage("3 Seconds until new year!").queue(); break;
 			case "23:59:58": chan.sendMessage("2 Seconds until new year!").queue(); break;
 			case "23:59:59": chan.sendMessage("1 Second until new year!").queue(); break;
-			case "00:00:00": text = "HAPPY NEW YEAR 2023 EVERYONE!"; file = new File("img/templates/feuerwerk7.png"); break;
+			case "00:00:00": text = "HAPPY NEW YEAR 2024 EVERYONE!"; file = new File("img/templates/feuerwerk7.png"); break;
 			}
-			if(text.equalsIgnoreCase("HAPPY NEW YEAR 2023 EVERYONE!")) {
+			if(text.equalsIgnoreCase("HAPPY NEW YEAR 2024 EVERYONE!")) {
 				File out = editFile(file, text);
 				if(out != null) {
 					chan.sendFile(out).queue();

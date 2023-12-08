@@ -12,15 +12,12 @@ import org.simpleyaml.configuration.file.YamlFile;
 import org.simpleyaml.exceptions.InvalidConfigurationException;
 
 import at.mlps.botclasses.guildlogging.guild.GuildLogEvents;
-import at.mlps.main.MagmaVerCheck;
+import at.mlps.main.NewYearScheduler;
 import at.mlps.main.RebootClass;
-import at.mlps.main.RediFMGetter;
 import at.mlps.main.Runner;
-import at.mlps.main.StatisticsClass;
 import at.mlps.rc.mysql.lb.MySQL;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDAInfo;
-import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.events.ReadyEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
@@ -52,37 +49,14 @@ public class Ready extends ListenerAdapter{
 		}else {
 			ebwelc.addField("Info", "The bot is not on the latest version!", false);
 		}
-		try {
-			PreparedStatement ps = MySQL.getConnection().prepareStatement("SELECT * FROM redibot_guildlog");
-			ResultSet rs = ps.executeQuery();
-			while(rs.next()) {
-				long saveguildid = rs.getLong("guildid");
-				@SuppressWarnings("unused")
-				long savetxtchan = rs.getLong("channelid");
-				for(Guild g : e.getJDA().getGuilds()) {
-					if(g.getIdLong() == saveguildid) {
-						//g.getTextChannelById(savetxtchan).sendMessage(ebwelc.build()).queue();
-					}
-				}
-			}
-		}catch (SQLException e1) {
-			e1.printStackTrace();
-		}
-		RediFMGetter rfm = new RediFMGetter();
-		Timer timer = new Timer();
-		timer.scheduleAtFixedRate(rfm, 0, 10000);
-		
-		MagmaVerCheck magma = new MagmaVerCheck(e.getJDA());
-		Timer t1 = new Timer();
-		t1.scheduleAtFixedRate(magma, 0, 60000);
 		
 		Runner runner = new Runner(e.getJDA());
 		Timer t = new Timer();
 		t.scheduleAtFixedRate(runner, 1000, 60000);
+		NewYearScheduler nys = new NewYearScheduler(e.getJDA());
+		t.scheduleAtFixedRate(nys, 0, 1000);
 		RebootClass rc = new RebootClass();
-		StatisticsClass sc = new StatisticsClass(e.getJDA());
 		//300000 equals to 300 seconds or 5 mins
-		t.schedule(sc, 0, 300000);
 		t.scheduleAtFixedRate(rc, 0, 1000);
 	}
 	

@@ -2,7 +2,6 @@ package at.mlps.main;
 
 import java.io.IOException;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Random;
 import java.util.TimerTask;
@@ -19,7 +18,7 @@ import net.dv8tion.jda.api.entities.Member;
 
 public class Runner extends TimerTask{
 	
-	static int timer = 3;
+	static int timer = 0;
 	
 	public JDA api;
 	public Runner(JDA api) {
@@ -47,8 +46,18 @@ public class Runner extends TimerTask{
 		
 		timer++;
 		if(timer == 1) {
-			//redifm
-			api.getPresence().setActivity(Activity.listening("🎵 RediFM 🎵 | " + getRadioInfo("track") + " - " + getRadioInfo("artist")));
+			//xmas/newyear ctd
+			long xmas23 = 1703437200000l;
+			long newy23 = 1704063599000l;
+			long current = System.currentTimeMillis();
+			if(current <= xmas23) {
+				api.getPresence().setActivity(Activity.watching("for Christmas in " + getDays(((xmas23 - current) / 1000))));
+			}else if(current >= xmas23 && current <= newy23) {
+				api.getPresence().setActivity(Activity.watching("for New Year 2024 in " + getDays(((newy23 - current) / 1000))));
+			}else {
+				api.getPresence().setActivity(Activity.watching("all the memories happened in 2023!"));
+			}
+			
 		}else if(timer == 2) {
 			//watching
 			int guilds = 0;
@@ -61,7 +70,6 @@ public class Runner extends TimerTask{
 			}
 			api.getPresence().setActivity(Activity.watching("over " + guilds + " Guilds and " + members + " Members"));
 		}else if(timer == 3) {
-			timer = 0;
 			//defaultstate (cfg)
 			YamlFile file = new YamlFile("configs/configuration.yml");
 			try {
@@ -87,6 +95,9 @@ public class Runner extends TimerTask{
 			}else if(file.getString("BotConfig.Activity.Onlinestatus").equalsIgnoreCase("OFFLINE")) {
 				api.getPresence().setStatus(OnlineStatus.OFFLINE);
 			}
+		}else if(timer == 4) {
+			timer = 1;
+			api.getPresence().setActivity(Activity.watching("Lotus growing - be curious!"));
 		}
 	}
 	
@@ -99,59 +110,15 @@ public class Runner extends TimerTask{
 		return number;
 	}
 	
-	private String getRadioInfo(String col) {
-		String data = "";
-		try {
-			PreparedStatement ps = MySQL.getConnection().prepareStatement("SELECT * FROM redifm_current WHERE id = ?");
-			ps.setInt(1, 1);
-			ResultSet rs = ps.executeQuery();
-			rs.next();
-			data = rs.getString(col);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return data;
-	}
-	
-	String getDays(long input) {
-		long seconds = input;
-		long minutes = 0;
-		long hours = 0;
-		long days = 0;
-		while(seconds > 60) {
-			seconds -= 60;
-			minutes++;
-		}
-		while(minutes > 60) {
-			minutes -= 60;
-			hours++;
-		}
-		while(hours > 24) {
-			hours -= 24;
-			days++;
-		}
-		String day = "";
-		String hour = "";
-		String minute = "";
-		if(days < 10) {
-			day = "0" + days;
+	String getDays(long seconds) {
+		long days = seconds / (24 * 3600);
+        long hours = (seconds % (24 * 3600)) / 3600;
+        long minutes = (seconds % 3600) / 60;
+       
+		if(days != 0) {
+			return String.format("%02d days, %02d hours and %02d minutes", days, hours, minutes);
 		}else {
-			day = "" + days;
-		}
-		if(hours < 10) {
-			hour = "0" + hours;
-		}else {
-			hour = "" + hours;
-		}
-		if(minutes < 10) {
-			minute = "0" + minutes;
-		}else {
-			minute = "" + minutes;
-		}
-		if(day.equalsIgnoreCase("00")) {
-			return hour + ":" + minute + "h remaining";
-		}else {
-			return day + " Days, " + hour + ":" + minute + "h remaining";
+			return String.format("%02d:%02d hours", hours, minutes);
 		}
 	}
 }

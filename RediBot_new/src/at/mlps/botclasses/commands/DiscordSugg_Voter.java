@@ -18,7 +18,12 @@ public class DiscordSugg_Voter extends ListenerAdapter {
 		Guild g = e.getGuild();
 		YamlFile cfg = new YamlFile("configs/guildsettings.yml");
 		try {
-			cfg.load();
+			if(cfg.exists()) {
+				cfg.load();
+			}else {
+				cfg.createNewFile(true);
+				cfg.load();
+			}
 		} catch (InvalidConfigurationException | IOException e1) {
 			e1.printStackTrace();
 		}

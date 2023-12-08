@@ -42,7 +42,7 @@ public class MessageLogging extends ListenerAdapter{
         String updatedTextNew = TextCryptor.decrypt(updatedTextOld, getPassword());
         eb.setTitle("Message has been updated.");
         eb.setAuthor(m.getUser().getName(), null, m.getUser().getAvatarUrl());
-        eb.setDescription("Channel: " + e.getChannel().getAsMention() + " \nJump to Message: " + e.getMessage().getJumpUrl());
+        eb.setDescription("Channel: " + e.getChannel().getAsMention() + " \nJump to Message [here](" + e.getMessage().getJumpUrl() + ")");
         if(originalTextNew.length() >= 512) {
        	 	eb.addField("Original Message:", originalTextNew.substring(0, 512) + " ", false);
         }else {

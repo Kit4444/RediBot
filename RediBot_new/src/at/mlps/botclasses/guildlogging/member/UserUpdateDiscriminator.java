@@ -22,10 +22,12 @@ public class UserUpdateDiscriminator extends ListenerAdapter{
 		eb.setFooter(stime);
 		eb.setColor(gl.green);
 		List<Guild> guilds = e.getUser().getMutualGuilds();
-		if(!(guilds.isEmpty()) && !(e.getUser().isBot())) {
-			for(Guild guild : guilds) {
-				if(gl.enabledLog(guild, "userupdatediscriminator")) {
-					gl.sendMsg(eb, guild);
+		if(!e.getOldDiscriminator().equalsIgnoreCase(e.getNewDiscriminator())) {
+			if(!(guilds.isEmpty()) && !(e.getUser().isBot())) {
+				for(Guild guild : guilds) {
+					if(gl.enabledLog(guild, "userupdatediscriminator")) {
+						gl.sendMsg(eb, guild);
+					}
 				}
 			}
 		}

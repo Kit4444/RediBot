@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Timer;
 
 import javax.security.auth.login.LoginException;
 
@@ -14,7 +13,6 @@ import org.simpleyaml.exceptions.InvalidConfigurationException;
 import at.mlps.rc.mysql.lpb.MySQL;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.events.GenericEvent;
-import net.dv8tion.jda.api.events.ReadyEvent;
 import net.dv8tion.jda.api.hooks.EventListener;
 
 public class Main implements EventListener{
@@ -113,13 +111,6 @@ public class Main implements EventListener{
 	
 	@Override
 	public void onEvent(GenericEvent e) {
-		if(e instanceof ReadyEvent) {
-			System.out.println("System initialised.");
-			Timer t = new Timer();
-			NewYearScheduler nys = new NewYearScheduler(e.getJDA());
-			t.scheduleAtFixedRate(nys, 0, 1000);
-			System.out.println("New Year Scheduler must run now.");
-		}
 	}
 	
 	public static void onLog(int log, String msg) {
