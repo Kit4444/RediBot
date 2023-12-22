@@ -13,6 +13,7 @@ import org.simpleyaml.exceptions.InvalidConfigurationException;
 
 import at.mlps.botclasses.guildlogging.guild.GuildLogEvents;
 import at.mlps.main.NewYearScheduler;
+import at.mlps.main.PCHMG_MemberCount;
 import at.mlps.main.RebootClass;
 import at.mlps.main.Runner;
 import at.mlps.rc.mysql.lb.MySQL;
@@ -58,6 +59,10 @@ public class Ready extends ListenerAdapter{
 		RebootClass rc = new RebootClass();
 		//300000 equals to 300 seconds or 5 mins
 		t.scheduleAtFixedRate(rc, 0, 1000);
+		
+		//PCHMG Member Count in Voice Channel
+		PCHMG_MemberCount pchmg = new PCHMG_MemberCount(e.getJDA());
+		t.scheduleAtFixedRate(pchmg, 0, 3600000);
 	}
 	
 	private String retVer() {
