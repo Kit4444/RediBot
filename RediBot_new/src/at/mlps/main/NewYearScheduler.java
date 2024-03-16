@@ -31,6 +31,7 @@ public class NewYearScheduler extends TimerTask{
 	int height = 192;
 	
 	static boolean inited = false;
+	static boolean ranAlready = false;
 	
 	@Override
 	public void run() {
@@ -46,47 +47,50 @@ public class NewYearScheduler extends TimerTask{
 		String date1 = sdf1.format(new Date());
 		File file = null;
 		String text = "";
-		if(date.matches("00:30:00")) {
-			switch(date1) {
-			case "01.12": file = new File("img/templates/christmas1.png"); text = "23 Days"; break;
-			case "02.12": file = new File("img/templates/christmas4.png"); text = "22 Days"; break;
-			case "03.12": file = new File("img/templates/christmas2.png"); text = "21 Days"; break;
-			case "04.12": file = new File("img/templates/christmas1.png"); text = "20 Days"; break;
-			case "05.12": file = new File("img/templates/christmas2.png"); text = "19 Days"; break;
-			case "06.12": file = new File("img/templates/christmas4.png"); text = "18 Days"; break;
-			case "07.12": file = new File("img/templates/christmas1.png"); text = "17 Days"; break;
-			case "08.12": file = new File("img/templates/christmas3.png"); text = "16 Days"; break;
-			case "09.12": file = new File("img/templates/christmas5.png"); text = "15 Days"; break;
-			case "10.12": file = new File("img/templates/christmas4.png"); text = "14 Days"; break;
-			case "11.12": file = new File("img/templates/christmas6.png"); text = "13 Days"; break;
-			case "12.12": file = new File("img/templates/christmas2.png"); text = "12 Days"; break;
-			case "13.12": file = new File("img/templates/christmas3.png"); text = "11 Days"; break;
-			case "14.12": file = new File("img/templates/christmas1.png"); text = "10 Days"; break;
-			case "15.12": file = new File("img/templates/christmas6.png"); text = "9 Days"; break;
-			case "16.12": file = new File("img/templates/christmas5.png"); text = "8 Days"; break;
-			case "17.12": file = new File("img/templates/christmas4.png"); text = "7 Days"; break;
-			case "18.12": file = new File("img/templates/christmas1.png"); text = "6 Days"; break;
-			case "19.12": file = new File("img/templates/christmas4.png"); text = "5 Days"; break;
-			case "20.12": file = new File("img/templates/christmas5.png"); text = "4 Days"; break;
-			case "21.12": file = new File("img/templates/christmas6.png"); text = "3 Days"; break;
-			case "22.12": file = new File("img/templates/christmas3.png"); text = "2 Days"; break;
-			case "23.12": file = new File("img/templates/christmas1.png"); text = "1 Day"; break;
-			case "24.12": file = new File("img/templates/christmas5.png"); text = "Merry Christmas!"; break;
-			case "25.12": file = new File("img/templates/feuerwerk1.png"); text = "6 Days"; break;
-			case "26.12": file = new File("img/templates/feuerwerk2.png"); text = "5 Days"; break;
-			case "27.12": file = new File("img/templates/feuerwerk3.png"); text = "4 Days"; break;
-			case "28.12": file = new File("img/templates/feuerwerk4.png"); text = "3 Days"; break;
-			case "29.12": file = new File("img/templates/feuerwerk5.png"); text = "2 Days"; break;
-			case "30.12": file = new File("img/templates/feuerwerk6.png"); text = "1 Day"; break;
-			}
-			File fileEdit = editFile(file, text);
-			if(fileEdit != null) {
-				chan.sendFile(fileEdit).queue();
+		if(date.matches("00:00:02") || date.matches("00:00:03")) {
+			if(!ranAlready) {
+				switch(date1) {
+				case "01.12": file = new File("img/templates/christmas1.png"); text = "23 Days"; break;
+				case "02.12": file = new File("img/templates/christmas4.png"); text = "22 Days"; break;
+				case "03.12": file = new File("img/templates/christmas2.png"); text = "21 Days"; break;
+				case "04.12": file = new File("img/templates/christmas1.png"); text = "20 Days"; break;
+				case "05.12": file = new File("img/templates/christmas2.png"); text = "19 Days"; break;
+				case "06.12": file = new File("img/templates/christmas4.png"); text = "18 Days"; break;
+				case "07.12": file = new File("img/templates/christmas1.png"); text = "17 Days"; break;
+				case "08.12": file = new File("img/templates/christmas3.png"); text = "16 Days"; break;
+				case "09.12": file = new File("img/templates/christmas5.png"); text = "15 Days"; break;
+				case "10.12": file = new File("img/templates/christmas4.png"); text = "14 Days"; break;
+				case "11.12": file = new File("img/templates/christmas6.png"); text = "13 Days"; break;
+				case "12.12": file = new File("img/templates/christmas2.png"); text = "12 Days"; break;
+				case "13.12": file = new File("img/templates/christmas3.png"); text = "11 Days"; break;
+				case "14.12": file = new File("img/templates/christmas1.png"); text = "10 Days"; break;
+				case "15.12": file = new File("img/templates/christmas6.png"); text = "9 Days"; break;
+				case "16.12": file = new File("img/templates/christmas5.png"); text = "8 Days"; break;
+				case "17.12": file = new File("img/templates/christmas4.png"); text = "7 Days"; break;
+				case "18.12": file = new File("img/templates/christmas1.png"); text = "6 Days"; break;
+				case "19.12": file = new File("img/templates/christmas4.png"); text = "5 Days"; break;
+				case "20.12": file = new File("img/templates/christmas5.png"); text = "4 Days"; break;
+				case "21.12": file = new File("img/templates/christmas6.png"); text = "3 Days"; break;
+				case "22.12": file = new File("img/templates/christmas3.png"); text = "2 Days"; break;
+				case "23.12": file = new File("img/templates/christmas1.png"); text = "1 Day"; break;
+				case "24.12": file = new File("img/templates/christmas5.png"); text = "Merry Christmas!"; break;
+				case "25.12": file = new File("img/templates/feuerwerk1.png"); text = "6 Days"; break;
+				case "26.12": file = new File("img/templates/feuerwerk2.png"); text = "5 Days"; break;
+				case "27.12": file = new File("img/templates/feuerwerk3.png"); text = "4 Days"; break;
+				case "28.12": file = new File("img/templates/feuerwerk4.png"); text = "3 Days"; break;
+				case "29.12": file = new File("img/templates/feuerwerk5.png"); text = "2 Days"; break;
+				case "30.12": file = new File("img/templates/feuerwerk6.png"); text = "1 Day"; break;
+				}
+				File fileEdit = editFile(file, text);
+				if(fileEdit != null) {
+					chan.sendFile(fileEdit).queue();
+				}
+				ranAlready = true;
 			}
 		}
 		if(date1.matches("31.12")) {
 			switch(date) {
-			case "00:01:00": chan.sendMessage("24 Hours until new year!").queue(); break;
+			case "00:00:01": chan.sendMessage("24 Hours until new year!").queue(); break;
 			case "01:00:00": chan.sendMessage("23 Hours until new year!").queue(); break;
 			case "02:00:00": chan.sendMessage("22 Hours until new year!").queue(); break;
 			case "03:00:00": chan.sendMessage("21 Hours until new year!").queue(); break;
@@ -132,7 +136,16 @@ public class NewYearScheduler extends TimerTask{
 			case "23:59:57": chan.sendMessage("3 Seconds until new year!").queue(); break;
 			case "23:59:58": chan.sendMessage("2 Seconds until new year!").queue(); break;
 			case "23:59:59": chan.sendMessage("1 Second until new year!").queue(); break;
-			case "00:00:00": text = "HAPPY NEW YEAR 2024 EVERYONE!"; file = new File("img/templates/feuerwerk7.png"); break;
+			}
+			if(text.equalsIgnoreCase("HAPPY NEW YEAR 2024 EVERYONE!")) {
+				File out = editFile(file, text);
+				if(out != null) {
+					chan.sendFile(out).queue();
+				}
+			}
+		}else if(date1.matches("01.01")) {
+			switch(date) {
+			case "00:00:01": text = "HAPPY NEW YEAR 2024 EVERYONE!"; file = new File("img/templates/feuerwerk7.png"); break;
 			}
 			if(text.equalsIgnoreCase("HAPPY NEW YEAR 2024 EVERYONE!")) {
 				File out = editFile(file, text);
