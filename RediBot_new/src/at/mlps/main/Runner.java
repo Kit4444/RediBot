@@ -46,19 +46,6 @@ public class Runner extends TimerTask{
 		
 		timer++;
 		if(timer == 1) {
-			//xmas/newyear ctd
-			long xmas23 = 1703437200000l;
-			long newy23 = 1704063599000l;
-			long current = System.currentTimeMillis();
-			if(current <= xmas23) {
-				api.getPresence().setActivity(Activity.watching("for Christmas in " + getDays(((xmas23 - current) / 1000))));
-			}else if(current >= xmas23 && current <= newy23) {
-				api.getPresence().setActivity(Activity.watching("for New Year 2024 in " + getDays(((newy23 - current) / 1000))));
-			}else {
-				api.getPresence().setActivity(Activity.watching("all the memories happened in 2023!"));
-			}
-			
-		}else if(timer == 2) {
 			//watching
 			int guilds = 0;
 			int members = 0;
@@ -69,7 +56,7 @@ public class Runner extends TimerTask{
 				}
 			}
 			api.getPresence().setActivity(Activity.watching("over " + guilds + " Guilds and " + members + " Members"));
-		}else if(timer == 3) {
+		}else if(timer == 2) {
 			//defaultstate (cfg)
 			YamlFile file = new YamlFile("configs/configuration.yml");
 			try {
@@ -95,7 +82,7 @@ public class Runner extends TimerTask{
 			}else if(file.getString("BotConfig.Activity.Onlinestatus").equalsIgnoreCase("OFFLINE")) {
 				api.getPresence().setStatus(OnlineStatus.OFFLINE);
 			}
-		}else if(timer == 4) {
+		}else if(timer == 3) {
 			timer = 1;
 			api.getPresence().setActivity(Activity.watching("Lotus growing - be curious!"));
 		}

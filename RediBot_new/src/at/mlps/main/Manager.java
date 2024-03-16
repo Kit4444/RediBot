@@ -12,7 +12,6 @@ import at.mlps.botclasses.commands.FAQ;
 import at.mlps.botclasses.commands.GiftAllIngame;
 import at.mlps.botclasses.commands.HelpCMD;
 import at.mlps.botclasses.commands.ImgManClassCMD;
-import at.mlps.botclasses.commands.LOA;
 import at.mlps.botclasses.commands.MCServerinfo;
 import at.mlps.botclasses.commands.NewYearClass;
 import at.mlps.botclasses.commands.PridePFP;
@@ -121,7 +120,6 @@ public class Manager {
 		builder.enableIntents(GatewayIntent.DIRECT_MESSAGES);
 		builder.enableCache(CacheFlag.ONLINE_STATUS);
 		builder.setMemberCachePolicy(MemberCachePolicy.ALL);
-		builder.addEventListeners(new LOA());
 		builder.addEventListeners(new PurgeCommand());
 		builder.addEventListeners(new Serverinfo());
 		builder.addEventListeners(new SetStatesCMD());

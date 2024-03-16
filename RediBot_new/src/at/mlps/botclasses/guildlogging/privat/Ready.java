@@ -54,8 +54,6 @@ public class Ready extends ListenerAdapter{
 		Runner runner = new Runner(e.getJDA());
 		Timer t = new Timer();
 		t.scheduleAtFixedRate(runner, 1000, 60000);
-		NewYearScheduler nys = new NewYearScheduler(e.getJDA());
-		t.scheduleAtFixedRate(nys, 0, 1000);
 		RebootClass rc = new RebootClass();
 		//300000 equals to 300 seconds or 5 mins
 		t.scheduleAtFixedRate(rc, 0, 1000);
